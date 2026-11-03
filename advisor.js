@@ -81,13 +81,59 @@
     root.querySelectorAll("[data-q]").forEach((x) => (x.disabled = b));
   }
 
+  /* ---------- GitHub Pages: 이슈로 묻고 Actions의 Claude가 답해요 ---------- */
+  const REPO = "butblank-oss/ssosha-camp";
+  const PREFIX = "[AI 캠퍼]";
+  async function loadThreads() {
+    const box = root.querySelector("#ghLog");
+    box.innerHTML = '<p class="hint">질문과 답을 불러오는 중…</p>';
+    try {
+      const r = await fetch(`https://api.github.com/repos/${REPO}/issues?state=all&per_page=15`, { headers: { Accept: "application/vnd.github+json" } });
+      if (!r.ok) throw new Error(r.status);
+      const issues = (await r.json()).filter((i) => !i.pull_request && i.title.startsWith(PREFIX));
+      if (!issues.length) { box.innerHTML = '<p class="hint">아직 질문이 없어요. 위에서 첫 질문을 보내보세요.</p>'; return; }
+      const threads = await Promise.all(issues.map(async (i) => {
+        let comments = [];
+        if (i.comments) { const c = await fetch(i.comments_url); if (c.ok) comments = await c.json(); }
+        return { i, comments };
+      }));
+      box.innerHTML = threads.map(({ i, comments }) => {
+        const q = (i.body || "").split("\n---")[0].trim();
+        const ans = comments.map((c) => `<div class="msg assistant">${fmt(c.body.replace(/\n---\n_AI 베테랑 캠퍼[^\n]*$/, ""))}</div>`).join("");
+        return `<div class="thread"><div class="msg user">${esc(q || i.title.replace(PREFIX, ""))}</div>${ans || '<div class="msg assistant"><span class="thinking">답을 쓰는 중이에요. 1~2분 뒤에 새로고침해 주세요.</span></div>'}<a class="hint" href="${esc(i.html_url)}" target="_blank" rel="noopener">GitHub에서 보기</a></div>`;
+      }).join("");
+    } catch {
+      box.innerHTML = '<p class="hint">질문 목록을 불러오지 못했어요. 잠시 뒤에 새로고침해 주세요.</p>';
+    }
+  }
   function renderUnavailable() {
-    root.innerHTML = `<div class="panel-card adv-off">
-      <h2>AI 베테랑 캠퍼</h2>
-      <p>AI 조언은 Claude 안에서 연 Sosha Camp에서만 쓸 수 있어요. 이 페이지는 GitHub Pages라서 Claude와 연결할 수 없어요.</p>
-      ${ARTIFACT_URL ? `<a class="btn btn-primary" href="${esc(ARTIFACT_URL)}" target="_blank" rel="noopener">Claude에서 열기</a>` : ""}
-      <p class="hint">Claude에서 열면 지금 보드에 있는 장비, 차량, 강아지 정보를 보고 베테랑 캠퍼가 바로 답해줘요. 사용량은 여는 사람의 Claude 계정에서 나가요.</p>
+    root.innerHTML = `<div class="panel-card adv">
+      <div class="adv-head"><div><h2>AI 베테랑 캠퍼</h2>
+        <p class="hint">질문을 보내면 GitHub에 질문이 올라가고, 1~2분 안에 Claude가 답을 달아요. 보내기를 누르면 GitHub 화면이 열리니 아래 '이슈 만들기'(Submit new issue)를 눌러 주세요.</p></div></div>
+      <div class="adv-quick">${QUICK.map((q) => `<button class="chip" data-q="${esc(q)}">${esc(q)}</button>`).join("")}</div>
+      <form class="adv-form" id="ghForm">
+        <label class="sr" for="ghInput">질문</label>
+        <textarea id="ghInput" rows="3" placeholder="예: 전기장판은 어떤 걸 사야 해요?"></textarea>
+        <div class="adv-actions"><button type="button" class="btn" id="ghRefresh">새로고침</button><button class="btn btn-primary">GitHub로 질문 보내기</button></div>
+      </form>
+      <div class="adv-log" id="ghLog" aria-live="polite"></div>
+      ${ARTIFACT_URL ? `<p class="hint">바로바로 대화하고 싶으면 <a href="${esc(ARTIFACT_URL)}" target="_blank" rel="noopener">Claude에서 열기</a>를 쓰세요. 그쪽은 기다릴 필요 없이 실시간으로 답해요.</p>` : ""}
     </div>`;
+    const input = root.querySelector("#ghInput");
+    root.querySelectorAll("[data-q]").forEach((b) => (b.onclick = () => { input.value = b.dataset.q; input.focus(); }));
+    root.querySelector("#ghRefresh").onclick = loadThreads;
+    root.querySelector("#ghForm").onsubmit = (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (!q) { input.focus(); return; }
+      const title = `${PREFIX} ${q.length > 40 ? q.slice(0, 40) + "…" : q}`;
+      const body = `${q}\n\n---\n캠퍼 정보 (사이트에서 자동으로 붙였어요)\n${context()}`.slice(0, 6000);
+      const url = `https://github.com/${REPO}/issues/new?title=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
+      const a = document.createElement("a"); a.href = url; a.target = "_blank"; a.rel = "noopener"; a.click();
+      input.value = "";
+      setTimeout(loadThreads, 60000);
+    };
+    loadThreads();
   }
   function renderChat() {
     root.innerHTML = `<div class="panel-card adv">

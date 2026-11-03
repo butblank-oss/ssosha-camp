@@ -421,7 +421,9 @@
   };
 
   window.SOSHA = { allItems, save, get state() { return state; } };
+  window.SOSHA_REFRESH = () => { renderBoard(); renderUsed(); };
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
+  if (window.SoshaTrips) window.SoshaTrips.init();
   const h = location.hash.slice(1);
   if (["board", "guide", "ai", "pack", "market", "log"].includes(h)) showTab(h);
 })();

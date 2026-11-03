@@ -375,3 +375,23 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .thinking { color: var(--muted-foreground); }
 .adv-form { display: grid; gap: 8px; }
 .adv-actions { display: flex; justify-content: flex-end; gap: 8px; }
+.thread { display: grid; gap: 8px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+.thread:last-child { border-bottom: 0; }
+.thread > a { justify-self: start; }
+
+/* ---------- 캠핑 기록 ---------- */
+.trip-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.trip-card { display: grid; gap: 10px; align-content: start; }
+.trip-top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.trip-top h3 { font-size: 18px; font-weight: 800; }
+.trip-card .meta { margin-top: 0; }
+.trip-notes { font-size: 15px; line-height: 1.6; white-space: pre-line; }
+.trip-sub { font-size: 13px; color: var(--muted-foreground); }
+.needs { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
+.trip-actions { display: flex; gap: 6px; justify-content: flex-end; }
+.photos { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 6px; }
+.photos img { width: 100%; max-width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; display: block; }
+.ph { position: relative; }
+.ph .icon-btn { position: absolute; top: 4px; right: 4px; width: 32px; height: 32px; background: var(--card); color: var(--foreground); box-shadow: var(--shadow-md); }
+@media (max-width: 640px) { .trip-list { grid-template-columns: minmax(0, 1fr); } }
+.trip > .badge { justify-self: start; }

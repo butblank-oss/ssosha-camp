@@ -98,6 +98,7 @@
     <!-- 기록 -->
     <section id="tab-log" class="panel" role="tabpanel" hidden>
       <div id="log"></div>
+      <div id="trips"></div>
       <div class="io">
         <h2 class="h2">백업 / 다른 기기로 옮기기</h2>
         <p class="hint">둘이 각자 폰에서 보려면 백업 파일을 내보내서 상대 폰에서 불러오면 돼요.</p>
@@ -135,11 +136,21 @@
   </dialog>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.2/Sortable.min.js"></script>
+  <dialog id="tripDlg" aria-labelledby="tripTitle">
+    <form method="dialog" id="tripForm">
+      <div class="dlg-head"><h2 id="tripTitle">캠핑 기록 추가</h2>
+        <button class="icon-btn" value="cancel" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="dlg-body" id="tripBody"></div>
+      <div class="dlg-foot"><span class="grow"></span><button class="btn" value="cancel">닫기</button><button class="btn btn-primary" value="save">저장하고 +40 XP</button></div>
+    </form>
+  </dialog>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script src="data.js"></script>
   <script src="research.js"></script>
   <script src="game.js"></script>
   <script src="pack.js"></script>
+  <script src="trips.js"></script>
   <script src="app.js"></script>
   <script src="advisor.js"></script>
 </body>

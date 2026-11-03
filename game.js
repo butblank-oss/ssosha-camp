@@ -33,11 +33,19 @@
   }
   function compute(items) {
     const h = new Set(items.filter(have).map((i) => i.id));
-    const xp = items.reduce((s, i) => s + itemXP(i), 0);
+    const trips = window.SoshaTrips ? window.SoshaTrips.list() : [];
+    const tripCount = trips.length + 1; // 첫 캠핑 포함
+    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * 40;
     let lv = 0;
     LEVELS.forEach((l, i) => { if (xp >= l.xp) lv = i; });
     const cur = LEVELS[lv], next = LEVELS[lv + 1];
-    const badges = BADGES.map((b) => ({ ...b, on: b.test ? b.test(h, items) : b.need.every((id) => h.has(id)) }));
+    const tripBadges = [
+      { id: "trip1", name: "첫 캠핑 완주", on: true },
+      { id: "winter", name: "영하의 밤", on: trips.some((t) => t.temp !== "" && t.temp != null && +t.temp <= 0) },
+      { id: "dogtrip", name: "댕댕이와 1박", on: trips.some((t) => t.dog) },
+      { id: "regular", name: "단골 캠퍼", on: tripCount >= 3 },
+    ];
+    const badges = BADGES.map((b) => ({ ...b, on: b.test ? b.test(h, items) : b.need.every((id) => h.has(id)) })).concat(tripBadges);
     const quest = items.filter((i) => !have(i) && i.pri === 1).sort((a, b) => a.pri - b.pri)[0];
     return { h, xp, lv, cur, next, badges, quest };
   }
