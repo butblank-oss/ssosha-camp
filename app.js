@@ -353,6 +353,9 @@
       <p class="hint">트레이더스, 이마트, 노브랜드, 홈플러스, 데카트론, 무인양품은 믿을 만한 후기를 찾지 못해서 넣지 않았어요. 매장에서 보면 위 '새로 사요' 목록만 피하면 돼요.</p>
       ${usedNew}</article>
 
+    ${(window.SOSHA_SHELTER_TIPS || []).length ? `<article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.box}</span>겨울 쉘터 고르는 법 (경량, 우레탄창)</h3>
+      <ul>${window.SOSHA_SHELTER_TIPS.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>
+      <p class="hint">후보 제품은 준비 보드의 '경량 쉘터 (우레탄창)' 카드를 눌러 보세요.</p></article>` : ""}
     <article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.moon}</span>베테랑 캠퍼들의 조언</h3>
       <div class="shop-grid">${Object.entries(byTopic).map(([topic, ts]) => `<div class="shop"><strong>${esc(topic)}</strong><ul>${ts.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul></div>`).join("")}</div>
     </article>`;
@@ -485,7 +488,7 @@
   };
 
   window.SOSHA = {
-    allItems, save, get state() { return state; },
+    allItems, save, openItem, get state() { return state; },
     replaceState(next) {
       state = Object.assign({ items: {}, custom: [], order: {} }, next);
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }

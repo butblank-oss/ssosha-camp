@@ -88,6 +88,10 @@ window.SOSHA_ITEMS = [
     spec: "렉타타프 4×3m + 폴대 2개 (비·햇빛 대비)",
     why: "비 오는 날이나 여름 햇빛을 피하는 거실 공간이에요. 원터치 텐트가 비에 약해서 우중 캠핑을 할 생각이 생기면 고려해요.",
     newPrice: "8~20만 원", usedPrice: "4~10만 원", q: "렉타타프" },
+  { id: "shelter", cat: "shelter", name: "경량 쉘터 (우레탄창)", status: "research", pri: 2,
+    spec: "4~6kg, 바닥 300cm 안팎, 우레탄창(윈도우 커버) 포함, 스커트 있는 것. 원터치 텐트를 안에 넣을 수 있는 크기",
+    why: "겨울에 원터치 텐트를 쉘터 안에 넣으면 바람과 냉기를 한 번 더 막고, 우레탄창 덕분에 밖을 보며 강아지들과 거실처럼 지낼 수 있어요. 미니 컨트리맨 트렁크에 실으려면 무게와 수납 크기가 중요해서 백컨트리 같은 경량 쉘터 위주로 골랐어요.",
+    newPrice: "50~75만 원 (창 포함)", usedPrice: "중고 매물 적음", q: "백컨트리 쉘터 우레탄" },
   { id: "cot", cat: "shelter", name: "야전침대", status: "research", pri: 3,
     spec: "로우 야전침대 2개 (높이 20cm 내외)",
     why: "바닥 냉기를 완전히 피할 수 있어요. 다만 4인용 원터치 텐트 안에 2개를 넣으면 강아지 자리가 좁아져요.",
@@ -293,14 +297,14 @@ window.SOSHA_DANAWA = [
   { name: "동계 침낭", q: "동계 침낭", filter: "컴포트 -5℃ 이하", pri: 2 },
   { name: "그라운드시트", q: "그라운드시트", filter: "210×200 이하", pri: 1 },
   { name: "타프", q: "렉타타프", filter: "4×3m, 폴대 포함", pri: 3 },
-  { name: "리빙쉘·쉘터 (동계 업그레이드)", q: "리빙쉘 텐트", filter: "2~4인, 스커트 있음", pri: 3 },
+  { name: "경량 쉘터 (우레탄창)", q: "쉘터 우레탄창", filter: "6kg 이하, 300cm 안팎, 스커트", pri: 2 },
 ];
 
 /* 적재 계산용 수납 크기 [가로, 세로(깊이), 높이 cm, 무게 kg]. est = 추정치, 제품 조사로 덮어써요. */
 window.SOSHA_PACK = {
   tent: [105, 18, 18, 4.2], mat: [68, 30, 30, 4.5], peg: [35, 10, 8, 2.5], rope: [20, 15, 5, 0.4],
   groundsheet: [30, 20, 8, 0.8], rug: [40, 30, 20, 1.5], bedding: [50, 40, 30, 3], pillow: [40, 30, 15, 0.5],
-  tarp: [55, 20, 20, 4], cot: [80, 20, 20, 5],
+  tarp: [55, 20, 20, 4], cot: [80, 20, 20, 5], shelter: [60, 25, 25, 5.5],
   reel: [35, 25, 30, 4.5], eblanket: [40, 30, 15, 2.5], heater: [25, 20, 35, 2], co: [12, 12, 4, 0.2],
   hotpack: [20, 15, 10, 0.5], circulator: [25, 20, 30, 1.5],
   burner: [37, 30, 12, 2], gas: [30, 20, 10, 1.6], windscreen: [30, 10, 5, 0.4], torch: [20, 8, 6, 0.3],
@@ -325,3 +329,19 @@ window.SOSHA_CARS = [
 
 /* Claude 아티팩트 버전 (AI 베테랑 캠퍼 조언이 되는 곳) */
 window.SOSHA_ARTIFACT_URL = "https://claude.ai/artifact/BRGwWiaJGFbYht4XDRGNW5";
+
+/* 캠핑 조건별로 필요한 장비 (다음 캠핑 계획의 필터에 쓰여요) */
+window.SOSHA_RULES = {
+  base: ["tent", "peg", "groundsheet", "mat", "bedding", "burner", "gas", "torch", "cookset", "tongs", "scissors", "board", "spice", "dishes", "cutlery", "cups", "table1", "chairs", "storage", "trash", "mainlamp", "headlamp", "toiletry", "tissue", "clothes", "extinguisher"],
+  fire: ["firepit", "gloves", "wood", "firemat"],
+  winter: ["co", "hotpack", "windscreen", "rug", "shelter"],
+  winterElec: ["reel", "eblanket", "heater"],
+  elec: ["reel", "battery"],
+  summer: ["circulator", "cooler", "jug"],
+  mild: ["rope", "cooler"],
+  rain: ["tarp", "rope", "groundsheet"],
+  nights2: ["cooler", "jug", "dishbag", "coffee"],
+  dog: ["dogleash", "dogbowl", "dogbed", "dogpoop"],
+  dogWinter: ["dogwear"],
+  deck: ["carabiner"],
+};

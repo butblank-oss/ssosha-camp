@@ -1231,3 +1231,116 @@ window.SOSHA_BRANDS = [
   "url": ""
  }
 ];
+
+/* 경량 우레탄창 쉘터 조사 (2026-11, 다나와 최저가 기준) */
+window.SOSHA_PICKS = window.SOSHA_PICKS || {};
+window.SOSHA_PICKS.shelter = [
+ {
+  "brand": "백컨트리",
+  "model": "320 쉘터 얼티메이트 DAC 2.0 + 320 쉘터 윈도우 커버(우레탄창)",
+  "price": 687000,
+  "weightKg": 5.5,
+  "packedCm": null,
+  "est": true,
+  "why": "백컨트리라 가볍고 이지폴로 설치가 쉬워요. 320 폭이라 원터치 텐트와 강아지 공간이 여유로워요. 윈도우 커버를 정품으로 살 수 있어요 아쉬운 점: 수납 사이즈가 공개 스펙에 없고, 후기에 이지폴/스킨 가방이 크고 스킨 넣기 빡빡하다는 말이 있어요. 합계가 70만 원 가까이 돼요. 스커트 여부 매장 확인 필요해요 우레탄창: 별도 판매 '320 쉘터 윈도우 커버' (우레탄창, 310x145cm, 940g). 지퍼/탈착 방식 여부는 상세 미확인",
+  "url": "https://prod.danawa.com/info/?pcode=17219210",
+  "pick": true
+ },
+ {
+  "brand": "백컨트리",
+  "model": "280 쉘터 얼티메이트 SE (+ 280 쉘터 윈도우 커버)",
+  "price": 553000,
+  "weightKg": 3.72,
+  "packedCm": [
+   45,
+   22,
+   22
+  ],
+  "est": true,
+  "why": "가장 가벼워서 MINI 트렁크에 부담이 적어요. 윈도우 커버를 같이 사도 예산 안이에요 아쉬운 점: 280이라 원터치 텐트를 넣으면 남는 공간이 좁아요. 수납 45x22는 핸즈홈 표기로, 높이는 원통 지름으로 보고 est예요 우레탄창: 별도 판매 '280 쉘터 윈도우 커버' (우레탄창)",
+  "url": "https://prod.danawa.com/info/?pcode=17141672",
+  "pick": false
+ },
+ {
+  "brand": "백컨트리",
+  "model": "이지쉘터 (이지폴 포함) + 우레탄창문(지퍼분리형)",
+  "price": 810000,
+  "weightKg": 6.3,
+  "packedCm": [
+   23,
+   23,
+   62
+  ],
+  "est": true,
+  "why": "차량 뒤에 붙이는 방식이라 짐 공간과 강아지 대기 공간으로 좋아요 아쉬운 점: 6.3kg으로 가볍지 않고 가격 대비 공간이 작아요. 수납 23x62는 핸즈홈 표기라 원통형 지름(23,23)은 est예요 우레탄창: 별도 판매 '이지쉘터 우레탄창문(지퍼분리형)' 170,000원 (macoutdoor)",
+  "url": "https://prod.danawa.com/info/?pcode=16479374",
+  "pick": false
+ },
+ {
+  "brand": "미니멀웍스",
+  "model": "잭 쉘터 플러스",
+  "price": 540000,
+  "weightKg": 2.9,
+  "packedCm": [
+   55,
+   20,
+   20
+  ],
+  "est": false,
+  "why": "2.9kg로 가장 가볍고 폴 1개라 설치가 빨라요. 300 폭이라 공간이 넉넉해요 아쉬운 점: 우레탄창이 확인되지 않아 필수 조건을 못 채울 수 있고, 내수압 3000mm라 눈비에는 약해요 우레탄창: 우레탄창 구성/별도 판매 확인 못 함 (구성품: 스킨, 폴 1개, 브이팩, 스트링, 가방). 사이드 폴은 별도 판매",
+  "url": "https://prod.danawa.com/info/?pcode=6795325",
+  "pick": false
+ },
+ {
+  "brand": "스위스알파인클럽",
+  "model": "벨라 쉘터 (+ 벨라쉘터 전용 우레탄창)",
+  "price": 294000,
+  "weightKg": 2.85,
+  "packedCm": null,
+  "est": true,
+  "why": "가볍고 저렴하고 우레탄창 전용품이 있어요 아쉬운 점: 220x220은 여성 2명과 강아지 2마리에 원터치 텐트까지 넣기엔 좁아요. 우레탄창 재고가 불확실해요 우레탄창: 별도 판매 전용 우레탄창 (11번가 판매 종료 표시, 재고 확인 필요)",
+  "url": "https://prod.danawa.com/info/?pcode=8982098",
+  "pick": false
+ },
+ {
+  "brand": "어반사이드",
+  "model": "케팔로 돔쉘터 + 전용 우레탄창",
+  "price": null,
+  "weightKg": null,
+  "packedCm": null,
+  "est": true,
+  "why": "우레탄창 가격이 매우 저렴해요 아쉬운 점: 본체 스펙을 확인하지 못해 후보로만 남겨요 우레탄창: 별도 판매 전용 우레탄창 39,000원 (품절 표기 있음)",
+  "url": "https://urbanside.co.kr/product/%EC%96%B4%EB%B0%98%EC%82%AC%EC%9D%B4%EB%93%9C-%EC%BC%80%ED%8C%94%EB%A1%9C-%EB%8F%94%EC%89%98%ED%84%B0-%ED%85%90%ED%8A%B8-%EC%A0%84%EC%9A%A9-%EC%9A%B0%EB%A0%88%ED%83%84%EC%B0%BD/733/",
+  "pick": false
+ }
+];
+window.SOSHA_SHELTER_TIPS = [
+ {
+  "tip": "우레탄창은 쉘터 본체와 같은 브랜드 정품(윈도우 커버)을 고르면 치수가 맞아서 설치가 편해요. 백컨트리는 280/320/360용이 따로 있어요.",
+  "url": "https://backcountry.co.kr/category/%ED%85%90%ED%8A%B8-%EC%89%98%ED%84%B0/24/"
+ },
+ {
+  "tip": "안팎 온도 차가 크면 천장과 우레탄창에 결로가 맺혀요. 난방 전에 상단 환기창을 먼저 열고 서큘레이터로 공기를 돌려 주세요.",
+  "url": "https://www.dealsfor.me/Blog/gyeoul-kaemping-nanbang-tib-anjeonhago-ttatteushage-jeulgineun-gyejeolbyeol-jeonlyag"
+ },
+ {
+  "tip": "스커트 쪽 아래 환기구는 조금 열어 두는 게 좋고, 스커트를 돌로 완전히 덮는 건 장박이 아니면 권하지 않는다는 경험담이 있어요. 스커트 포함 여부는 구매 전에 꼭 확인해 주세요.",
+  "url": "https://www.clien.net/service/board/cm_camp/15515261"
+ },
+ {
+  "tip": "쉘터 안에 이너텐트 대신 쓰던 원터치 텐트를 넣으면 짐이 줄고 보온도 좋아져요. 대신 폭 320 정도는 되어야 원터치 텐트 둘레로 강아지 동선이 남아요.",
+  "url": "https://prod.danawa.com/info/?pcode=17219210"
+ },
+ {
+  "tip": "소형차 트렁크(약 450L)라면 무게와 수납 크기를 먼저 보세요. 280급은 3.7kg대, 320급은 4.6kg대이고 우레탄창은 약 0.9kg 더해져요. 스펙의 수납 사이즈는 판매처 표기가 달라서 직접 확인해 주세요.",
+  "url": "https://prod.danawa.com/info/?pcode=16479473"
+ },
+ {
+  "tip": "2인이 설치할 거라면 이지폴처럼 폴 수가 적은 모델이 편해요. 후기에선 처음이라도 20~30분 만에 설치했다는 말이 있어요.",
+  "url": "https://m.cafe.daum.net/bushcraft/K4rz/6703?listURI=%2Fbushcraft%2FK4rz"
+ },
+ {
+  "tip": "난로 같은 연소식 난방은 일산화탄소 위험이 커요. 침실 공간에서는 쓰지 말고, 일산화탄소 경보기를 2개 이상 두고 환기구를 꼭 열어 주세요. 강아지는 더 일찍 영향을 받을 수 있어요.",
+  "url": "https://m.segye.com/view/20211127503723"
+ }
+];

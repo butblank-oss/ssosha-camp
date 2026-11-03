@@ -8,6 +8,47 @@
   const items = () => api().allItems();
   const itemById = (id) => items().find((i) => i.id === id);
   const have = (it) => it.status === "bought" || it.status === "owned";
+  const R = window.SOSHA_RULES || {};
+  const won = (n) => (n ? Number(n).toLocaleString("ko-KR") + "원" : "-");
+  const DEF_COND = { season: "winter", elec: true, rain: false, nights: 1, site: "gravel", fire: true };
+  const SEASONS = [["winter", "겨울"], ["mild", "봄·가을"], ["summer", "여름"]];
+  const SITES = [["gravel", "파쇄석"], ["deck", "데크"], ["grass", "잔디·흙"]];
+  function needIds(p) {
+    const c = Object.assign({}, DEF_COND, p.cond || {});
+    const ids = new Set(R.base || []);
+    const add = (k) => (R[k] || []).forEach((id) => ids.add(id));
+    if (c.fire) add("fire");
+    if (c.elec) add("elec");
+    if (c.season === "winter") { add("winter"); if (c.elec) add("winterElec"); }
+    if (c.season === "summer") add("summer");
+    if (c.season === "mild") add("mild");
+    if (c.rain) add("rain");
+    if (+c.nights >= 2) add("nights2");
+    if (p.dog) { add("dog"); if (c.season === "winter") add("dogWinter"); }
+    if (c.site === "deck") add("deck");
+    return [...ids].filter((id) => itemById(id));
+  }
+  function condLabel(p) {
+    const c = Object.assign({}, DEF_COND, p.cond || {});
+    return [
+      (SEASONS.find((x) => x[0] === c.season) || [])[1], c.elec ? "전기" : "전기 없음", (SITES.find((x) => x[0] === c.site) || [])[1],
+      +c.nights >= 2 ? "2박 이상" : "1박", c.rain ? "비 예보" : "", c.fire ? "불멍" : "", p.dog ? "강아지 동반" : "",
+    ].filter(Boolean);
+  }
+  function buyPlan(p) {
+    const PICKS = window.SOSHA_PICKS || {};
+    const miss = needIds(p).map(itemById).filter((i) => i && !have(i)).sort((a, b) => a.pri - b.pri);
+    let cheap = 0, full = 0, unknown = 0, cheapMust = 0, fullMust = 0;
+    const rows = miss.map((i) => {
+      const ps = (PICKS[i.id] || []).filter((x) => x.price);
+      const best = ps.find((x) => x.pick) || ps[0];
+      const low = ps.slice().sort((a, b) => a.price - b.price)[0];
+      if (low) cheap += low.price; if (best) full += best.price; if (!low) unknown++;
+      if (i.pri === 1) { if (low) cheapMust += low.price; if (best) fullMust += best.price; }
+      return { i, low, best };
+    });
+    return { rows, cheap, full, unknown, cheapMust, fullMust };
+  }
 
   function dday(date) {
     const d = new Date(date + "T00:00:00"), t = new Date(); t.setHours(0, 0, 0, 0);
@@ -22,7 +63,8 @@
     const gear = (p.gear || []).map(itemById).filter(Boolean);
     const packed = new Set(p.packed || []);
     const done = gear.filter((g) => packed.has(g.id)).length;
-    const missing = items().filter((i) => i.pri === 1 && !have(i) && !(p.gear || []).includes(i.id) && (p.dog || i.cat !== "dog"));
+    const bp = buyPlan(p);
+    const view = p.view || "pack";
     const others = items().filter((i) => !(p.gear || []).includes(i.id) && i.id !== "foodmenu");
     const byCat = CATS.map((c) => {
       const xs = gear.filter((g) => g.cat === c.id);
@@ -35,10 +77,24 @@
         <div class="plan-acts"><button class="btn btn-sm" data-pedit="${esc(p.id)}">고치기</button><button class="btn btn-sm btn-primary" data-pdone="${esc(p.id)}">다녀왔어요</button></div>
       </div>
       <div class="plan-progress"><div class="meter-top"><span>짐 챙기기</span><strong class="num">${done} / ${gear.length}</strong></div><div class="meter-bar"><i style="--p:${gear.length ? done / gear.length : 0}"></i></div></div>
-      ${missing.length ? `<div class="plan-warn"><strong>아직 없는 필수품 ${missing.length}개</strong><span>${missing.slice(0, 8).map((m) => esc(m.name)).join(", ")}${missing.length > 8 ? " 외" : ""}</span></div>` : ""}
-      <div class="gear-groups">${byCat || '<p class="hint">챙길 장비가 없어요. 아래에서 더해 주세요.</p>'}</div>
-      <div class="toolbar-row"><label class="sel">장비 더하기 <select data-addg="${esc(p.id)}"><option value="">고르기</option>${others.map((o) => `<option value="${esc(o.id)}">${esc(o.name)}${have(o) ? "" : " (아직 없음)"}</option>`).join("")}</select></label>
-        <button class="btn btn-sm btn-danger" data-pdel="${esc(p.id)}">계획 삭제</button></div>
+      <div class="cond-chips">${condLabel(p).map((t) => `<span class="badge">${esc(t)}</span>`).join("")}</div>
+      <div class="plan-tabs" role="tablist">
+        <button role="tab" data-pview="${esc(p.id)}" value="pack" aria-selected="${view === "pack"}">챙길 것 <b>${gear.length}</b></button>
+        <button role="tab" data-pview="${esc(p.id)}" value="cheap" aria-selected="${view === "cheap"}">가성비로 채우기 <b>${bp.rows.length}</b></button>
+        <button role="tab" data-pview="${esc(p.id)}" value="full" aria-selected="${view === "full"}">풀패키지</button>
+      </div>
+      ${view === "pack" ? `
+        <div class="gear-groups">${byCat || '<p class="hint">이번 조건에 맞는 가진 장비가 없어요. 아래에서 더해 주세요.</p>'}</div>
+        <div class="toolbar-row"><label class="sel">장비 더하기 <select data-addg="${esc(p.id)}"><option value="">고르기</option>${others.map((o) => `<option value="${esc(o.id)}">${esc(o.name)}${have(o) ? "" : " (아직 없음)"}</option>`).join("")}</select></label></div>`
+      : bp.rows.length ? `
+        <div class="buy-sum"><div><span>필수만 사면</span><strong class="num">${won(view === "cheap" ? bp.cheapMust : bp.fullMust)}</strong></div><div><span>${view === "cheap" ? "가장 싼 제품으로 다 사면" : "추천 제품으로 다 갖추면"}</span><strong class="num">${won(view === "cheap" ? bp.cheap : bp.full)}</strong></div>${bp.unknown ? `<span class="hint">가격 정보가 없는 ${bp.unknown}개는 빼고 계산했어요</span>` : ""}</div>
+        <ul class="buy-list">${bp.rows.map(({ i, low, best }) => { const x = view === "cheap" ? low : best; return `<li>
+          <button class="buy-name" data-open="${esc(i.id)}"><strong>${esc(i.name)}</strong><span class="badge ${i.pri === 1 ? "b-must" : i.pri === 2 ? "b-nice" : ""}">${i.pri === 1 ? "필수" : i.pri === 2 ? "권장" : "나중에"}</span></button>
+          <span class="buy-pick">${x ? `${esc(x.brand)} ${esc(x.model)}` : `${esc(i.newPrice || "추천 제품 조사 전")}${i.usedPrice && i.usedPrice !== "-" ? `, 중고 ${esc(i.usedPrice)}` : ""}`}</span>
+          <span class="buy-price num">${x ? won(x.price) : ""}</span></li>`; }).join("")}</ul>
+        <p class="hint">${view === "cheap" ? "가성비 칸은 후보 중 가장 싼 제품이에요. 중고로 사면 더 아낄 수 있어요." : "풀패키지는 조사한 후보 중 추천(★) 제품 기준이에요."} 이름을 누르면 후보와 중고 바로가기를 볼 수 있어요.</p>`
+      : '<div class="empty">이번 조건에 필요한 장비를 다 가지고 있어요!</div>'}
+      <div class="toolbar-row plan-foot"><button class="btn btn-sm btn-danger" data-pdel="${esc(p.id)}">계획 삭제</button></div>
     </article>`;
   }
 
@@ -62,6 +118,8 @@
     root.querySelectorAll("[data-addg]").forEach((sel) => (sel.onchange = () => {
       if (!sel.value) return; const p = find(sel.dataset.addg); p.gear = (p.gear || []).concat(sel.value); persist();
     }));
+    root.querySelectorAll("[data-pview]").forEach((b) => (b.onclick = () => { const p = find(b.dataset.pview); p.view = b.value; render(); }));
+    root.querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => { if (window.SOSHA.openItem) window.SOSHA.openItem(b.dataset.open); }));
     root.querySelectorAll("[data-pdel]").forEach((b) => (b.onclick = () => {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 삭제"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "계획 삭제"; }, 3000); return; }
       const arr = plans(); arr.splice(arr.findIndex((x) => x.id === b.dataset.pdel), 1); persist();
@@ -95,6 +153,7 @@
     editing = p;
     const dlg = document.getElementById("planDlg");
     const favs = window.SoshaCamps ? window.SoshaCamps.favs() : [];
+    const c = Object.assign({}, DEF_COND, p.cond || {});
     document.getElementById("planTitle").textContent = p && p.id ? "계획 고치기" : "캠핑 계획 추가";
     document.getElementById("planBody").innerHTML = `
       <div class="grid2">
@@ -102,8 +161,18 @@
         <label class="field"><span>캠핑장</span><input type="text" id="pPlace" list="pFavs" value="${esc(p.place || "")}" placeholder="예: 집 앞 OO캠핑장"></label>
       </div>
       <datalist id="pFavs">${favs.map((c) => `<option value="${esc(c.facltNm)}">`).join("")}</datalist>
-      <label class="toggle"><input type="checkbox" id="pDog" ${p.dog ? "checked" : ""}> 강아지랑 같이 가요</label>
-      <p class="hint">짐 목록은 준비 보드의 '구매 완료'와 '원래 있던 것'으로 만들어져요. 강아지랑 안 가면 강아지 용품은 빼고 만들어요.</p>`;
+      <div class="grid2">
+        <label class="field"><span>계절</span><select id="pSeason">${SEASONS.map(([v, n]) => `<option value="${v}" ${c.season === v ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+        <label class="field"><span>사이트 바닥</span><select id="pSite">${SITES.map(([v, n]) => `<option value="${v}" ${c.site === v ? "selected" : ""}>${n}</option>`).join("")}</select></label>
+        <label class="field"><span>몇 박</span><select id="pNights"><option value="1" ${+c.nights < 2 ? "selected" : ""}>1박</option><option value="2" ${+c.nights >= 2 ? "selected" : ""}>2박 이상</option></select></label>
+      </div>
+      <div class="toolbar-row">
+        <label class="toggle"><input type="checkbox" id="pElec" ${c.elec ? "checked" : ""}> 전기 사이트</label>
+        <label class="toggle"><input type="checkbox" id="pFire" ${c.fire ? "checked" : ""}> 불멍 가능</label>
+        <label class="toggle"><input type="checkbox" id="pRain" ${c.rain ? "checked" : ""}> 비 예보</label>
+        <label class="toggle"><input type="checkbox" id="pDog" ${p.dog ? "checked" : ""}> 강아지 동반</label>
+      </div>
+      <p class="hint">조건에 맞춰 챙길 것과 아직 없는 장비가 나뉘어요. 저장한 뒤에도 장비를 더하거나 뺄 수 있어요.</p>`;
     dlg.showModal();
   }
   function openNew(prefill) {
@@ -116,13 +185,14 @@
     if (!dlg) return;
     dlg.addEventListener("close", () => {
       if (dlg.returnValue !== "save" || !editing) return;
-      const date = document.getElementById("pDate").value, place = document.getElementById("pPlace").value.trim(), dog = document.getElementById("pDog").checked;
-      if (editing.id) {
-        Object.assign(editing, { date, place, dog });
-      } else {
-        const gear = items().filter((i) => have(i) && (dog || i.cat !== "dog")).map((i) => i.id);
-        plans().push({ id: "p" + Date.now(), date, place, dog, campId: editing.campId || "", gear, packed: [] });
-      }
+      const v = (id) => document.getElementById(id);
+      const date = v("pDate").value, place = v("pPlace").value.trim(), dog = v("pDog").checked;
+      const cond = { season: v("pSeason").value, site: v("pSite").value, nights: +v("pNights").value, elec: v("pElec").checked, fire: v("pFire").checked, rain: v("pRain").checked };
+      const target = editing.id ? editing : { id: "p" + Date.now(), campId: editing.campId || "", packed: [] };
+      Object.assign(target, { date, place, dog, cond });
+      target.gear = needIds(target).filter((id) => have(itemById(id)));
+      target.packed = (target.packed || []).filter((id) => target.gear.includes(id));
+      if (!editing.id) plans().push(target);
       editing = null; persist();
     });
     const chip = document.getElementById("ddayChip");
