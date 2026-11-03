@@ -178,7 +178,6 @@
     const pct = Math.round((have / items.length) * 100);
     if ($("#log") && $("#log").childElementCount) renderLog();
     if (window.SoshaGame) window.SoshaGame.render(items, { spent: won(spent), must: must + "개", pct: pct + "%" });
-    if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(items, state, save);
   }
 
   /* ---------- 추천 제품 ---------- */
@@ -427,7 +426,6 @@
   function showTab(name) {
     document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === name));
     document.querySelectorAll(".panel").forEach((p) => (p.hidden = p.id !== "tab-" + name));
-    if (name === "pack" && window.SoshaPack) window.SoshaPack.render(allItems(), state, save);
     try { history.replaceState(null, "", "#" + name); } catch { /* noop */ }
   }
   document.querySelector(".tabs").onclick = (e) => { const t = e.target.closest(".tab"); if (t) showTab(t.dataset.tab); };
@@ -506,7 +504,6 @@
       renderBoard(); renderUsed();
       if (window.SoshaTrips) window.SoshaTrips.render();
       if (window.SoshaPlans) window.SoshaPlans.render();
-      if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(allItems(), state, save);
     },
   };
   window.SOSHA_REFRESH = () => { renderBoard(); renderUsed(); };
@@ -514,5 +511,5 @@
   if (window.SoshaTrips) window.SoshaTrips.init();
   if (window.SoshaPlans) window.SoshaPlans.init();
   const h = location.hash.slice(1);
-  if (["board", "guide", "ai", "pack", "market", "log"].includes(h)) showTab(h);
+  if (["board", "guide", "market", "log"].includes(h)) showTab(h);
 })();
