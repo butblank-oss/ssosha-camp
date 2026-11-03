@@ -1329,3 +1329,96 @@ window.SOSHA_SHELTER_TIPS = [
   "url": "https://m.segye.com/view/20211127503723"
  }
 ];
+
+/* IGT 테이블 조사 (2026-11) */
+window.SOSHA_PICKS.igt = [
+ {
+  "brand": "네이처하이크",
+  "model": "FlatTop IGT Modular Camping Table (Standard / Extended)",
+  "price": null,
+  "weightKg": 3.65,
+  "packedCm": [
+   86.5,
+   16,
+   15
+  ],
+  "est": false,
+  "why": "한국 판매가는 확인하지 못했어요(해외 109.99달러). 조사한 표 중 가장 가벼워요(3.65kg). 수납이 납작해서 트렁크 정리하기 좋아요. 아쉬운 점: 국내 정식 판매가·A/S 확인이 안 돼요. 호환 버너 설명이 없어요. 버너: 버너 모델 호환 명시 없음. Standard에 Stove Module Plate 1개 포함 → 1유닛 플레이트에 기존 카세트 버너 올리는 방식 가능성(실물 확인 필요)",
+  "url": "https://naturehike.com/products/flattop-igt-modular-camping-table",
+  "pick": true
+ },
+ {
+  "brand": "아지트",
+  "model": "IGT 캠핑테이블 3유닛 WA (알루미늄) 82x40.5cm",
+  "price": 109970,
+  "weightKg": null,
+  "packedCm": null,
+  "est": false,
+  "why": "가격이 11만원 안팎으로 가성비가 좋아요. 알루미늄 접이식이에요. 아쉬운 점: 무게·수납 사이즈·후기를 확인 못 했어요. 구매 전 상세페이지 확인이 필요해요. 버너: IGT 규격이라 원버너 플레이트(제라/캠프1/스노우라인 호환 유닛)와 조합 가능성. 호환 공식 명시는 확인 못 함",
+  "url": "https://search.danawa.com/dsearch.php?query=아지트+IGT+테이블",
+  "pick": false
+ },
+ {
+  "brand": "살반",
+  "model": "3유닛 IGT 테이블",
+  "price": 116100,
+  "weightKg": 7,
+  "packedCm": null,
+  "est": false,
+  "why": "튼튼하고 높이 조절 폭이 넓어요. 아쉬운 점: 7kg로 무거워요. 수납 사이즈·리뷰 정보가 거의 없어요. 버너: 스테인리스+알루미늄 프레임, 분해접이식. 호환 버너 명시 없음",
+  "url": "https://prod.danawa.com/info/?pcode=92357576",
+  "pick": false
+ },
+ {
+  "brand": "스노우피크",
+  "model": "엔트리 IGT 테이블 CK-080(R)",
+  "price": 269900,
+  "weightKg": 5.4,
+  "packedCm": [
+   83.2,
+   44,
+   5
+  ],
+  "est": true,
+  "why": "가장 납작하게 접혀요(수납 약 5cm). 정품이라 호환 걱정이 없어요. 아쉬운 점: 가격이 비싸요. 높이 고정이에요. 버너: 스노우피크 플랫버너 GS-450R(270x410x110mm,1.9kg) 등 IGT 1유닛 버너 정식 호환. 대나무 인서트",
+  "url": "https://www.camp-gazua.com/snowpeak-igt/",
+  "pick": false
+ },
+ {
+  "brand": "스노우라인",
+  "model": "플랫 테이블 유닛 1",
+  "price": 47230,
+  "weightKg": 1.5,
+  "packedCm": null,
+  "est": false,
+  "why": "1.5kg로 아주 가볍고 저렴해요. 아쉬운 점: 3유닛 IGT가 아니라 확장이 안 돼요. 작은 보조용이에요. 버너: 풀사이즈 IGT 프레임용이 아니라 단독 소형 테이블이에요. 버너 호환 명시 없음",
+  "url": "https://prod.danawa.com/info/?pcode=98769920",
+  "pick": false
+ }
+];
+window.SOSHA_IGT_BURNER = [
+ {
+  "option": "1유닛 원버너 플레이트에 기존 카세트 버너 올리기 (제라/캠프1/스노우라인 호환 유닛)",
+  "price": "22,500원 (+배송 3,000원)",
+  "note": "가장 저렴하고 확실한 루트예요. 다만 사용하는 카세트 버너가 플레이트 구멍/크기에 맞는지 상세페이지 확인 필요해요(다나와 페이지에 카세트 호환 문구는 없었어요).",
+  "url": "https://search.danawa.com/dsearch.php?query=원버너+테이블+IGT+플레이트+호환+유닛"
+ },
+ {
+  "option": "IGT 상판 플레이트 0.5/1 원버너 유닛 (스노우피크 호환, 스테인리스)",
+  "price": "8,820원 (+배송 3,000원)",
+  "note": "가장 싼 대안이에요. 단순 플레이트라 버너 고정 방식은 직접 확인해야 해요.",
+  "url": "https://search.danawa.com/dsearch.php?query=원버너+테이블+IGT+플레이트+호환+유닛"
+ },
+ {
+  "option": "캠핑문 IGT 투버너 듀얼 플랫버너 CK-50PG",
+  "price": "38,070원",
+  "note": "IGT 전용 버너를 새로 사는 경우예요. 2구라 기존 버너는 필요 없지만 가스 사용량이 늘 수 있어요.",
+  "url": "https://prod.danawa.com/info/?pcode=115747531"
+ },
+ {
+  "option": "스노우피크 플랫버너 GS-450R (정품 IGT 버너)",
+  "price": "일본가 12,100엔(국내가 미확인)",
+  "note": "스노우피크 엔트리 IGT에 확실히 맞지만 가장 비싼 길이에요. 이와타니/코베아/버팔로 IGT 버너 가격은 확인 못 했어요.",
+  "url": "https://www.camp-gazua.com/snowpeak-igt/"
+ }
+];
