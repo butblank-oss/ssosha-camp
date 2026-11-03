@@ -2,48 +2,55 @@
 window.SOSHA_PICKS = {
  "reel": [
   {
-   "brand": "케이디와이(KDY)",
-   "model": "전선릴 차단형 2.5SQ x 3C 30m (배선/과부하/누전차단, 통합스위치)",
-   "price": 118430,
-   "weightKg": 4.5,
+   "brand": "나이스텍",
+   "model": "2구 누전차단기 부착형 케이블릴 1.5SQ 27m",
+   "price": 61410,
+   "weightKg": null,
    "packedCm": [
-    33,
-    20,
-    33
+    28,
+    17.5,
+    37
    ],
-   "est": true,
-   "why": "과부하·누전 차단에 접지(3C) 2.5SQ라 겨울 전기장판 쓰기에 안전하고 가격도 중간이에요.",
-   "url": "https://search.danawa.com/dsearch.php?query=캠핑 릴선 30m 2.5sq 과부하차단",
+   "est": false,
+   "why": "1.5SQ에 과부하·누전·배선 차단이 다 있고 27m라 길이도 넉넉한데 6만 원대예요. 가성비로는 제일이에요. 접지(3심) 여부와 KC 표기는 다나와에 없어서 판매 페이지에서 꼭 확인하세요.",
+   "url": "https://prod.danawa.com/info/?pcode=15115835",
    "pick": true
   },
   {
-   "brand": "베스토",
-   "model": "접지 차단전선릴 2.5SQ x 3C 30m (2구)",
-   "price": 143820,
-   "weightKg": 4.8,
-   "packedCm": [
-    34,
-    22,
-    34
-   ],
-   "est": true,
-   "why": "배선·과부하·누전 차단이 다 되고 리뷰 평점이 높지만 조금 비싸요.",
-   "url": "https://search.danawa.com/dsearch.php?query=캠핑 릴선 30m 2.5sq 과부하차단",
+   "brand": "미주산업",
+   "model": "2구 개별 방우형 누전차단 전선릴 1.5SQ 30m",
+   "price": 89120,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false,
+   "why": "과부하·누전 차단에 방우형이라 이슬이나 비에 강하고 30m로 가장 길어요. 비 오는 날도 다닐 거라면 이쪽이에요. 접지 표기는 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=13266224",
    "pick": false
   },
   {
-   "brand": "스마토",
-   "model": "전선릴 접지형 2.5SQ 30m (2구, 과부하차단)",
-   "price": 77200,
-   "weightKg": 4.3,
+   "brand": "반딧불테크",
+   "model": "2구 접지차단 전선릴 1.5SQ 25m (카키)",
+   "price": 98580,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false,
+   "why": "후보 중 유일하게 제품명에 접지가 명시돼 있고 과부하·누전 차단도 돼요. 안전을 가장 우선하면 이쪽이에요. 다만 가장 비싸요.",
+   "url": "https://prod.danawa.com/info/?pcode=21589127",
+   "pick": false
+  },
+  {
+   "brand": "KEEP",
+   "model": "2구 밀리터리 캠핑 릴선 1.5SQ 20m",
+   "price": 57200,
+   "weightKg": null,
    "packedCm": [
-    32,
-    20,
-    32
+    26,
+    26,
+    37
    ],
    "est": true,
-   "why": "가장 저렴한 1.5sq급 대안으로 보기 쉽지만 누전차단 표기가 없어요. 누전차단이 있는 제품을 고르세요.",
-   "url": "https://search.danawa.com/dsearch.php?query=캠핑 릴선 30m 2.5sq 과부하차단",
+   "why": "가장 싸고 과부하·누전 차단도 돼요. 다만 20m라 전기 기둥이 먼 사이트에서는 짧을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=21438059",
    "pick": false
   }
  ],
