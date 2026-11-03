@@ -440,7 +440,7 @@
       setField(mv.dataset.move, { status: "bought" });
       state.order.bought = [mv.dataset.move].concat((state.order.bought || []).filter((x) => x !== mv.dataset.move));
       save(); renderBoard(); renderUsed();
-      const t = $("#toast"); if (t) { t.textContent = "구매 완료로 옮겼어요. 카드를 눌러 가격을 적으면 +5 XP예요"; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2600); }
+      const t = $("#toast"); if (t) { t.textContent = "구매 완료로 옮겼어요. 카드를 눌러 가격을 적으면 +2 XP예요"; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2600); }
       return;
     }
     const c = e.target.closest(".card"); if (c) openItem(c.dataset.id);

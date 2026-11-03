@@ -3,12 +3,13 @@
   "use strict";
   const LEVELS = [
     { xp: 0, name: "거지 캠퍼" },
-    { xp: 120, name: "불멍 입문" },
-    { xp: 300, name: "주말 캠퍼" },
-    { xp: 520, name: "동계 캠퍼" },
-    { xp: 800, name: "베테랑 캠퍼" },
+    { xp: 200, name: "불멍 입문" },
+    { xp: 450, name: "주말 캠퍼" },
+    { xp: 750, name: "동계 캠퍼" },
+    { xp: 1100, name: "베테랑 캠퍼" },
   ];
-  const XP_BY_PRI = { 1: 30, 2: 20, 3: 10 };
+  const XP_BY_PRI = { 1: 15, 2: 10, 3: 5 };
+  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 20;
   const BADGES = [
     { id: "first", name: "첫 구매", test: (h, its) => its.some((i) => i.status === "bought") },
     { id: "warm", name: "따뜻한 밤", need: ["reel", "eblanket"] },
@@ -25,17 +26,17 @@
 
   function itemXP(it) {
     if (!have(it)) return 0;
-    let x = it.status === "owned" ? 10 : XP_BY_PRI[it.pri] || 10;
-    if (it.purchase && it.purchase.price) x += 5;
-    if (it.rating) x += 5;
-    if (it.memo) x += 5;
+    let x = it.status === "owned" ? XP_OWNED : XP_BY_PRI[it.pri] || 5;
+    if (it.purchase && it.purchase.price) x += XP_RECORD;
+    if (it.rating) x += XP_RECORD;
+    if (it.memo) x += XP_RECORD;
     return x;
   }
   function compute(items) {
     const h = new Set(items.filter(have).map((i) => i.id));
     const trips = window.SoshaTrips ? window.SoshaTrips.list() : [];
     const tripCount = trips.length + 1; // 첫 캠핑 포함
-    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * 40;
+    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP;
     let lv = 0;
     LEVELS.forEach((l, i) => { if (xp >= l.xp) lv = i; });
     const cur = LEVELS[lv], next = LEVELS[lv + 1];
@@ -58,7 +59,9 @@
       <polygon class="${cls}" points="${x},${y - 60 * s} ${x - 32 * s},${y - 8 * s} ${x + 32 * s},${y - 8 * s}"/></g>`;
   }
   /* 레벨이 오르거나 그 장비를 사면 장면에 생겨요 */
-  const on = (h, lv, id, minLv) => (id && h.has(id)) || lv >= minLv;
+  /* 보드에 있는 장비는 실제로 가져야 그림에 나와요. 강아지 용품과 타프만 레벨로도 생겨요 */
+  const LEVEL_GEAR = new Set(["dogbed", "dogwear", "dogleash", "tarp"]);
+  const on = (h, lv, id, minLv) => (id ? h.has(id) || (LEVEL_GEAR.has(id) && lv >= minLv) : lv >= minLv);
 
   /* 사람: (x, y)는 의자 앉는 면의 가운데. dir 1은 오른쪽, -1은 왼쪽(불 쪽)을 봐요.
    * who 1: 검은 숏컷, 은색 링 귀걸이, 검정 집업과 목걸이
@@ -99,7 +102,7 @@
       : lv >= 2 ? `<path class="sc-stick" d="M27,-15 L54,-30"/><rect class="sc-marsh" x="51" y="-35" width="8" height="7" rx="2" transform="rotate(-28 55 -31)"/>` : "";
     const mouth = lv === 0 ? `<path class="sc-mouth" d="M2,-37.5 q2.2,-1.8 4.4,0"/>` : `<path class="sc-lip" d="M1.6,-38.8 q2.6,2.4 5.2,0 q-2.6,.9 -5.2,0z"/>`;
     const sniffle = lv === 0 ? `<path class="sc-drop" d="M5,-41 q2.2,3.6 0,6.4 q-2.2,-2.8 0,-6.4z"/>` : "";
-    return `<g class="${lv === 0 ? "shiver" : ""}" transform="translate(${x} ${y}) scale(${dir} 1)">
+    return `<g transform="translate(${x} ${y}) scale(${dir} 1)"><g class="${lv === 0 ? "shiver" : ""}">
       ${seat}
       <path class="${who === 1 ? "sc-pants" : "sc-pants-2"}" d="M-11,-5 H16 a5,5 0 0 1 0,10 H-11z"/>
       <rect class="${who === 1 ? "sc-pants" : "sc-pants-2"}" x="12" y="3" width="9" height="21" rx="4"/>
@@ -117,7 +120,7 @@
       <ellipse class="sc-ink" cx="9" cy="-45" rx="1.9" ry="2.3"/><circle class="sc-eye-hl" cx="9.7" cy="-45.9" r=".8"/>
       <ellipse class="sc-cheek" cx="-4" cy="-40" rx="2.8" ry="1.6"/><ellipse class="sc-cheek" cx="12.5" cy="-40" rx="2.8" ry="1.6"/>
       ${mouth}${sniffle}
-    </g>`;
+    </g></g>`;
   }
   /* 시츄 두 마리 (처음의 옆모습 모양, 흰 바탕에 갈색 귀와 눈가 무늬)
    * kind 1: 8kg 큰 아이, 진한 갈색 무늬
@@ -229,10 +232,10 @@
 
   const LEVEL_FX = [
     "찌그러진 작은 텐트에 테이프를 덕지덕지, 박스에 앉아 깡통 촛불을 쬐요. 강아지들은 신문지 위에서 덜덜.",
-    "번듯한 원터치 텐트와 캠핑 의자, 작은 모닥불이 생겨요. 강아지들은 방석에 앉아요.",
-    "돔 텐트로 커지고 텐트 안에 불이 켜져요. 랜턴과 릴선이 생기고, 둘은 털모자를, 강아지들은 옷을 입어요.",
-    "커다란 터널형 텐트에 타프가 쳐지고 전구 줄이 켜져요. 패딩과 헤드랜턴, 강아지 집과 리드줄이 생겨요.",
-    "텐트 위에 깃발, 차에는 루프박스! 강아지 울타리와 장난감, 머플러에 따뜻한 머그잔까지 생겨요.",
+    "번듯한 원터치 텐트와 캠핑 의자, 강아지 방석이 생기고 별과 나무가 늘어요.",
+    "돔 텐트로 커지고 둘은 털모자를 쓰고 마시멜로를 구워요. 강아지들은 옷을 입고 밥그릇이 생겨요.",
+    "커다란 터널형 텐트에 타프가 쳐지고 전구 줄이 켜져요. 강아지 집과 리드줄이 생겨요.",
+    "텐트 위에 깃발, 루프박스를 단 차, 강아지 울타리와 장난감, 머플러에 따뜻한 머그잔까지!",
   ];
   const ITEM_FX = [
     ["chairs", "두 사람이 의자에 앉아요"], ["firepit", "모닥불이 타올라요"], ["eblanket", "텐트 문에 따뜻한 불빛이 켜져요"],
@@ -254,7 +257,7 @@
       <div class="dlg-head"><div><span class="badge b-ok">지금 Lv.${g.lv + 1} ${g.cur.name}</span><h2 id="lvTitle">레벨 미리보기</h2></div>
         <button class="icon-btn" value="cancel" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
       <div class="dlg-body">
-        <p class="hint">경험치로 레벨이 오르면 장면 전체가 바뀌고, 장비를 사면 그 장비가 장면에 하나씩 생겨요. 아래 그림은 지금 가진 장비 기준이에요.</p>
+        <p class="hint">레벨이 오르면 텐트 크기와 분위기, 강아지 용품이 바뀌어요. 랜턴이나 아이스박스 같은 장비는 실제로 사야 그림에 생겨요. 아래 그림은 지금 가진 장비 기준이에요.</p>
         <div class="lv-grid">${LEVELS.map((l, i) => `<div class="lv-step ${i === g.lv ? "now" : ""} ${i < g.lv ? "past" : ""}">
           <div class="lv-scene">${scene({ h: g.h, lv: i })}</div>
           <div class="lv-meta"><strong>Lv.${i + 1} ${l.name}</strong><span>${l.xp} XP${i === g.lv ? ", 지금" : i > g.lv ? `, ${l.xp - g.xp} XP 남음` : ", 달성"}</span></div>
@@ -279,7 +282,7 @@
 
   window.SoshaGame = {
     xpOf: itemXP,
-    xpFor: (it) => (XP_BY_PRI[it.pri] || 10) + 5,
+    xpFor: (it) => (XP_BY_PRI[it.pri] || 5) + XP_RECORD,
     render(items, stats) {
       const g = compute(items);
       const el = document.getElementById("camp");
@@ -298,7 +301,7 @@
             <div class="stat"><span class="stat-k">필수 남음</span><strong>${stats.must}</strong></div>
             <div class="stat"><span class="stat-k">준비율</span><strong>${stats.pct}</strong></div>
           </div>
-          ${g.quest ? `<div class="next-quest"><strong>다음 퀘스트: ${g.quest.name}</strong><span>구매 완료로 옮기면 +${(XP_BY_PRI[g.quest.pri] || 10)} XP, 가격까지 적으면 +5 XP 더 받아요.</span></div>` : ""}
+          ${g.quest ? `<div class="next-quest"><strong>다음 퀘스트: ${g.quest.name}</strong><span>구매 완료로 옮기면 +${(XP_BY_PRI[g.quest.pri] || 5)} XP, 가격까지 적으면 +${XP_RECORD} XP 더 받아요.</span></div>` : ""}
         </div>
         <div class="panel-card badge-card">
           <span class="hint">뱃지 ${g.badges.filter((b) => b.on).length} / ${g.badges.length}</span>

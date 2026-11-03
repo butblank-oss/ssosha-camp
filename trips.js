@@ -4,7 +4,7 @@
   "use strict";
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const won = (n) => (n ? Number(n).toLocaleString("ko-KR") + "원" : "-");
-  const TRIP_XP = 40;
+  const TRIP_XP = 20;
   const MAX_PHOTOS = 4;
   const CATS = window.SOSHA_CATEGORIES || [];
   const FIRST = window.SOSHA_FIRST_TRIP;
