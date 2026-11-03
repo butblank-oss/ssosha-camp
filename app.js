@@ -180,6 +180,13 @@
     if (window.SoshaGame) window.SoshaGame.render(items, { spent: won(spent), must: must + "개", pct: pct + "%" });
   }
 
+  /* ---------- 다이소 대안 ---------- */
+  function daisoHTML(id) {
+    const ds = (window.SOSHA_DAISO || []).filter((d) => d.item === id);
+    if (!ds.length) return "";
+    return `<div class="box daiso-box"><h4>다이소 대안 (캠퍼 추천)</h4>${ds.map((d) => `<p><a href="https://www.daisomall.co.kr/ds/dst/SCR_DST_0015?searchTerm=${enc(d.name.replace(/\(.*\)/, ""))}" target="_blank" rel="noopener"><strong>${esc(d.name)}</strong></a>${d.price ? ` ${esc(d.price)}` : ""}: ${esc(d.use)}${d.tip ? `. ${esc(d.tip)}` : ""}</p>`).join("")}</div>`;
+  }
+
   /* ---------- 추천 제품 ---------- */
   function picksHTML(id) {
     const ps = (window.SOSHA_PICKS || {})[id];
@@ -222,7 +229,8 @@
         <div class="box"><h4>추천 스펙</h4><p>${esc(it.spec)}</p></div>
         <div class="box"><h4>왜 필요해요?</h4><p>${esc(it.why)}</p></div>
         <div class="prices"><div class="box"><h4>신품 시세</h4><p class="num">${esc(it.newPrice || "-")}</p></div><div class="box"><h4>중고 시세</h4><p class="num">${esc(it.usedPrice || "-")}</p></div></div>
-        ${picksHTML(it.id)}`}
+        ${picksHTML(it.id)}
+        ${daisoHTML(it.id)}`}
       ${it.q || it.name ? `<div class="field"><span>매물 찾아보기: "${esc(it.q || it.name)}"</span>${linksHTML(it.q || it.name)}${it.link ? `<a class="link" href="${esc(it.link)}" target="_blank" rel="noopener">다나와 제품 페이지</a>` : ""}</div>` : ""}
       <div class="grid2">
         <label class="field"><span>상태</span><select name="status">${opt(COLS.map((c) => [c.id, c.name]), it.status)}</select></label>
@@ -348,7 +356,14 @@
       <tr><td>랜턴, 테이블, 의자, 폴딩박스, 릴선(차단기 작동 확인), 아이스박스, 타프</td><td>침낭과 매트(위생, 보온 성능), 전기장판, 부탄가스, 소화기, 일산화탄소 경보기</td></tr></table>`;
     const byTopic = {};
     tips.forEach((t) => { (byTopic[t.topic] = byTopic[t.topic] || []).push(t); });
+    const DS = (window.SOSHA_DAISO || []).slice().sort((a, b) => b.votes - a.votes);
+    const dsLink = (q) => `https://www.daisomall.co.kr/ds/dst/SCR_DST_0015?searchTerm=${enc(q)}`;
     return `
+    ${DS.length ? `<article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.box}</span>다이소 찐템 (캠퍼들이 꼽은 것)</h3>
+      <p class="hint">캠핑퍼스트 카페 댓글에서 여러 명이 추천한 순서예요. '보드' 칸은 준비 보드에서 바꿀 수 있는 장비예요. <a class="src" href="${esc(window.SOSHA_DAISO_SRC)}" target="_blank" rel="noopener">원문 보기</a></p>
+      <div class="table-wrap"><table class="tbl"><thead><tr><th>다이소 제품</th><th>쓰는 곳</th><th>추천</th><th>팁</th><th>보드</th></tr></thead><tbody>
+      ${DS.map((d) => { const it = d.item ? getItem(d.item) : null; return `<tr><td><a href="${dsLink(d.name.split(" ")[0] === "다이소" ? d.name : d.name.replace(/\(.*\)/, ""))}" target="_blank" rel="noopener"><strong>${esc(d.name)}</strong></a>${d.price ? `<br><span class="hint">${esc(d.price)}</span>` : ""}</td><td>${esc(d.use)}</td><td class="num">${d.votes}명</td><td>${esc(d.tip || "")}</td><td>${it ? `<button class="item-chip ${it.status === "bought" || it.status === "owned" ? "have" : ""}" data-open-item="${esc(it.id)}">${esc(it.name)}</button>` : ""}</td></tr>`; }).join("")}
+      </tbody></table></div></article>` : ""}
     <article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.list}</span>필수 품목 추천 제품 한눈에</h3>
       <p class="hint">다나와 최저가 기준으로 조사했어요(2026년 11월). 카드를 누르면 다른 후보 2개도 볼 수 있어요.</p>
       <div class="table-wrap"><table class="tbl"><thead><tr><th>품목</th><th>추천 제품</th><th>가격</th><th>무게</th><th>왜</th></tr></thead><tbody>
@@ -507,6 +522,7 @@
     },
   };
   window.SOSHA_REFRESH = () => { renderBoard(); renderUsed(); };
+  $("#guide").addEventListener("click", (e) => { const b = e.target.closest("[data-open-item]"); if (b) openItem(b.dataset.openItem); });
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
   if (window.SoshaTrips) window.SoshaTrips.init();
   if (window.SoshaPlans) window.SoshaPlans.init();

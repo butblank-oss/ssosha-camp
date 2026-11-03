@@ -709,3 +709,7 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .lvz-scene { width: 100%; }
 .lv-zoom p { font-size: 15px; }
 .lvz-nav { display: flex; justify-content: space-between; gap: 8px; }
+.daiso-box { background: color-mix(in srgb, var(--site-ds) 8%, var(--card)); border: 1px solid color-mix(in srgb, var(--site-ds) 25%, var(--border)); }
+.daiso-box p { font-size: 14px; }
+.daiso-box a { color: var(--site-ds); }
+.tbl td.num, .tbl th { white-space: nowrap; }
