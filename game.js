@@ -119,36 +119,30 @@
       ${mouth}${sniffle}
     </g>`;
   }
-  /* 시츄 두 마리: 흰 바탕에 갈색 귀와 눈 무늬.
-   * kind 1: 8kg 큰 아이, 혀를 내밀고 은색 체인 목줄
-   * kind 2: 4kg 작은 아이, 노란 오리 하네스와 노랑·분홍 줄무늬 조끼 */
+  /* 시츄 두 마리 (처음의 옆모습 모양, 흰 바탕에 갈색 귀와 눈가 무늬)
+   * kind 1: 8kg 큰 아이, 진한 갈색 무늬, 혀를 내밀어요
+   * kind 2: 4kg 작은 아이, 연갈색 무늬, 노랑·분홍 줄무늬 조끼 */
   function dog(x, y, kind, coat, h, lv, dir, size) {
     const brown = kind === 1 ? "sc-shih-b" : "sc-shih-g";
-    const outfit = kind === 2
-      ? `<path class="sc-vest" d="M-15,-10 C-8,-19 10,-19 15,-10 L15,2 C6,5 -8,5 -15,2z"/><path class="sc-vest-stripe" d="M-14,-6 h29 M-15,-1 h30"/><path class="sc-harness" d="M7,-14 C10,-6 10,0 8,4 L12,4 C14,0 14,-7 11,-14z"/><circle class="sc-tag" cx="11" cy="-2" r="2"/>`
-      : on(h, lv, "dogwear", 2) ? `<path class="${coat}" d="M-16,-9 C-10,-19 10,-19 15,-9 L15,1 C6,4 -8,4 -16,1z"/><path class="sc-quilt" d="M-13,-4 h26"/>` : "";
-    const neck = lv >= 4
-      ? `<path class="sc-fire" d="M7,-6 C12,-2 22,-2 27,-6 L26,0 C21,3 12,3 7,0z"/>`
-      : kind === 1 ? `<path class="sc-chain" d="M8,-5 C13,-1 21,-1 26,-5"/><circle class="sc-tag-w" cx="25" cy="-2" r="2.6"/>` : "";
-    const tongue = kind === 1 ? `<path class="sc-tongue" d="M14.5,-8 q2.5,6 5,0 q-2.5,1 -5,0z"/>` : (lv >= 1 ? `<path class="sc-tongue" d="M16,-8 q1,3 2,0z"/>` : "");
+    const wear = kind === 2
+      ? `<path class="sc-vest" d="M-16,-6 q16,-14 30,0 v8 h-30z"/><path class="sc-vest-stripe" d="M-15,-2 h28 M-16,2 h30"/>`
+      : on(h, lv, "dogwear", 2) ? `<path class="${coat}" d="M-16,-6 q16,-14 30,0 v8 h-30z"/>` : "";
+    const scarf = lv >= 4 ? `<path class="sc-fire" d="M10,-4 q10,4 20,-2 l-2,8 q-8,3 -16,0z"/>` : "";
+    const tongue = kind === 1 ? `<path class="sc-tongue" d="M29,-7 q1,6 -3,6 q-1,-3 0,-6z"/>` : "";
     return `<g transform="translate(${x} ${y}) scale(${dir * size} ${size})">
-      <ellipse class="sc-shadow" cx="0" cy="13" rx="24" ry="4"/>
-      <path class="wag" d="M-16,-8 C-30,-14 -26,-30 -14,-24 C-20,-20 -20,-14 -14,-12" style="fill:var(--s-shih-g)"/>
-      <path class="sc-shih-w" d="M-21,-4 C-21,-15 -6,-17 8,-15 C15,-14 18,-8 18,-2 L19,11 C14,12 12,10 10,12 C6,10 2,12 -2,11 C-6,12 -10,10 -14,12 C-17,10 -20,12 -22,11z"/>
-      <ellipse class="${brown}" cx="-6" cy="-11" rx="9" ry="5" opacity=".85"/>
-      <ellipse class="sc-shoe" cx="-12" cy="12.5" rx="3.4" ry="1.6" opacity=".3"/><ellipse class="sc-shoe" cx="10" cy="12.5" rx="3.4" ry="1.6" opacity=".3"/>
-      ${outfit}
-      <path class="${brown}" d="M5,-26 C-1,-24 -2,-10 3,-5 C7,-7 9,-16 8,-24z"/>
-      <circle class="sc-shih-w" cx="17" cy="-18" r="13"/>
-      <ellipse class="${brown}" cx="11.5" cy="-20" rx="5.5" ry="4.6"/><ellipse class="${brown}" cx="22.5" cy="-20" rx="5.5" ry="4.6"/>
-      <path class="${brown}" d="M7,-27 C10,-31 14,-31 15,-29 C13,-27 10,-26 7,-27z M27,-27 C24,-31 20,-31 19,-29 C21,-27 24,-26 27,-27z"/>
-      <path class="${brown}" d="M29,-26 C35,-22 35,-10 30,-5 C27,-8 26,-17 27,-24z"/>
-      <path class="sc-shih-w" d="M9,-12 C9,-5 13,-2 17,-2 C21,-2 25,-5 25,-12 C21,-14 13,-14 9,-12z"/>
-      <circle class="sc-ink" cx="12" cy="-19.5" r="2.8"/><circle class="sc-eye-hl" cx="12.9" cy="-20.5" r=".9"/>
-      <circle class="sc-ink" cx="22" cy="-19.5" r="2.8"/><circle class="sc-eye-hl" cx="22.9" cy="-20.5" r=".9"/>
-      <ellipse class="sc-ink" cx="17" cy="-13.5" rx="2.8" ry="2"/>
-      <path class="sc-mouth" d="M14.5,-9.5 q2.5,1.8 5,0"/>
-      ${tongue}${neck}
+      <ellipse class="sc-shadow" cx="0" cy="12" rx="22" ry="4"/>
+      <path class="wag" d="M-18,-2 q-12,-10 -6,-18" stroke-width="6" stroke-linecap="round" style="stroke:var(--s-shih-w);fill:none"/>
+      <ellipse class="sc-shih-w" cx="0" cy="0" rx="20" ry="12"/>
+      <ellipse class="${brown}" cx="-7" cy="-5" rx="8" ry="5" opacity=".8"/>
+      <rect class="sc-shih-w" x="-14" y="4" width="6" height="10" rx="3"/><rect class="sc-shih-w" x="8" y="4" width="6" height="10" rx="3"/>
+      ${wear}
+      <circle class="sc-shih-w" cx="20" cy="-12" r="12"/>
+      <ellipse class="${brown}" cx="24" cy="-14" rx="4.4" ry="3.8"/>
+      <ellipse class="${brown}" cx="12" cy="-14" rx="5" ry="9"/>
+      <circle class="sc-ink" cx="24" cy="-14" r="1.9"/><circle class="sc-eye-hl" cx="24.6" cy="-14.7" r=".6"/>
+      <circle class="sc-ink" cx="31" cy="-10" r="2.4"/>
+      <circle class="sc-cheek" cx="24" cy="-7" r="2.2"/>
+      ${tongue}${scarf}
     </g>`;
   }
   function tent(lv, warm) {
@@ -224,8 +218,8 @@
       ${warm ? '<ellipse class="sc-glow" cx="252" cy="268" rx="110" ry="34"/>' : ""}
       ${tent(lv, warm)}${flag}${trash}${lantern}${fire}${table}${cooler}
       ${dogHouse}${ground}${bed}${bowls}${stake}
-      ${dog(166, 312, 1, "sc-coat-2", h, lv, 1, 1.18)}
-      ${dog(252, 318, 2, "sc-coat-1", h, lv, -1, 0.86)}
+      ${dog(166, 314, 1, "sc-coat-2", h, lv, 1, 1.15)}
+      ${dog(250, 318, 2, "sc-coat-1", h, lv, -1, 0.82)}
       ${fence}${bone}
       ${chairs || lv === 0 ? person(418, 290, 1, "sc-coat-3", h, lv, 1) + person(512, 290, 2, "sc-coat-1", h, lv, -1) : ""}
     </svg>`;
