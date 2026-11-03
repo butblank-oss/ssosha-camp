@@ -18,6 +18,9 @@ window.SOSHA_CATEGORIES = [
 window.SOSHA_FIRST_TRIP = {
   date: "2026년 11월 초 (평일)",
   place: "집에서 10분 거리 캠핑장",
+  dateISO: "2026-11-01",
+  weather: "맑음",
+  gear: ["tent", "mat", "firepit", "gloves", "table1", "chairs", "cookset", "burner", "moodlamp"],
   site: 50000,
   spent: [
     { name: "원터치 텐트 (로티캠프 COM4 컴포트)", where: "고릴라캠핑", price: 59000, cond: "신품" },

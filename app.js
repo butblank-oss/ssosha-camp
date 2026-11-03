@@ -367,7 +367,7 @@
           ${TRIP.spent.map((x) => `<span>${esc(x.name.replace(/ \(.*\)/, ""))} ${won(x.price)}, ${esc(x.where)} ${esc(x.cond)}</span>`).join("")}
         </div>
       </div>
-      <div class="lesson-head"><h3>배운 점과 다음엔 이렇게</h3><span class="lesson-score">해결 ${solved} / ${TRIP.lessons.length}</span></div>
+      <div class="lesson-head"><h3>첫 캠핑에서 배운 점</h3><span class="lesson-score">해결 ${solved} / ${TRIP.lessons.length}</span></div>
       <p class="hint">장비를 사서 구매 완료로 옮기면 그 교훈이 해결로 바뀌어요. 장비 이름을 누르면 추천 제품을 볼 수 있어요.</p>
       <div class="lessons">${TRIP.lessons.map((l, i) => {
         const done = (l.items || []).every(haveIt);

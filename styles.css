@@ -465,3 +465,46 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .sync-banner { margin-top: 16px; padding: 10px 14px; border-radius: 12px; background: var(--tint); color: var(--teal-700); font-size: 14px; font-weight: 600; }
 .sync-banner[data-kind="warn"] { background: var(--accent-amber-soft); color: var(--accent-amber-foreground); }
 .sync-banner[data-kind="ro"] { background: var(--muted); color: var(--muted-foreground); }
+
+/* ---------- 다녀온 캠핑 목록 ---------- */
+#trips { margin-top: 8px; }
+#trips .section-head { align-items: center; }
+.trip-table { border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.trip-th, .trip-line { display: grid; grid-template-columns: 110px minmax(0, 1fr) 80px 100px 24px; gap: 12px; align-items: center; }
+.trip-th { padding: 10px 18px; background: var(--muted); font-size: 12px; font-weight: 600; color: var(--muted-foreground); }
+.trip-rows { list-style: none; margin: 0; padding: 0; }
+.trip-row { border-top: 1px solid var(--border); }
+.trip-row:first-child { border-top: 0; }
+.trip-line { width: 100%; padding: 14px 18px; border: 0; background: transparent; color: var(--foreground); font: inherit; text-align: left; cursor: pointer; transition: background-color .15s var(--ease); }
+.trip-line:hover { background: var(--muted); }
+.trip-row.open .trip-line { background: var(--tint); }
+.tl-date { font-size: 14px; color: var(--muted-foreground); }
+.tl-place { display: grid; min-width: 0; }
+.tl-place strong { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tl-place small { font-size: 13px; color: var(--muted-foreground); }
+.tl-gear { justify-self: start; padding: 2px 10px; border-radius: 999px; background: var(--mint); color: var(--teal-700); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.tl-cost { font-size: 14px; font-weight: 700; text-align: right; }
+.tl-caret { color: var(--subtle-foreground); transition: transform .2s var(--ease); }
+.trip-row.open .tl-caret { transform: rotate(180deg); }
+.trip-detail { display: grid; gap: 14px; padding: 4px 18px 18px; background: var(--tint); }
+.td-block { display: grid; gap: 6px; }
+.td-block > strong { font-size: 13px; color: var(--teal-700); }
+.gear-groups { display: grid; gap: 8px; }
+.gear-group { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 8px; align-items: start; }
+.gear-group > span { font-size: 12px; font-weight: 600; color: var(--muted-foreground); padding-top: 4px; }
+.gear-group > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.gear-chip { padding: 3px 10px; border-radius: 999px; background: var(--card); border: 1px solid var(--border); font-size: 13px; }
+.gear-picks { display: flex; flex-wrap: wrap; gap: 6px; }
+.gear-pick { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border: 1px solid var(--border); border-radius: 999px; font-size: 13px; cursor: pointer; }
+.gear-pick:has(input:checked) { background: var(--mint); border-color: var(--mint); color: var(--teal-700); font-weight: 600; }
+.gear-pick input { width: 16px; height: 16px; accent-color: var(--teal-700); }
+.gear-more summary { cursor: pointer; font-size: 14px; font-weight: 600; color: var(--teal-700); padding: 6px 0; }
+.gear-more .gear-groups { margin-top: 8px; }
+#log { margin-top: 32px; }
+@media (max-width: 640px) {
+  .trip-th { display: none; }
+  .trip-line { grid-template-columns: minmax(0, 1fr) auto 20px; grid-template-areas: "place cost caret" "date gear caret"; row-gap: 4px; }
+  .tl-place { grid-area: place; } .tl-date { grid-area: date; font-size: 12px; } .tl-gear { grid-area: gear; justify-self: end; } .tl-cost { grid-area: cost; } .tl-caret { grid-area: caret; }
+  .gear-group { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+}
+.btn { white-space: nowrap; }
