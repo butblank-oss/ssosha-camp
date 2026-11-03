@@ -995,10 +995,12 @@ window.SOSHA_PICKS = {
    "why": "화구가 넓고 화력(6,480kcal/h 표기)이 세서 그리들이나 큰 냄비에 좋아요. 대신 1.2kg으로 무거워요.",
    "url": "https://prod.danawa.com/info/?pcode=16882496",
    "pick": false
-  },
+  }
+ ],
+ "gas": [
   {
-   "brand": "",
-   "model": "[함께 살 가스] 맥선 맥스 캠핑가스 230g (4개)",
+   "brand": "맥선",
+   "model": "맥스 캠핑가스 230g (4개)",
    "price": 10440,
    "weightKg": 1.24,
    "packedCm": [
@@ -1009,11 +1011,11 @@ window.SOSHA_PICKS = {
    "est": true,
    "why": "이소가스 표기에 230g 4개입이라 가볍게 챙기기 좋아요. 이소부탄 혼합 비율은 상세에서 확인이 필요해요. 프로판 혼합 여부를 캔에서 확인하세요.",
    "url": "https://prod.danawa.com/info/?pcode=2390902",
-   "pick": false
+   "pick": true
   },
   {
-   "brand": "",
-   "model": "[함께 살 가스] 맥선 맥스 이소 부탄 가스 450g (4개)",
+   "brand": "맥선",
+   "model": "맥스 이소 부탄 가스 450g (4개)",
    "price": 16470,
    "weightKg": 2.2,
    "packedCm": [
