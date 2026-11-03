@@ -532,3 +532,47 @@ dialog[open] { animation: sheet .25s var(--ease); }
   .list { max-height: calc(100dvh - 260px); }
 }
 .card, .col-head { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+
+/* ---------- D-day 칩 ---------- */
+.dday-chip { justify-self: end; display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px 0 4px; border: 0; border-radius: 999px; background: var(--tint); color: var(--teal-700); font-size: 13px; font-weight: 600; cursor: pointer; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.dday-chip b { padding: 4px 10px; border-radius: 999px; background: var(--teal-700); color: var(--card); font-size: 12px; }
+
+/* ---------- 다음 캠핑 ---------- */
+#plans { display: grid; gap: 12px; margin-top: 8px; margin-bottom: 24px; }
+.plan-card { display: grid; gap: 14px; border-color: color-mix(in srgb, var(--teal-300) 55%, var(--border)); }
+.plan-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.plan-dday { display: grid; place-items: center; min-width: 76px; height: 56px; padding: 0 12px; border-radius: 14px; background: var(--foreground); color: var(--card); font-size: 22px; font-weight: 900; font-variant-numeric: tabular-nums; }
+.plan-dday.soon { background: var(--teal-700); }
+.plan-title { flex: 1; min-width: 160px; display: grid; }
+.plan-title strong { font-size: 18px; }
+.plan-acts { display: flex; gap: 6px; }
+.plan-progress .meter-bar i { background: linear-gradient(90deg, var(--teal-700), var(--teal-300)); }
+.plan-warn { display: grid; gap: 2px; padding: 10px 14px; border-radius: 12px; background: var(--accent-amber-soft); color: var(--accent-amber-foreground); font-size: 13px; }
+.plan-warn strong { color: var(--foreground); font-size: 14px; }
+.gear-pick .x { display: grid; place-items: center; width: 22px; height: 22px; margin-right: -6px; border: 0; border-radius: 999px; background: transparent; color: var(--subtle-foreground); font-size: 16px; line-height: 1; cursor: pointer; }
+.gear-pick .x:hover { background: var(--muted-2); color: var(--foreground); }
+
+/* ---------- 캠핑장 ---------- */
+#campsRoot { margin-top: 8px; }
+.camp-filter { display: grid; gap: 12px; }
+.camp-filter .search { box-shadow: 0 0 0 1px var(--border); }
+.camp-filter .chip[aria-pressed="false"] { background: var(--card); }
+.camp-count { margin: 16px 0 8px; }
+.camp-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--border); border-radius: var(--radius); background: var(--card); overflow: hidden; }
+.camp-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px; padding: 18px; border-top: 1px solid var(--border); }
+.camp-row:first-child { border-top: 0; }
+.camp-main { display: grid; gap: 8px; min-width: 0; }
+.camp-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.camp-top strong { font-size: 17px; }
+.camp-intro { font-size: 14px; }
+.camp-actions { display: grid; gap: 6px; align-content: start; }
+.camp-more { display: flex; margin: 12px auto 0; }
+.camp-setup { display: grid; gap: 12px; }
+.camp-setup h3 { font-size: 18px; font-weight: 800; }
+.camp-setup ol { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 15px; }
+.camp-setup code { padding: 1px 6px; border-radius: 6px; background: var(--muted); font-size: 13px; }
+@media (max-width: 640px) {
+  .camp-row { grid-template-columns: minmax(0, 1fr); }
+  .camp-actions { grid-auto-flow: column; justify-content: start; }
+  .dday-chip { display: none; }
+}

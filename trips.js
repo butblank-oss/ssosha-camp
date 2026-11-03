@@ -112,7 +112,7 @@
   }
 
   /* ---------- 입력 폼 ---------- */
-  let editingId = null, photos = [], gear = new Set();
+  let editingId = null, photos = [], gear = new Set(), onSaved = null;
   function gearPicker() {
     const all = items().filter((i) => i.id !== "foodmenu");
     const mine = all.filter(have), others = all.filter((i) => !have(i));
@@ -124,11 +124,12 @@
       ${others.length ? `<details class="gear-more"><summary>빌렸거나 아직 보드에 '사야 해요'로 있는 장비도 넣기 (${others.length}개)</summary><div class="gear-groups">${byCat(others)}</div></details>` : ""}
     </div>`;
   }
-  function openForm(id) {
+  function openForm(id, prefill, done) {
     const dlg = document.getElementById("tripDlg");
     editingId = id;
+    onSaved = done || null;
     const t = id == null
-      ? { date: new Date().toISOString().slice(0, 10), place: "", link: "", cost: "", weather: "", temp: "", dog: false, notes: "", needs: [], photos: [], gear: items().filter(have).map((i) => i.id) }
+      ? Object.assign({ date: new Date().toISOString().slice(0, 10), place: "", link: "", cost: "", weather: "", temp: "", dog: false, notes: "", needs: [], photos: [], gear: items().filter(have).map((i) => i.id) }, prefill || {})
       : trips().find((x) => x.id === id);
     photos = (t.photos || []).slice();
     gear = new Set(t.gear || []);
@@ -191,6 +192,7 @@
         photos: photos.slice(), gear: [...gear],
       };
       if (prev) arr[arr.indexOf(prev)] = t; else arr.unshift(t);
+      if (onSaved) { try { onSaved(t); } catch { /* 계획 정리 실패는 무시해요 */ } onSaved = null; }
       open.add(t.id);
       try { api().save(); localStorage.setItem("sosha-camp-v1", JSON.stringify(api().state)); }
       catch { t.photos = t.photos.filter((p) => !String(p).startsWith("data:")); api().save(); const n = document.getElementById("toast"); if (n) { n.textContent = "저장 공간이 부족해서 사진은 빼고 저장했어요"; n.classList.add("show"); setTimeout(() => n.classList.remove("show"), 3000); } }
@@ -203,6 +205,7 @@
     TRIP_XP,
     render,
     init() { bindForm(); render(); },
+    openNew: (prefill, done) => openForm(null, prefill, done),
     list: () => (api() ? trips() : []),
   };
 })();

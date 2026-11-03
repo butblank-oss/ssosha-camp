@@ -11,3 +11,10 @@
 
 파일: `data.js`(품목), `research.js`(제품 조사), `game.js`(성장 시스템), `pack.js`(적재), `app.js`(화면).
 기록은 브라우저 localStorage에 저장돼요.
+
+## 다음 캠핑과 캠핑장 찾기
+- **다음 캠핑**(기록 탭 맨 위): 날짜와 캠핑장을 정하면 D-day와 짐 체크리스트가 생겨요. '다녀왔어요'를 누르면 챙긴 장비로 캠핑 기록이 만들어져요.
+- **캠핑장 탭**: 고캠핑 공공데이터로 전국 캠핑장을 반려견 동반, 전기, 지역, 업종으로 걸러 봐요.
+  1. [공공데이터포털 고캠핑 정보 조회서비스](https://www.data.go.kr/data/15101933/openapi.do)에서 활용신청
+  2. 일반 인증키(Decoding)를 레포 Settings → Secrets → Actions에 `GOCAMPING_KEY`로 저장
+  3. Actions → '캠핑장 목록 받기' → Run workflow (이후 매주 월요일 자동 갱신)

@@ -457,12 +457,16 @@
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }
       renderBoard(); renderUsed();
       if (window.SoshaTrips) window.SoshaTrips.render();
+      if (window.SoshaPlans) window.SoshaPlans.render();
+      if (window.SoshaCamps) window.SoshaCamps.render();
       if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(allItems(), state, save);
     },
   };
   window.SOSHA_REFRESH = () => { renderBoard(); renderUsed(); };
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
   if (window.SoshaTrips) window.SoshaTrips.init();
+  if (window.SoshaPlans) window.SoshaPlans.init();
+  if (window.SoshaCamps) window.SoshaCamps.init();
   const h = location.hash.slice(1);
-  if (["board", "guide", "ai", "pack", "market", "log"].includes(h)) showTab(h);
+  if (["board", "guide", "camps", "ai", "pack", "market", "log"].includes(h)) showTab(h);
 })();
