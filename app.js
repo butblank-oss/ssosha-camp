@@ -87,12 +87,22 @@
         ${paid ? `<span class="price">${won(it.purchase.price)}${it.purchase.where ? ", " + esc(it.purchase.where) : ""}</span>` : ""}
         ${!paid && (it.status === "todo" || it.status === "research") && window.SoshaGame ? `<span class="xp-tag">+${window.SoshaGame.xpFor(it)} XP</span>` : ""}
         ${it.status === "todo" || it.status === "research" ? `<button class="quick-move" data-move="${esc(it.id)}" aria-label="${esc(it.name)} 구매 완료로 옮기기">샀어요</button>` : ""}
+        <button class="move-menu" data-menu="${esc(it.id)}" aria-label="${esc(it.name)} 다른 칸으로 옮기기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg></button>
       </div>
     </article>`;
   }
   let sortables = [];
+  let mobileCol = (() => { try { return localStorage.getItem("sosha-col") || "todo"; } catch { return "todo"; } })();
   function renderBoard() {
     const board = $("#board");
+    const tabs = $("#colTabs");
+    if (tabs) {
+      tabs.innerHTML = COLS.map((c) => {
+        const n = allItems().filter((i) => i.status === c.id && visible(i)).length;
+        return `<button role="tab" class="col-tab" data-coltab="${c.id}" aria-selected="${c.id === mobileCol}">${c.name}<b>${n}</b></button>`;
+      }).join("");
+    }
+    board.dataset.active = mobileCol;
     board.innerHTML = COLS.map((c) => {
       const all = sorted(c.id);
       const vis = all.filter(visible);
@@ -109,12 +119,28 @@
       board.querySelectorAll(".list").forEach((list) => {
         sortables.push(new Sortable(list, {
           group: "board", animation: 180, ghostClass: "ghost", dragClass: "drag",
-          delay: 150, delayOnTouchOnly: true, filter: ".empty, .quick-move", preventOnFilter: false, forceFallback: true, fallbackOnBody: true, fallbackTolerance: 4, scroll: true, bubbleScroll: true, scrollSensitivity: 80,
+          delay: 150, delayOnTouchOnly: true, filter: ".empty, .quick-move, .move-menu", preventOnFilter: false, forceFallback: true, fallbackOnBody: true, fallbackTolerance: 4, scroll: true, bubbleScroll: true, scrollSensitivity: 80,
           onEnd: syncFromDOM,
         }));
       });
     }
     renderStats();
+  }
+  function moveTo(id, status) {
+    setField(id, { status });
+    state.order[status] = [id].concat((state.order[status] || []).filter((x) => x !== id));
+    save(); renderBoard(); renderUsed();
+    const c = COLS.find((x) => x.id === status);
+    const t = $("#toast"); if (t) { t.textContent = `'${c.name}'(으)로 옮겼어요`; t.classList.add("show"); clearTimeout(moveTo._t); moveTo._t = setTimeout(() => t.classList.remove("show"), 2200); }
+  }
+  function openMove(id) {
+    const it = getItem(id); const dlg = $("#moveDlg"); if (!it || !dlg) return;
+    $("#moveTitle").textContent = it.name;
+    $("#moveBody").innerHTML = COLS.map((c) => `<button type="button" class="move-opt" data-to="${c.id}" ${c.id === it.status ? "disabled" : ""}>${c.name}${c.id === it.status ? " (지금)" : ""}</button>`).join("") +
+      `<button type="button" class="move-opt ghost-opt" data-detail="1">자세히 보기, 구매 기록 남기기</button>`;
+    $("#moveBody").querySelectorAll("[data-to]").forEach((b) => (b.onclick = () => { dlg.close(); moveTo(id, b.dataset.to); }));
+    $("#moveBody").querySelector("[data-detail]").onclick = () => { dlg.close(); openItem(id); };
+    dlg.showModal();
   }
   function syncFromDOM() {
     document.querySelectorAll("#board .list").forEach((list) => {
@@ -394,6 +420,8 @@
 
   /* ---------- 이벤트 ---------- */
   $("#board").addEventListener("click", (e) => {
+    const menu = e.target.closest("[data-menu]");
+    if (menu) { e.stopPropagation(); openMove(menu.dataset.menu); return; }
     const mv = e.target.closest("[data-move]");
     if (mv) {
       e.stopPropagation();
@@ -409,6 +437,12 @@
     const c = e.target.closest(".card");
     if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openItem(c.dataset.id); }
   });
+  const colTabs = $("#colTabs");
+  if (colTabs) colTabs.onclick = (e) => {
+    const b = e.target.closest("[data-coltab]"); if (!b) return;
+    mobileCol = b.dataset.coltab; try { localStorage.setItem("sosha-col", mobileCol); } catch { /* 저장 불가 */ }
+    renderBoard();
+  };
   $("#q").oninput = (e) => { filter.q = e.target.value.trim(); renderBoard(); };
   const topQ = $("#topQ");
   if (topQ) topQ.oninput = (e) => { filter.q = e.target.value.trim(); $("#q").value = e.target.value; showTab("board"); renderBoard(); };

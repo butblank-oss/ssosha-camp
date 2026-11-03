@@ -587,3 +587,29 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .badge-card { grid-column: 1 / -1; display: grid; gap: 10px; padding: 18px 24px; }
 .badge-card .badges { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
 @media (max-width: 400px) { .badge-card .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- 모바일 보드: 칸을 탭으로 바꿔 보기 ---------- */
+.col-tabs { display: none; }
+.move-menu { display: none; }
+@media (max-width: 640px) {
+  .col-tabs { position: sticky; top: calc(62px + env(safe-area-inset-top, 0px)); z-index: 20; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; margin: 0 -16px 10px; padding: 8px 16px; background: var(--background); border-bottom: 1px solid var(--border); }
+  .col-tab { display: grid; justify-items: center; gap: 2px; min-height: 52px; padding: 6px 2px; border: 0; border-radius: 10px; background: transparent; color: var(--muted-foreground); font-size: 12px; font-weight: 600; cursor: pointer; }
+  .col-tab b { font-size: 17px; font-weight: 800; color: var(--foreground); font-variant-numeric: tabular-nums; }
+  .col-tab[aria-selected="true"] { background: var(--card); color: var(--teal-700); box-shadow: 0 0 0 1.5px var(--teal-300); }
+  .col-tab[aria-selected="true"] b { color: var(--teal-700); }
+  .board { display: block; overflow: visible; }
+  .board .col { display: none; padding: 0; border: 0; background: transparent; min-height: 0; }
+  .board[data-active="todo"] .col[data-col="todo"], .board[data-active="research"] .col[data-col="research"],
+  .board[data-active="bought"] .col[data-col="bought"], .board[data-active="owned"] .col[data-col="owned"] { display: block; }
+  .board .col-head { display: none; }
+  .board .list { max-height: none; overflow: visible; }
+  .card { padding: 14px 14px 12px; }
+  .move-menu { display: grid; place-items: center; width: 36px; height: 32px; margin-left: 2px; border: 1px solid var(--border); border-radius: 999px; background: var(--card); color: var(--muted-foreground); cursor: pointer; }
+  .move-menu .ico { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+  dialog.sheet { margin: auto auto 0; width: 100%; max-width: 100%; border-radius: 20px 20px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+}
+.move-body { display: grid; gap: 8px; }
+.move-opt { min-height: 52px; padding: 0 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--card); color: var(--foreground); font-size: 16px; font-weight: 600; text-align: left; cursor: pointer; }
+.move-opt:hover:not(:disabled) { background: var(--tint); border-color: var(--teal-300); }
+.move-opt:disabled { color: var(--subtle-foreground); background: var(--muted); cursor: default; }
+.move-opt.ghost-opt { border-style: dashed; color: var(--teal-700); }
