@@ -29,7 +29,7 @@
   --shadow-sm: 0 1px 2px rgb(0 0 0 / .04);
   --shadow-md: 0 4px 16px rgb(25 31 40 / .08);
   --shadow-lg: 0 16px 40px rgb(25 31 40 / .16);
-  --font: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  --font: "Pretendard Variable", Pretendard, "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
   --ease: cubic-bezier(.2, .8, .2, 1);
   --site-dg: #C2410C; --site-nv: #15803D; --site-cf: #166534; --site-dn: #1D4ED8;
   --tk-0: #86EFAC; --tk-1: #7DD3FC; --tk-2: #FCD34D; --tk-3: #F9A8D4;
@@ -58,6 +58,16 @@
     color-scheme: dark;
   }
 }
+:root[data-theme="dark"] {
+    --background: #101317; --card: #1B1F25; --foreground: #ECEEF1; --muted: #22272E; --muted-2: #2C323A;
+    --muted-foreground: #A1A9B3; --subtle-foreground: #8A939E; --border: #2C323A; --input: #3A414B;
+    --primary: #22C55E; --primary-hover: #4ADE80; --primary-foreground: #052E14; --primary-soft: #14361F; --primary-soft-foreground: #86EFAC;
+    --accent-amber: #FBBF24; --accent-amber-soft: #3A2A0D; --accent-amber-foreground: #FCD34D; --accent-sky-soft: #0C2A3B; --accent-sky-foreground: #7DD3FC;
+    --accent-rose-soft: #3B1220; --accent-rose-foreground: #FDA4AF; --ring: #4ADE80;
+    --site-dg: #FB923C; --site-nv: #4ADE80; --site-cf: #86EFAC; --site-dn: #93C5FD;
+    --shadow-md: 0 4px 16px rgb(0 0 0 / .4); --shadow-lg: 0 16px 40px rgb(0 0 0 / .5);
+    color-scheme: dark;
+}
 
 *, *::before, *::after { box-sizing: border-box; }
 html, body { overflow-x: clip; }
@@ -79,7 +89,7 @@ button, input, select, textarea { font: inherit; letter-spacing: inherit; }
 .num { font-variant-numeric: tabular-nums; }
 
 /* ---------- 상단 바 ---------- */
-.top { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--border); }
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 50; background: color-mix(in srgb, var(--card) 88%, transparent); backdrop-filter: saturate(180%) blur(16px); border-bottom: 1px solid var(--border); }
 .top-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap; min-height: 64px; padding-block: 8px; }
 .brand { display: flex; align-items: center; gap: 10px; }
 .brand .ico-lg { width: 28px; height: 28px; color: var(--primary); }
@@ -347,3 +357,21 @@ dialog[open] { animation: sheet .25s var(--ease); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
 }
+
+/* ---------- AI 캠퍼 ---------- */
+.adv-wrap { margin-top: 24px; }
+.adv, .adv-off { display: grid; gap: 16px; max-width: 820px; margin-inline: auto; }
+.adv h2, .adv-off h2 { font-size: 22px; font-weight: 800; }
+.adv-off p { font-size: 15px; }
+.adv-off .btn { justify-self: start; }
+.adv-quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.adv-quick .chip { white-space: normal; text-align: left; min-height: 36px; padding: 6px 14px; line-height: 1.4; }
+.adv-quick .chip:disabled { opacity: .5; cursor: not-allowed; }
+.adv-log { display: grid; gap: 10px; align-content: start; min-height: 240px; max-height: 56vh; overflow-y: auto; padding: 4px; }
+.msg { max-width: 88%; padding: 12px 14px; border-radius: 16px; font-size: 15px; line-height: 1.6; }
+.msg ul { margin: 6px 0; padding-left: 20px; display: grid; gap: 4px; }
+.msg.user { justify-self: end; background: var(--primary); color: var(--primary-foreground); border-bottom-right-radius: 6px; }
+.msg.assistant { justify-self: start; background: var(--muted); border-bottom-left-radius: 6px; }
+.thinking { color: var(--muted-foreground); }
+.adv-form { display: grid; gap: 8px; }
+.adv-actions { display: flex; justify-content: flex-end; gap: 8px; }

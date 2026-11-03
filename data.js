@@ -307,3 +307,6 @@ window.SOSHA_CARS = [
   { id: "f60", name: "미니 컨트리맨 F60 (2017~2023)", w: 100, d: 80, h: 45, dFolded: 150, est: true, liters: 450, litersFolded: 1390 },
   { id: "custom", name: "직접 입력", w: 100, d: 80, h: 50, dFolded: 150 },
 ];
+
+/* Claude 아티팩트 버전 (AI 베테랑 캠퍼 조언이 되는 곳) */
+window.SOSHA_ARTIFACT_URL = "https://claude.ai/artifact/BRGwWiaJGFbYht4XDRGNW5";

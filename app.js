@@ -225,7 +225,10 @@
     editing = null;
   });
   $("#delBtn").onclick = () => {
-    if (!editing || !confirm("이 품목을 삭제할까요?")) return;
+    if (!editing) return;
+    const b = $("#delBtn");
+    if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 삭제"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "삭제"; }, 3000); return; }
+    b.dataset.armed = ""; b.textContent = "삭제";
     state.custom = state.custom.filter((c) => c.id !== editing.id);
     editing = null; save(); dlg.close(); renderBoard(); renderUsed();
   };
@@ -382,11 +385,22 @@
   $("#priSel").onchange = (e) => { filter.pri = +e.target.value; renderBoard(); };
   $("#dogToggle").onchange = (e) => { filter.dog = e.target.checked; renderBoard(); };
   $("#addBtn").onclick = () => openItem(null);
-  $("#exportBtn").onclick = () => {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  function note(msg) {
+    const t = $("#toast"); if (!t) return;
+    t.textContent = msg; t.classList.add("show");
+    clearTimeout(note._t); note._t = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+  $("#exportBtn").onclick = async () => {
+    const filename = `sosha-camp-${new Date().toISOString().slice(0, 10)}.json`;
+    const data = JSON.stringify(state, null, 2);
+    if (window.claude && typeof window.claude.use === "function") {
+      const dl = await window.claude.use("downloads").catch(() => null);
+      if (dl) { try { await dl.save({ filename, data }); note("백업 파일을 저장했어요"); } catch { note("저장을 취소했어요"); } return; }
+    }
+    const blob = new Blob([data], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `sosha-camp-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = filename;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   };
@@ -395,17 +409,19 @@
     try {
       const data = JSON.parse(await f.text());
       state = Object.assign({ items: {}, custom: [], order: {} }, data);
-      save(); renderBoard(); renderUsed(); alert("불러왔어요!");
-    } catch { alert("파일을 읽지 못했어요."); }
+      save(); renderBoard(); renderUsed(); note("백업을 불러왔어요");
+    } catch { note("파일을 읽지 못했어요. sosha-camp 백업 파일인지 확인해 주세요."); }
     e.target.value = "";
   };
-  $("#resetBtn").onclick = () => {
-    if (!confirm("모든 기록을 지우고 처음 상태로 되돌릴까요?")) return;
+  $("#resetBtn").onclick = (e) => {
+    const b = e.currentTarget;
+    if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 모두 지워요"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "처음 상태로 되돌리기"; }, 3000); return; }
+    b.dataset.armed = ""; b.textContent = "처음 상태로 되돌리기";
     state = { items: {}, custom: [], order: {} }; save(); renderBoard(); renderUsed();
   };
 
   window.SOSHA = { allItems, save, get state() { return state; } };
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
   const h = location.hash.slice(1);
-  if (["board", "guide", "pack", "market", "log"].includes(h)) showTab(h);
+  if (["board", "guide", "ai", "pack", "market", "log"].includes(h)) showTab(h);
 })();
