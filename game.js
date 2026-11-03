@@ -120,7 +120,7 @@
     </g>`;
   }
   /* 시츄 두 마리 (처음의 옆모습 모양, 흰 바탕에 갈색 귀와 눈가 무늬)
-   * kind 1: 8kg 큰 아이, 진한 갈색 무늬, 혀를 내밀어요
+   * kind 1: 8kg 큰 아이, 진한 갈색 무늬
    * kind 2: 4kg 작은 아이, 연갈색 무늬, 노랑·분홍 줄무늬 조끼 */
   function dog(x, y, kind, coat, h, lv, dir, size) {
     const brown = kind === 1 ? "sc-shih-b" : "sc-shih-g";
@@ -128,7 +128,6 @@
       ? `<path class="sc-vest" d="M-16,-6 q16,-14 30,0 v8 h-30z"/><path class="sc-vest-stripe" d="M-15,-2 h28 M-16,2 h30"/>`
       : on(h, lv, "dogwear", 2) ? `<path class="${coat}" d="M-16,-6 q16,-14 30,0 v8 h-30z"/>` : "";
     const scarf = lv >= 4 ? `<path class="sc-fire" d="M10,-4 q10,4 20,-2 l-2,8 q-8,3 -16,0z"/>` : "";
-    const tongue = kind === 1 ? `<path class="sc-tongue" d="M29,-7 q1,6 -3,6 q-1,-3 0,-6z"/>` : "";
     return `<g transform="translate(${x} ${y}) scale(${dir * size} ${size})">
       <ellipse class="sc-shadow" cx="0" cy="12" rx="22" ry="4"/>
       <path class="wag" d="M-18,-2 q-12,-10 -6,-18" stroke-width="6" stroke-linecap="round" style="stroke:var(--s-shih-w);fill:none"/>
@@ -142,7 +141,7 @@
       <circle class="sc-ink" cx="24" cy="-14" r="1.9"/><circle class="sc-eye-hl" cx="24.6" cy="-14.7" r=".6"/>
       <circle class="sc-ink" cx="31" cy="-10" r="2.4"/>
       <circle class="sc-cheek" cx="24" cy="-7" r="2.2"/>
-      ${tongue}${scarf}
+      ${scarf}
     </g>`;
   }
   function tent(lv, warm) {
