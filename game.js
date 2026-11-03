@@ -116,6 +116,8 @@
     const cooler = h.has("cooler") ? `<rect class="sc-cooler" x="604" y="290" width="30" height="24" rx="4"/><rect class="sc-star" x="608" y="294" width="22" height="4" rx="2" opacity=".6"/>` : "";
     const bed = h.has("dogbed") ? `<ellipse class="sc-cushion" cx="196" cy="326" rx="70" ry="12"/>` : "";
     const stake = h.has("dogleash") ? `<rect class="sc-metal" x="270" y="318" width="4" height="16"/><path class="sc-leash" d="M168,316 q50,18 104,6"/><path class="sc-leash" d="M228,318 q24,12 44,4"/>` : "";
+    const garland = lv >= 3 ? `<path class="sc-line" d="M40,200 Q190,240 330,196" style="stroke:var(--s-metal);opacity:.7"/>${[70,110,150,190,230,270,305].map((x, i) => `<circle class="${i % 2 ? "sc-fire-2" : "sc-cushion"} twinkle" style="animation-delay:${i * 0.3}s" cx="${x}" cy="${200 + Math.sin((x - 40) / 290 * Math.PI) * 26 - (x - 40) * 0.0}" r="4"/>`).join("")}` : "";
+    const shoot = lv >= 4 ? `<path class="sc-star" d="M420,40 l60,-18 l-58,22z" opacity=".9"/>` : "";
     const flag = lv >= 4 ? `<line class="sc-line" x1="250" y1="168" x2="250" y2="140"/><path class="sc-fire" d="M250,140 l22,6 -22,6z"/>` : "";
     return `<svg viewBox="0 0 640 360" role="img" aria-label="우리 캠프 장면: 레벨 ${lv + 1}, 장비를 살수록 캠프가 꾸며져요" preserveAspectRatio="xMidYMid slice">
       <defs><linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sc-sky-a"/><stop offset="1" class="sc-sky-b"/></linearGradient></defs>
@@ -124,7 +126,7 @@
       ${trees}
       <path class="sc-ground" d="M0,262 Q160,244 320,256 T640,252 V360 H0z"/>
       <path class="sc-ground-2" d="M0,320 Q200,306 420,318 T640,312 V360 H0z"/>
-      ${tarp}${cable}${boxes}
+      ${shoot}${garland}${tarp}${cable}${boxes}
       ${warm ? '<ellipse class="sc-glow" cx="252" cy="262" rx="90" ry="30"/>' : ""}
       <polygon class="sc-tent" points="160,292 252,176 344,292"/>
       <polygon class="sc-tent-2" points="252,176 344,292 300,292"/>
@@ -138,6 +140,46 @@
 
   /* ---------- 뱃지 아이콘 ---------- */
   const medalSVG = (on) => `<svg viewBox="0 0 24 24" aria-hidden="true"><circle class="m-bg" cx="12" cy="12" r="11"/>${on ? '<path class="m-fg" d="m7.5 12.5 3 3 6-6.5"/>' : '<path class="m-fg" d="M12 8v4M12 16h.01"/>'}</svg>`;
+
+  const LEVEL_FX = [
+    "기본 숲과 텐트, 별 6개로 시작해요.",
+    "별이 늘고 나무가 한 그루 더 자라요.",
+    "두 사람이 털모자(비니)를 써요.",
+    "숲이 우거지고 나무 사이에 전구 줄이 켜져요.",
+    "텐트 위에 깃발이 꽂히고 별똥별이 떨어져요.",
+  ];
+  const ITEM_FX = [
+    ["chairs", "두 사람이 의자에 앉아요"], ["firepit", "모닥불이 타올라요"], ["eblanket", "텐트 문에 따뜻한 불빛이 켜져요"],
+    ["reel", "전기 릴선이 텐트까지 이어져요"], ["mainlamp", "밝은 랜턴 기둥이 서요"], ["headlamp", "머리에 헤드랜턴 불빛이 생겨요"],
+    ["clothes", "두 사람이 패딩을 입어요"], ["dogwear", "강아지들이 옷을 입어요"], ["dogbed", "강아지 방석이 깔려요"],
+    ["dogleash", "리드줄과 고정 말뚝이 생겨요"], ["storage", "폴딩박스가 쌓여요"], ["table1", "테이블에 컵이 놓여요"],
+    ["cooler", "아이스박스가 생겨요"], ["tarp", "타프가 펼쳐져요"],
+  ];
+  function openPreview(g, items) {
+    let dlg = document.getElementById("lvDlg");
+    if (!dlg) {
+      dlg = document.createElement("dialog");
+      dlg.id = "lvDlg"; dlg.setAttribute("aria-labelledby", "lvTitle");
+      document.body.appendChild(dlg);
+    }
+    const all = new Set(ITEM_FX.map(([id]) => id).concat(["moodlamp"]));
+    const nameOf = (id) => (items.find((i) => i.id === id) || {}).name || id;
+    dlg.innerHTML = `<form method="dialog" class="lv-form">
+      <div class="dlg-head"><div><span class="badge b-ok">지금 Lv.${g.lv + 1} ${g.cur.name}</span><h2 id="lvTitle">레벨 미리보기</h2></div>
+        <button class="icon-btn" value="cancel" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+      <div class="dlg-body">
+        <p class="hint">경험치로 레벨이 오르면 장면 전체가 바뀌고, 장비를 사면 그 장비가 장면에 하나씩 생겨요. 아래 그림은 지금 가진 장비 기준이에요.</p>
+        <div class="lv-grid">${LEVELS.map((l, i) => `<div class="lv-step ${i === g.lv ? "now" : ""} ${i < g.lv ? "past" : ""}">
+          <div class="lv-scene">${scene({ h: g.h, lv: i })}</div>
+          <div class="lv-meta"><strong>Lv.${i + 1} ${l.name}</strong><span>${l.xp} XP${i === g.lv ? ", 지금" : i > g.lv ? `, ${l.xp - g.xp} XP 남음` : ", 달성"}</span></div>
+          <p>${LEVEL_FX[i]}</p></div>`).join("")}</div>
+        <h3 class="lv-sub">장비가 바꾸는 장면</h3>
+        <ul class="fx-list">${ITEM_FX.map(([id, fx]) => `<li class="${g.h.has(id) ? "on" : ""}"><span class="badge ${g.h.has(id) ? "b-ok" : ""}">${g.h.has(id) ? "생김" : "아직"}</span><strong>${nameOf(id)}</strong> ${fx}</li>`).join("")}</ul>
+        <h3 class="lv-sub">다 갖추면 이런 모습이에요</h3>
+        <div class="lv-scene lv-final">${scene({ h: all, lv: 4 })}</div>
+      </div></form>`;
+    dlg.showModal();
+  }
 
   let lastLv = null, lastBadges = null;
   function toast(msg) {
@@ -171,9 +213,11 @@
             <div class="stat"><span class="stat-k">필수 남음</span><strong>${stats.must}</strong></div>
             <div class="stat"><span class="stat-k">준비율</span><strong>${stats.pct}</strong></div>
           </div>
+          <button class="btn btn-sm lv-btn" id="lvPreview">레벨 미리보기</button>
           ${g.quest ? `<div class="next-quest"><strong>다음 퀘스트: ${g.quest.name}</strong><span>구매 완료로 옮기면 +${(XP_BY_PRI[g.quest.pri] || 10)} XP, 가격까지 적으면 +5 XP 더 받아요.</span></div>` : ""}
           <div class="badges" aria-label="뱃지">${g.badges.map((b) => `<span class="medal ${b.on ? "on" : ""}" title="${b.need ? "필요: " + b.need.length + "개 품목" : ""}">${medalSVG(b.on)}${b.name}</span>`).join("")}</div>
         </div>`;
+      el.querySelector("#lvPreview").onclick = () => openPreview(g, items);
       const onIds = g.badges.filter((b) => b.on).map((b) => b.id);
       if (lastLv !== null && g.lv > lastLv) toast(`레벨 업! 이제 ${g.cur.name}이에요`);
       else if (lastBadges && onIds.some((id) => !lastBadges.includes(id))) {

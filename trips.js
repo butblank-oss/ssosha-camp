@@ -109,7 +109,11 @@
     drawPhotos();
     document.getElementById("tFile").onchange = async (e) => {
       for (const f of [...e.target.files].slice(0, MAX_PHOTOS - photos.length)) {
-        try { photos.push(await shrink(f)); } catch { /* 읽지 못한 사진은 건너뛰어요 */ }
+        try {
+          let src = await shrink(f);
+          if (window.SoshaSync && window.SoshaSync.uploadPhoto) src = await window.SoshaSync.uploadPhoto(src);
+          photos.push(src);
+        } catch { /* 읽지 못한 사진은 건너뛰어요 */ }
       }
       e.target.value = ""; drawPhotos();
     };

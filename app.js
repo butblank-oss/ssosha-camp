@@ -23,6 +23,7 @@
   let state = Object.assign({ items: {}, custom: [], order: {} }, load());
   function save() {
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }
+    if (window.SoshaSync) window.SoshaSync.push(state);
   }
   function allItems() {
     return BASE.concat(state.custom).map((b) => Object.assign({}, b, state.items[b.id] || {}));
@@ -437,7 +438,16 @@
     state = { items: {}, custom: [], order: {} }; save(); renderBoard(); renderUsed();
   };
 
-  window.SOSHA = { allItems, save, get state() { return state; } };
+  window.SOSHA = {
+    allItems, save, get state() { return state; },
+    replaceState(next) {
+      state = Object.assign({ items: {}, custom: [], order: {} }, next);
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }
+      renderBoard(); renderUsed();
+      if (window.SoshaTrips) window.SoshaTrips.render();
+      if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(allItems(), state, save);
+    },
+  };
   window.SOSHA_REFRESH = () => { renderBoard(); renderUsed(); };
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
   if (window.SoshaTrips) window.SoshaTrips.init();
