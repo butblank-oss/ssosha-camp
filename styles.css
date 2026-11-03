@@ -45,7 +45,7 @@
   --s-dog-1: #FFFDF7; --s-dog-2: #B7835A; --s-dog-ink: #2B2220; --s-cheek: #F7A8A8;
   --s-box: #8FA88A; --s-cooler: #7FB5E0; --s-tarp: #E8D3A8; --s-cable: #FFC34D; --s-cushion: #F4A7B9;
   --s-chip: rgb(255 255 255 / .16); --s-chip-ink: #FFFFFF;
-  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5;
+  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5; --s-chairfab: #5B6B7D; --s-shoe: #3A3F47; --s-ear-1: #E9E1D1; --s-ear-2: #8F5D3C; --s-bow: #F07C9C; --s-tongue: #F28C9A; --s-collar: #D9534F; --s-tag: #F5C542; --s-mug: #F4F1EA; --s-marsh: #FFF7EC; --s-stick: #8B6B4A;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -582,7 +582,7 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .scene { aspect-ratio: auto; height: auto; }
 .scene::before { content: ""; display: block; padding-top: 56.25%; }
 @media (max-width: 640px) {
-  .scene::before { padding-top: 72%; } /* 폰에서는 가운데를 크게 보여줘서 캐릭터가 잘 보여요 */
+  .scene::before { padding-top: 62%; } /* 폰에서도 그림 전체가 보이고, 위쪽은 밤하늘로 채워요 */
 }
 .player-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
 .badge-card { grid-column: 1 / -1; display: grid; gap: 10px; padding: 18px 24px; }
@@ -631,3 +631,23 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .sc-fence rect { fill: var(--s-tent-2); }
 .shiver { animation: shiver .18s linear infinite alternate; }
 @keyframes shiver { from { transform: translateX(-.6px); } to { transform: translateX(.6px); } }
+
+/* 캐릭터 디테일 */
+.sc-chairfab { fill: var(--s-chairfab); }
+.sc-shoe { fill: var(--s-shoe); }
+.sc-fold { fill: none; stroke: var(--s-wood); stroke-width: 1.4; opacity: .6; }
+.sc-arm.sc-arm { fill: none; stroke-width: 7; stroke-linecap: round; }
+.sc-hatband { fill: var(--s-star); opacity: .55; }
+.sc-lampband { fill: none; stroke: var(--s-shoe); stroke-width: 2.4; }
+.sc-quilt { fill: none; stroke: var(--s-shoe); stroke-width: 1; opacity: .18; }
+.sc-brow { fill: none; stroke: var(--s-dog-ink); stroke-width: 1.3; stroke-linecap: round; }
+.sc-mouth { fill: none; stroke: var(--s-dog-ink); stroke-width: 1.3; stroke-linecap: round; }
+.sc-eye-hl { fill: var(--s-star); }
+.sc-ear-1 { fill: var(--s-ear-1); } .sc-ear-2 { fill: var(--s-ear-2); }
+.sc-bow { fill: var(--s-bow); }
+.sc-tongue { fill: var(--s-tongue); }
+.sc-collar { fill: none; stroke: var(--s-collar); stroke-width: 2.4; stroke-linecap: round; }
+.sc-tag { fill: var(--s-tag); }
+.sc-mug { fill: var(--s-mug); } .sc-mug-h { fill: none; stroke: var(--s-mug); stroke-width: 2; }
+.sc-stick { fill: none; stroke: var(--s-stick); stroke-width: 1.6; stroke-linecap: round; }
+.sc-marsh { fill: var(--s-marsh); }
