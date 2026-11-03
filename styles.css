@@ -45,6 +45,7 @@
   --s-dog-1: #FFFDF7; --s-dog-2: #B7835A; --s-dog-ink: #2B2220; --s-cheek: #F7A8A8;
   --s-box: #8FA88A; --s-cooler: #7FB5E0; --s-tarp: #E8D3A8; --s-cable: #FFC34D; --s-cushion: #F4A7B9;
   --s-chip: rgb(255 255 255 / .16); --s-chip-ink: #FFFFFF;
+  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -613,3 +614,20 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .move-opt:hover:not(:disabled) { background: var(--tint); border-color: var(--teal-300); }
 .move-opt:disabled { color: var(--subtle-foreground); background: var(--muted); cursor: default; }
 .move-opt.ghost-opt { border-style: dashed; color: var(--teal-700); }
+
+/* 레벨별 장면 요소 */
+.sc-cardboard { fill: var(--s-cardboard); }
+.sc-tape { fill: var(--s-tape); }
+.sc-tape-line { fill: none; stroke: var(--s-tape); stroke-width: 4; stroke-linecap: round; }
+.sc-patch { fill: var(--s-tape); opacity: .9; }
+.sc-puff { fill: none; stroke: var(--s-sky); stroke-width: 1.4; opacity: .25; }
+.sc-steam { fill: none; stroke: var(--s-star); stroke-width: 1.4; stroke-linecap: round; opacity: .7; }
+.sc-drop { fill: var(--s-drop); }
+.sc-seam { fill: none; stroke: var(--s-tent-2); stroke-width: 2; }
+.sc-window { fill: var(--s-window); opacity: .85; }
+.sc-car { fill: var(--s-car); } .sc-car-2 { fill: var(--s-car-2); }
+.sc-paper { fill: var(--s-paper); }
+.sc-trash { fill: var(--s-trash); }
+.sc-fence rect { fill: var(--s-tent-2); }
+.shiver { animation: shiver .18s linear infinite alternate; }
+@keyframes shiver { from { transform: translateX(-.6px); } to { transform: translateX(.6px); } }
