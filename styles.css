@@ -45,7 +45,7 @@
   --s-dog-1: #FFFDF7; --s-dog-2: #B7835A; --s-dog-ink: #2B2220; --s-cheek: #F7A8A8;
   --s-box: #8FA88A; --s-cooler: #7FB5E0; --s-tarp: #E8D3A8; --s-cable: #FFC34D; --s-cushion: #F4A7B9;
   --s-chip: rgb(255 255 255 / .16); --s-chip-ink: #FFFFFF;
-  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5; --s-chairfab: #5B6B7D; --s-shoe: #3A3F47; --s-ear-1: #E9E1D1; --s-ear-2: #8F5D3C; --s-bow: #F07C9C; --s-tongue: #F28C9A; --s-collar: #D9534F; --s-tag: #F5C542; --s-mug: #F4F1EA; --s-marsh: #FFF7EC; --s-stick: #8B6B4A;
+  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5; --s-chairfab: #5B6B7D; --s-shoe: #3A3F47; --s-ear-1: #E9E1D1; --s-ear-2: #8F5D3C; --s-bow: #F07C9C; --s-tongue: #F28C9A; --s-collar: #D9534F; --s-tag: #F5C542; --s-mug: #F4F1EA; --s-marsh: #FFF7EC; --s-stick: #8B6B4A; --s-shih-w: #FFFCF4; --s-shih-g: #DDA769; --s-shih-b: #9A6A45;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -651,3 +651,4 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .sc-mug { fill: var(--s-mug); } .sc-mug-h { fill: none; stroke: var(--s-mug); stroke-width: 2; }
 .sc-stick { fill: none; stroke: var(--s-stick); stroke-width: 1.6; stroke-linecap: round; }
 .sc-marsh { fill: var(--s-marsh); }
+.sc-shih-w { fill: var(--s-shih-w); } .sc-shih-g { fill: var(--s-shih-g); } .sc-shih-b { fill: var(--s-shih-b); }
