@@ -92,7 +92,8 @@
         <ul class="buy-list">${bp.rows.map(({ i, low, best }) => { const x = view === "cheap" ? low : best; return `<li>
           <button class="buy-name" data-open="${esc(i.id)}"><strong>${esc(i.name)}</strong><span class="badge ${i.pri === 1 ? "b-must" : i.pri === 2 ? "b-nice" : ""}">${i.pri === 1 ? "필수" : i.pri === 2 ? "권장" : "나중에"}</span></button>
           <span class="buy-pick">${x ? `${esc(x.brand)} ${esc(x.model)}` : `${esc(i.newPrice || "추천 제품 조사 전")}${i.usedPrice && i.usedPrice !== "-" ? `, 중고 ${esc(i.usedPrice)}` : ""}`}</span>
-          <span class="buy-price num">${x ? won(x.price) : ""}</span></li>`; }).join("")}</ul>
+          <span class="buy-price num">${x ? won(x.price) : ""}</span>
+          <span class="buy-acts"><button class="btn btn-sm" data-got="${esc(p.id)}" data-item="${esc(i.id)}" value="bought">샀어요</button><button class="btn btn-sm btn-ghost" data-got="${esc(p.id)}" data-item="${esc(i.id)}" value="owned">원래 있어요</button></span></li>`; }).join("")}</ul>
         <p class="hint">${view === "cheap" ? "가성비 칸은 후보 중 가장 싼 제품이에요. 중고로 사면 더 아낄 수 있어요." : "풀패키지는 조사한 후보 중 추천(★) 제품 기준이에요."} 이름을 누르면 후보와 중고 바로가기를 볼 수 있어요.</p>`
       : '<div class="empty">이번 조건에 필요한 장비를 다 가지고 있어요!</div>'}
       <div class="toolbar-row plan-foot"><button class="btn btn-sm btn-danger" data-pdel="${esc(p.id)}">계획 삭제</button></div>
@@ -120,6 +121,12 @@
       if (!sel.value) return; const p = find(sel.dataset.addg); p.gear = (p.gear || []).concat(sel.value); persist();
     }));
     root.querySelectorAll("[data-pview]").forEach((b) => (b.onclick = () => { views[b.dataset.pview] = b.value; render(); }));
+    root.querySelectorAll("[data-got]").forEach((b) => (b.onclick = () => {
+      const p = find(b.dataset.got), id = b.dataset.item;
+      p.gear = [...new Set((p.gear || []).concat(id))];
+      if (window.SOSHA.moveTo) window.SOSHA.moveTo(id, b.value); else api().save();
+      render();
+    }));
     root.querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => { if (window.SOSHA.openItem) window.SOSHA.openItem(b.dataset.open); }));
     root.querySelectorAll("[data-pdel]").forEach((b) => (b.onclick = () => {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 삭제"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "계획 삭제"; }, 3000); return; }

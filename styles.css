@@ -690,3 +690,13 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .buy-sum { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; }
 .buy-sum > div { display: grid; }
 .buy-sum .hint { grid-column: 1 / -1; }
+.buy-list li { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) auto auto; }
+.buy-acts { display: flex; gap: 4px; }
+.buy-acts .btn { min-height: 32px; padding: 0 10px; font-size: 12px; }
+.btn-ghost { border-color: transparent; background: transparent; color: var(--muted-foreground); }
+.btn-ghost:hover { background: var(--muted); color: var(--foreground); }
+@media (max-width: 640px) {
+  .buy-list li { grid-template-columns: minmax(0, 1fr) auto; }
+  .buy-pick { grid-column: 1 / -1; grid-row: 2; }
+  .buy-acts { grid-column: 1 / -1; grid-row: 3; }
+}

@@ -489,7 +489,7 @@
   };
 
   window.SOSHA = {
-    allItems, save, openItem, get state() { return state; },
+    allItems, save, openItem, moveTo, get state() { return state; },
     replaceState(next) {
       state = Object.assign({ items: {}, custom: [], order: {} }, next);
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }
