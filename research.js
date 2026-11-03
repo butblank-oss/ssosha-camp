@@ -242,38 +242,6 @@ window.SOSHA_PICKS = {
    "pick": false
   }
  ],
- "gas": [
-  {
-   "brand": "맥선",
-   "model": "맥스 캠핑가스 230g (4개)",
-   "price": 10440,
-   "weightKg": 1.24,
-   "packedCm": [
-    13,
-    13,
-    20
-   ],
-   "est": true,
-   "why": "둥근 이소가스(OD캔)라 이소가스용 버너가 따로 필요해요. 이소가스 표기에 230g 4개입이라 가볍게 챙기기 좋아요. 이소부탄 혼합 비율은 상세에서 확인이 필요해요.",
-   "url": "https://prod.danawa.com/info/?pcode=2390902",
-   "pick": true
-  },
-  {
-   "brand": "맥선",
-   "model": "맥스 이소 부탄 가스 450g (4개)",
-   "price": 16470,
-   "weightKg": 2.2,
-   "packedCm": [
-    15,
-    15,
-    23
-   ],
-   "est": true,
-   "why": "둥근 이소가스(OD캔)라 이소가스용 버너가 따로 필요해요. 450g 대용량이라 겨울 1박 이상 쓰기에 넉넉하지만 부피가 커요.",
-   "url": "https://prod.danawa.com/info/?pcode=14216645",
-   "pick": false
-  }
- ],
  "torch": [
   {
    "brand": "코베아",
@@ -991,6 +959,71 @@ window.SOSHA_PICKS = {
    "est": true,
    "why": "고리가 있어 가방에 걸 수 있어요. 크기·무게는 추정이에요.",
    "url": "https://search.danawa.com/dsearch.php?query=쥬쥬베+접이식+실리콘+그릇",
+   "pick": false
+  }
+ ],
+ "isoburner": [
+  {
+   "brand": "코베아",
+   "model": "캠프1 스토브 KGB-9703 (호스형)",
+   "price": 43748,
+   "weightKg": 0.397,
+   "packedCm": null,
+   "est": false,
+   "why": "가장 인기 많은 호스형 이소 버너예요. 가스캔이 옆에 따로 놓여서 넘어질 걱정이 적고 0.4kg로 가벼워요.",
+   "url": "https://prod.danawa.com/info/?pcode=8797286",
+   "pick": true
+  },
+  {
+   "brand": "코베아",
+   "model": "캠프4 스토브 KB-0211G (호스형)",
+   "price": 53469,
+   "weightKg": 0.291,
+   "packedCm": null,
+   "est": false,
+   "why": "더 가볍고(0.29kg) 화력이 1,656kcal/h로 표기돼 있어요. 조금 더 비싸요.",
+   "url": "https://prod.danawa.com/info/?pcode=672559",
+   "pick": false
+  },
+  {
+   "brand": "카즈미",
+   "model": "크레이터 그리들 스토브 (호스형)",
+   "price": 52200,
+   "weightKg": 1.2,
+   "packedCm": null,
+   "est": false,
+   "why": "화구가 넓고 화력(6,480kcal/h 표기)이 세서 그리들이나 큰 냄비에 좋아요. 대신 1.2kg으로 무거워요.",
+   "url": "https://prod.danawa.com/info/?pcode=16882496",
+   "pick": false
+  },
+  {
+   "brand": "",
+   "model": "[함께 살 가스] 맥선 맥스 캠핑가스 230g (4개)",
+   "price": 10440,
+   "weightKg": 1.24,
+   "packedCm": [
+    13,
+    13,
+    20
+   ],
+   "est": true,
+   "why": "이소가스 표기에 230g 4개입이라 가볍게 챙기기 좋아요. 이소부탄 혼합 비율은 상세에서 확인이 필요해요. 프로판 혼합 여부를 캔에서 확인하세요.",
+   "url": "https://prod.danawa.com/info/?pcode=2390902",
+   "pick": false
+  },
+  {
+   "brand": "",
+   "model": "[함께 살 가스] 맥선 맥스 이소 부탄 가스 450g (4개)",
+   "price": 16470,
+   "weightKg": 2.2,
+   "packedCm": [
+    15,
+    15,
+    23
+   ],
+   "est": true,
+   "why": "450g 대용량이라 겨울 1박 이상 쓰기에 넉넉하지만 부피가 커요. 프로판 혼합 여부를 캔에서 확인하세요.",
+   "url": "https://prod.danawa.com/info/?pcode=14216645",
    "pick": false
   }
  ]
