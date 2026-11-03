@@ -36,7 +36,8 @@
     return [
       ["l-dg", "당근", `https://www.daangn.com/kr/search/buy-sell/?q=${enc(q)}`],
       ["l-nv", "N플리마켓", `https://fleamarket.naver.com/search?query=${enc(q)}`],
-      ["l-cf", "초캠장터", `https://cafe.naver.com/ca-fe/cafes/20486145/search/articles?q=${enc(q)}`],
+      ["l-cf", "초캠장터", `https://cafe.naver.com/f-e/cafes/20486145/menus/0?q=${enc(q)}`],
+      ["l-ds", "다이소몰", `https://www.daisomall.co.kr/ds/dst/SCR_DST_0015?searchTerm=${enc(q)}`],
       ["l-dn", "다나와 인기순", `https://search.danawa.com/?query=${enc(q)}&sort=saveDESC`],
     ];
   }
