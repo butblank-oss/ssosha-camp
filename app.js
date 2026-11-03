@@ -312,7 +312,7 @@
       <tr><td>소형 온풍기</td><td>약 500~800W</td></tr>
       <tr><td>휴대폰·랜턴 충전</td><td>약 20~60W</td></tr>
       <tr><td>전기포트</td><td>1000W 이상 (대부분 금지)</td></tr></table>
-      <ul><li>릴선은 <strong>2.5sq 굵기</strong>, 쓸 때는 끝까지 풀어서 써야 열이 안 나요.</li></ul></article>
+      <ul><li>릴선은 <strong>1.5sq면 충분</strong>해요(약 15A까지 버텨요). 굵기보다 과부하·누전 차단기와 접지가 중요하고, 쓸 때는 끝까지 풀어서 써야 열이 안 나요.</li></ul></article>
 
     <article class="g warn panel-card"><h3><span class="ico-wrap">${I.alert}</span>겨울 안전 (꼭 읽기)</h3>
       <ul><li><strong>부탄가스를 불 옆에서 데우지 마세요.</strong> 가스통이 터질 수 있어요. 동계용(이소부탄) 가스를 쓰고, 쓰기 전까지 침낭이나 주머니에 넣어 체온으로 데워요.</li>

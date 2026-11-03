@@ -42,7 +42,7 @@ window.SOSHA_PICKS = {
     32
    ],
    "est": true,
-   "why": "가장 저렴한 과부하차단 접지형이라 예산이 빠듯할 때 좋지만 누전차단은 표기가 없어요.",
+   "why": "가장 저렴한 1.5sq급 대안으로 보기 쉽지만 누전차단 표기가 없어요. 누전차단이 있는 제품을 고르세요.",
    "url": "https://search.danawa.com/dsearch.php?query=캠핑 릴선 30m 2.5sq 과부하차단",
    "pick": false
   }
