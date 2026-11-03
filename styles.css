@@ -40,12 +40,12 @@
   --s-ground: #3F6B4A; --s-ground-2: #34593E; --s-tree: #1F4733; --s-tree-2: #2C5E42;
   --s-tent: #F2D7A6; --s-tent-2: #D9B27A; --s-door: #4A3A2A; --s-glow: #FFD66B;
   --s-fire: #FF8A3D; --s-fire-2: #FFD15C; --s-wood: #7A5236; --s-metal: #7D8794;
-  --s-skin: #F6D2B8; --s-hair-1: #2B2220; --s-hair-2: #8A5A3B;
+  --s-skin: #F6D2B8; --s-hair-1: #2B2220; --s-hair-2: #2B2220;
   --s-coat-1: #7FC8A9; --s-coat-2: #F5B971; --s-coat-3: #8EA4D2; --s-pants: #4B5563;
   --s-dog-1: #FFFDF7; --s-dog-2: #B7835A; --s-dog-ink: #2B2220; --s-cheek: #F7A8A8;
   --s-box: #8FA88A; --s-cooler: #7FB5E0; --s-tarp: #E8D3A8; --s-cable: #FFC34D; --s-cushion: #F4A7B9;
   --s-chip: rgb(255 255 255 / .16); --s-chip-ink: #FFFFFF;
-  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5; --s-chairfab: #5B6B7D; --s-shoe: #3A3F47; --s-ear-1: #E9E1D1; --s-ear-2: #8F5D3C; --s-bow: #F07C9C; --s-tongue: #F28C9A; --s-collar: #D9534F; --s-tag: #F5C542; --s-mug: #F4F1EA; --s-marsh: #FFF7EC; --s-stick: #8B6B4A; --s-shih-w: #FFFCF4; --s-shih-g: #DDA769; --s-shih-b: #9A6A45;
+  --s-cardboard: #C89B6A; --s-tape: #EDE6D3; --s-trash: #2F343C; --s-car: #E9EEF2; --s-car-2: #2B2F36; --s-window: #9CC3E6; --s-paper: #D8D4C8; --s-drop: #9CD3F5; --s-chairfab: #5B6B7D; --s-shoe: #3A3F47; --s-ear-1: #E9E1D1; --s-ear-2: #8F5D3C; --s-bow: #F07C9C; --s-tongue: #F28C9A; --s-collar: #D9534F; --s-tag: #F5C542; --s-mug: #F4F1EA; --s-marsh: #FFF7EC; --s-stick: #8B6B4A; --s-shih-w: #FFFCF4; --s-shih-g: #C98E5A; --s-shih-b: #8E5530; --s-jacket: #22252B; --s-tee: #D7F3EE; --s-pants-2: #5A6B85; --s-cap: #8FB2D6; --s-cap-brim: #7A9EC4; --s-silver: #D5DAE0; --s-vest: #F5D35C; --s-vest-2: #F4A6C0; --s-harness: #F5C542; --s-lip: #D9707A;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
@@ -652,3 +652,15 @@ dialog[open] { animation: sheet .25s var(--ease); }
 .sc-stick { fill: none; stroke: var(--s-stick); stroke-width: 1.6; stroke-linecap: round; }
 .sc-marsh { fill: var(--s-marsh); }
 .sc-shih-w { fill: var(--s-shih-w); } .sc-shih-g { fill: var(--s-shih-g); } .sc-shih-b { fill: var(--s-shih-b); }
+.sc-jacket { fill: var(--s-jacket); } .sc-tee { fill: var(--s-tee); } .sc-pants-2 { fill: var(--s-pants-2); }
+.sc-tee-under { fill: var(--s-jacket); opacity: .6; }
+.sc-zip { fill: none; stroke: var(--s-metal); stroke-width: 1; }
+.sc-necklace { fill: none; stroke: var(--s-silver); stroke-width: .9; }
+.sc-silver-ring { fill: none; stroke: var(--s-silver); stroke-width: 1.4; }
+.sc-strap { fill: none; stroke: var(--s-jacket); stroke-width: 3; stroke-linecap: round; }
+.sc-cap { fill: var(--s-cap); } .sc-cap-brim { fill: var(--s-cap-brim); } .sc-cap-btn { fill: var(--s-cap-brim); }
+.sc-lip { fill: var(--s-lip); }
+.sc-vest { fill: var(--s-vest); } .sc-vest-stripe { fill: none; stroke: var(--s-vest-2); stroke-width: 2.4; }
+.sc-harness { fill: var(--s-harness); }
+.sc-chain { fill: none; stroke: var(--s-silver); stroke-width: 2.2; stroke-dasharray: 2 1.4; }
+.sc-tag-w { fill: var(--s-tee); }

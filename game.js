@@ -60,85 +60,95 @@
   /* 레벨이 오르거나 그 장비를 사면 장면에 생겨요 */
   const on = (h, lv, id, minLv) => (id && h.has(id)) || lv >= minLv;
 
-  /* 사람: (x, y)는 의자 앉는 면의 가운데. dir 1은 오른쪽, -1은 왼쪽(불 쪽)을 봐요 */
-  function person(x, y, hair, coat, h, lv, dir) {
+  /* 사람: (x, y)는 의자 앉는 면의 가운데. dir 1은 오른쪽, -1은 왼쪽(불 쪽)을 봐요.
+   * who 1: 검은 숏컷, 은색 링 귀걸이, 검정 집업과 목걸이
+   * who 2: 검은 단발, 연청 볼캡, 민트 티셔츠와 검정 크로스백 끈 */
+  function person(x, y, who, coat, h, lv, dir) {
     const padded = on(h, lv, "clothes", 3);
-    const coatCls = padded ? coat : "sc-coat-3";
+    const topCls = padded ? coat : who === 1 ? "sc-jacket" : "sc-tee";
+    const armColor = padded ? `var(--s-${coat.replace("sc-", "")})` : who === 1 ? "var(--s-jacket)" : "var(--s-tee)";
     const seat = lv === 0
       ? `<rect class="sc-cardboard" x="-19" y="-2" width="38" height="28" rx="2"/><path class="sc-tape-line" d="M-19,9 h38"/><path class="sc-fold" d="M-19,-2 l6,-5 h26 l6,5"/>`
       : `<rect class="sc-chairfab" x="-21" y="-38" width="10" height="38" rx="4" transform="rotate(-8 -16 0)"/>
          <rect class="sc-chairfab" x="-20" y="-3" width="40" height="8" rx="4"/>
          <path class="sc-line" d="M-16,5 L-22,27 M16,5 L22,27 M-14,5 L18,27 M14,5 L-18,27"/>`;
-    const hc = hair === 1 ? "sc-hair-1" : "sc-hair-2";
-    const back = hair === 1
-      ? `<path class="${hc}" d="M-15,-50 C-19,-30 -14,-22 -6,-21 H11 C19,-22 23,-30 19,-50z"/>`
-      : `<path class="${hc}" d="M-16,-50 C-18,-38 -14,-34 -7,-34 H12 C19,-34 22,-38 20,-50z"/>`;
-    const top = hair === 1
-      ? `<path class="${hc}" d="M-16,-47 C-17,-68 21,-68 20,-47 C18,-51 14,-55 9,-55 C7,-51 3,-50 0,-51 C-3,-53 -6,-52 -8,-50 C-11,-49 -14,-48 -16,-47z"/>`
-      : `<path class="${hc}" d="M-16,-46 C-18,-68 22,-68 20,-46 C17,-51 13,-53 8,-52 C5,-49 1,-49 -2,-51 C-6,-50 -12,-48 -16,-46z"/>`;
-    const hat = lv >= 2
-      ? `<path class="${hair === 1 ? "sc-coat-2" : "sc-coat-1"}" d="M-16,-53 C-16,-74 20,-74 20,-53z"/><rect class="sc-hatband" x="-17" y="-57" width="38" height="6" rx="3"/><circle class="sc-star" cx="2" cy="-74" r="4.5"/>`
+    const back = who === 1 ? "" : `<path class="sc-hair-1" d="M-16,-50 C-19,-36 -16,-28 -9,-27 H13 C20,-28 23,-36 20,-50z"/>`;
+    const top = who === 1
+      ? `<path class="sc-hair-1" d="M-15,-44 C-19,-66 16,-70 20,-52 C20,-47 18,-44 17,-42 C15,-49 11,-53 4,-54 C1,-50 -4,-48 -8,-49 C-10,-46 -12,-43 -15,-44z"/>
+         <path class="sc-hair-1" d="M-15,-44 C-16,-40 -15,-37 -12,-36 C-12,-40 -12,-42 -11,-44z"/>`
+      : `<path class="sc-hair-1" d="M-16,-47 C-17,-62 20,-62 20,-47 C17,-50 12,-51 8,-50 C5,-48 0,-48 -3,-49 C-8,-49 -12,-48 -16,-47z"/>`;
+    const cap = who === 2
+      ? `<path class="sc-cap" d="M-17,-50 C-17,-70 21,-70 21,-50z"/><path class="sc-cap-brim" d="M4,-51 C14,-53 24,-52 30,-49 C24,-47 14,-47 4,-48z"/><circle class="sc-cap-btn" cx="2" cy="-68" r="1.6"/>`
       : "";
+    const hat = who === 1 && lv >= 2
+      ? `<path class="sc-coat-2" d="M-16,-53 C-16,-74 20,-74 20,-53z"/><rect class="sc-hatband" x="-17" y="-57" width="38" height="6" rx="3"/><circle class="sc-star" cx="2" cy="-74" r="4.5"/>`
+      : "";
+    const earring = who === 1 ? `<circle class="sc-skin" cx="-12.5" cy="-43" r="3.2"/><circle class="sc-silver-ring" cx="-12.5" cy="-38.6" r="2.3"/>` : "";
     const lamp = on(h, lv, "headlamp", 3)
       ? `<polygon class="sc-beam" points="6,-55 92,-78 92,-30"/><path class="sc-lampband" d="M-15,-53 C-6,-57 10,-57 19,-53"/><circle class="sc-fire-2" cx="5" cy="-55" r="3.5"/>`
       : "";
-    const quilt = padded ? `<path class="sc-quilt" d="M-12,-24 C-4,-22 4,-22 12,-24 M-13,-12 C-4,-10 4,-10 13,-12"/>` : (lv === 0 ? `<rect class="sc-patch" x="-8" y="-16" width="8" height="7" rx="1" transform="rotate(-8 -4 -12)"/>` : "");
+    const detail = padded
+      ? `<path class="sc-quilt" d="M-12,-24 C-4,-22 4,-22 12,-24 M-13,-12 C-4,-10 4,-10 13,-12"/>`
+      : who === 1
+        ? `<path class="sc-zip" d="M2,-34 V0"/><path class="sc-tee-under" d="M-4,-35 L2,-29 L8,-35z"/><path class="sc-necklace" d="M-4,-35 Q2,-28 8,-35"/><circle class="sc-silver-ring" cx="2" cy="-29" r="1.4"/>`
+        : `<path class="sc-strap" d="M-11,-31 L14,-4"/>`;
+    const patch = lv === 0 ? `<rect class="sc-patch" x="-9" y="-14" width="8" height="7" rx="1" transform="rotate(-8 -5 -10)"/>` : "";
     const scarf = padded ? `<path class="${coat === "sc-coat-1" ? "sc-coat-2" : "sc-coat-1"}" d="M-8,-36 C-2,-33 6,-33 11,-36 L11,-31 C6,-28 -2,-28 -8,-31z M5,-31 l4,12 l-6,1z"/>` : "";
     const holding = lv >= 4
       ? `<rect class="sc-mug" x="25" y="-23" width="10" height="11" rx="2"/><path class="sc-mug-h" d="M35,-20 q4,2 0,6"/><path class="sc-steam" d="M28,-27 q-3,-5 0,-9 M32,-27 q-3,-5 0,-9"/>`
       : lv >= 2 ? `<path class="sc-stick" d="M27,-15 L54,-30"/><rect class="sc-marsh" x="51" y="-35" width="8" height="7" rx="2" transform="rotate(-28 55 -31)"/>` : "";
-    const mouth = lv === 0 ? `<path class="sc-mouth" d="M2,-37.5 q2.2,-1.8 4.4,0"/>` : `<path class="sc-mouth" d="M2,-38.6 q2.2,2 4.4,0"/>`;
+    const mouth = lv === 0 ? `<path class="sc-mouth" d="M2,-37.5 q2.2,-1.8 4.4,0"/>` : `<path class="sc-lip" d="M1.6,-38.8 q2.6,2.4 5.2,0 q-2.6,.9 -5.2,0z"/>`;
     const sniffle = lv === 0 ? `<path class="sc-drop" d="M5,-41 q2.2,3.6 0,6.4 q-2.2,-2.8 0,-6.4z"/>` : "";
     return `<g class="${lv === 0 ? "shiver" : ""}" transform="translate(${x} ${y}) scale(${dir} 1)">
       ${seat}
-      <path class="sc-pants" d="M-11,-5 H16 a5,5 0 0 1 0,10 H-11z"/>
-      <rect class="sc-pants" x="12" y="3" width="9" height="21" rx="4"/>
+      <path class="${who === 1 ? "sc-pants" : "sc-pants-2"}" d="M-11,-5 H16 a5,5 0 0 1 0,10 H-11z"/>
+      <rect class="${who === 1 ? "sc-pants" : "sc-pants-2"}" x="12" y="3" width="9" height="21" rx="4"/>
       <ellipse class="sc-shoe" cx="20" cy="25" rx="8" ry="4"/>
       ${back}
-      <path class="${coatCls}" d="M-14,1 C-17,-18 -12,-34 1,-36 C13,-35 17,-20 15,1z"/>
-      ${quilt}
-      <path class="sc-arm ${coatCls}" d="M6,-27 C14,-24 20,-19 25,-15" style="stroke:var(--s-${coatCls.replace("sc-", "")})"/>
+      <path class="${topCls}" d="M-14,1 C-17,-18 -12,-34 1,-36 C13,-35 17,-20 15,1z"/>
+      ${detail}${patch}
+      <path class="sc-arm" d="M6,-27 C14,-24 20,-19 25,-15" style="stroke:${armColor}"/>
       <circle class="sc-skin" cx="27" cy="-15" r="4"/>
       ${holding}${scarf}
       <ellipse class="sc-skin" cx="2" cy="-46" rx="15" ry="14.5"/>
-      ${top}${hat}${lamp}
-      <ellipse class="sc-ink" cx="-1" cy="-44.5" rx="1.9" ry="2.5"/><circle class="sc-eye-hl" cx="-.3" cy="-45.5" r=".8"/>
-      <ellipse class="sc-ink" cx="9" cy="-44.5" rx="1.9" ry="2.5"/><circle class="sc-eye-hl" cx="9.7" cy="-45.5" r=".8"/>
-      <ellipse class="sc-cheek" cx="-4" cy="-39.5" rx="2.8" ry="1.7"/><ellipse class="sc-cheek" cx="12.5" cy="-39.5" rx="2.8" ry="1.7"/>
+      ${top}${earring}${cap}${hat}${lamp}
+      ${who === 1 ? `<path class="sc-brow" d="M-3,-50.5 q2,-1.2 4,0 M7,-50.5 q2,-1.2 4,0"/>` : ""}
+      <ellipse class="sc-ink" cx="-1" cy="-45" rx="1.9" ry="2.3"/><circle class="sc-eye-hl" cx="-.3" cy="-45.9" r=".8"/>
+      <ellipse class="sc-ink" cx="9" cy="-45" rx="1.9" ry="2.3"/><circle class="sc-eye-hl" cx="9.7" cy="-45.9" r=".8"/>
+      <ellipse class="sc-cheek" cx="-4" cy="-40" rx="2.8" ry="1.6"/><ellipse class="sc-cheek" cx="12.5" cy="-40" rx="2.8" ry="1.6"/>
       ${mouth}${sniffle}
     </g>`;
   }
-  /* 강아지: 시츄 두 마리. 1은 8kg 큰 아이(흰 바탕에 금빛 무늬), 2는 4kg 작은 아이(금빛 바탕에 흰 얼굴) */
+  /* 시츄 두 마리: 흰 바탕에 갈색 귀와 눈 무늬.
+   * kind 1: 8kg 큰 아이, 혀를 내밀고 은색 체인 목줄
+   * kind 2: 4kg 작은 아이, 노란 오리 하네스와 노랑·분홍 줄무늬 조끼 */
   function dog(x, y, kind, coat, h, lv, dir, size) {
-    const base = kind === 1 ? "sc-shih-w" : "sc-shih-g";
-    const patch = kind === 1 ? "sc-shih-g" : "sc-shih-w";
-    const ear = kind === 1 ? "sc-shih-g" : "sc-shih-b";
-    const wear = on(h, lv, "dogwear", 2) ? `<path class="${coat}" d="M-16,-9 C-10,-19 10,-19 15,-9 L15,1 C6,4 -8,4 -16,1z"/><path class="sc-quilt" d="M-13,-4 h26"/>` : "";
-    const scarf = lv >= 4 ? `<path class="sc-fire" d="M7,-6 C12,-2 22,-2 27,-6 L26,0 C21,3 12,3 7,0z"/>` : `<path class="sc-collar" d="M8,-5 C13,-2 21,-2 26,-5"/><circle class="sc-tag" cx="17" cy="-1.5" r="2"/>`;
-    const blaze = kind === 2 ? `<path class="sc-shih-w" d="M15,-30 C13,-24 12,-18 12,-12 C16,-9 22,-9 25,-12 C25,-18 21,-24 18,-30z"/>` : `<ellipse class="sc-shih-g" cx="-4" cy="-6" rx="9" ry="5"/>`;
-    const tongue = lv >= 1 ? `<path class="sc-tongue" d="M19,-6.5 q.8,3.6 -1.8,4.2 q-1.6,-2.4 -.6,-4.2z"/>` : "";
+    const brown = kind === 1 ? "sc-shih-b" : "sc-shih-g";
+    const outfit = kind === 2
+      ? `<path class="sc-vest" d="M-15,-10 C-8,-19 10,-19 15,-10 L15,2 C6,5 -8,5 -15,2z"/><path class="sc-vest-stripe" d="M-14,-6 h29 M-15,-1 h30"/><path class="sc-harness" d="M7,-14 C10,-6 10,0 8,4 L12,4 C14,0 14,-7 11,-14z"/><circle class="sc-tag" cx="11" cy="-2" r="2"/>`
+      : on(h, lv, "dogwear", 2) ? `<path class="${coat}" d="M-16,-9 C-10,-19 10,-19 15,-9 L15,1 C6,4 -8,4 -16,1z"/><path class="sc-quilt" d="M-13,-4 h26"/>` : "";
+    const neck = lv >= 4
+      ? `<path class="sc-fire" d="M7,-6 C12,-2 22,-2 27,-6 L26,0 C21,3 12,3 7,0z"/>`
+      : kind === 1 ? `<path class="sc-chain" d="M8,-5 C13,-1 21,-1 26,-5"/><circle class="sc-tag-w" cx="25" cy="-2" r="2.6"/>` : "";
+    const tongue = kind === 1 ? `<path class="sc-tongue" d="M14.5,-8 q2.5,6 5,0 q-2.5,1 -5,0z"/>` : (lv >= 1 ? `<path class="sc-tongue" d="M16,-8 q1,3 2,0z"/>` : "");
     return `<g transform="translate(${x} ${y}) scale(${dir * size} ${size})">
       <ellipse class="sc-shadow" cx="0" cy="13" rx="24" ry="4"/>
-      <path class="wag" d="M-16,-8 C-30,-14 -26,-30 -14,-24 C-20,-20 -20,-14 -14,-12" style="fill:var(--s-${kind === 1 ? "shih-w" : "shih-g"})"/>
-      <path class="${base}" d="M-21,-4 C-21,-15 -6,-17 8,-15 C15,-14 18,-8 18,-2 L19,11 C14,12 12,10 10,12 C6,10 2,12 -2,11 C-6,12 -10,10 -14,12 C-17,10 -20,12 -22,11z"/>
-      ${blaze}
-      <ellipse class="sc-shoe" cx="-12" cy="12.5" rx="3.4" ry="1.6" opacity=".35"/><ellipse class="sc-shoe" cx="10" cy="12.5" rx="3.4" ry="1.6" opacity=".35"/>
-      ${wear}
-      <path class="${ear}" d="M4,-24 C-2,-22 -3,-8 2,-3 C6,-5 8,-14 7,-22z"/>
-      <circle class="${base}" cx="17" cy="-18" r="13"/>
-      <path class="${patch === "sc-shih-w" ? "sc-shih-g" : "sc-shih-g"}" d="M8,-27 C11,-31 23,-31 26,-26 C22,-27 18,-25 17,-21 C15,-25 11,-27 8,-27z" opacity="${kind === 1 ? 1 : 0}"/>
-      ${kind === 2 ? `<path class="sc-shih-w" d="M15,-29 C14,-24 14,-20 17,-18 C20,-20 20,-24 19,-29z"/>` : ""}
-      <path class="${ear}" d="M28,-24 C33,-20 34,-8 29,-4 C26,-7 25,-15 26,-22z"/>
-      <path class="sc-shih-w" d="M10,-12 C10,-6 14,-3 18,-3 C22,-3 26,-6 26,-12 C22,-14 14,-14 10,-12z"/>
-      <path class="sc-bow" d="M17,-33 l-6,-4 v8z M17,-33 l6,-4 v8z"/><circle class="sc-bow" cx="17" cy="-33" r="2.2"/>
-      <path class="${base}" d="M14,-33 C14,-38 20,-38 20,-33z"/>
-      <circle class="sc-ink" cx="12" cy="-19" r="2.7"/><circle class="sc-eye-hl" cx="12.9" cy="-20" r=".9"/>
-      <circle class="sc-ink" cx="22" cy="-19" r="2.7"/><circle class="sc-eye-hl" cx="22.9" cy="-20" r=".9"/>
-      <ellipse class="sc-ink" cx="17" cy="-13.5" rx="2.4" ry="1.7"/>
-      <path class="sc-mouth" d="M15,-10.5 q2,1.6 4,0"/>
-      ${tongue}
-      <ellipse class="sc-cheek" cx="9" cy="-14" rx="2" ry="1.3"/><ellipse class="sc-cheek" cx="25" cy="-14" rx="2" ry="1.3"/>
-      ${scarf}
+      <path class="wag" d="M-16,-8 C-30,-14 -26,-30 -14,-24 C-20,-20 -20,-14 -14,-12" style="fill:var(--s-shih-g)"/>
+      <path class="sc-shih-w" d="M-21,-4 C-21,-15 -6,-17 8,-15 C15,-14 18,-8 18,-2 L19,11 C14,12 12,10 10,12 C6,10 2,12 -2,11 C-6,12 -10,10 -14,12 C-17,10 -20,12 -22,11z"/>
+      <ellipse class="${brown}" cx="-6" cy="-11" rx="9" ry="5" opacity=".85"/>
+      <ellipse class="sc-shoe" cx="-12" cy="12.5" rx="3.4" ry="1.6" opacity=".3"/><ellipse class="sc-shoe" cx="10" cy="12.5" rx="3.4" ry="1.6" opacity=".3"/>
+      ${outfit}
+      <path class="${brown}" d="M5,-26 C-1,-24 -2,-10 3,-5 C7,-7 9,-16 8,-24z"/>
+      <circle class="sc-shih-w" cx="17" cy="-18" r="13"/>
+      <ellipse class="${brown}" cx="11.5" cy="-20" rx="5.5" ry="4.6"/><ellipse class="${brown}" cx="22.5" cy="-20" rx="5.5" ry="4.6"/>
+      <path class="${brown}" d="M7,-27 C10,-31 14,-31 15,-29 C13,-27 10,-26 7,-27z M27,-27 C24,-31 20,-31 19,-29 C21,-27 24,-26 27,-27z"/>
+      <path class="${brown}" d="M29,-26 C35,-22 35,-10 30,-5 C27,-8 26,-17 27,-24z"/>
+      <path class="sc-shih-w" d="M9,-12 C9,-5 13,-2 17,-2 C21,-2 25,-5 25,-12 C21,-14 13,-14 9,-12z"/>
+      <circle class="sc-ink" cx="12" cy="-19.5" r="2.8"/><circle class="sc-eye-hl" cx="12.9" cy="-20.5" r=".9"/>
+      <circle class="sc-ink" cx="22" cy="-19.5" r="2.8"/><circle class="sc-eye-hl" cx="22.9" cy="-20.5" r=".9"/>
+      <ellipse class="sc-ink" cx="17" cy="-13.5" rx="2.8" ry="2"/>
+      <path class="sc-mouth" d="M14.5,-9.5 q2.5,1.8 5,0"/>
+      ${tongue}${neck}
     </g>`;
   }
   function tent(lv, warm) {
@@ -217,7 +227,7 @@
       ${dog(166, 312, 1, "sc-coat-2", h, lv, 1, 1.18)}
       ${dog(252, 318, 2, "sc-coat-1", h, lv, -1, 0.86)}
       ${fence}${bone}
-      ${chairs || lv === 0 ? person(418, 290, 1, "sc-coat-1", h, lv, 1) + person(512, 290, 2, "sc-coat-2", h, lv, -1) : ""}
+      ${chairs || lv === 0 ? person(418, 290, 1, "sc-coat-3", h, lv, 1) + person(512, 290, 2, "sc-coat-1", h, lv, -1) : ""}
     </svg>`;
   }
 
