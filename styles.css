@@ -576,3 +576,14 @@ dialog[open] { animation: sheet .25s var(--ease); }
   .camp-actions { grid-auto-flow: column; justify-content: start; }
   .dday-chip { display: none; }
 }
+
+/* 캠프 그림: aspect-ratio를 지원하지 않는 폰(예전 iOS, 일부 앱 웹뷰)에서도 높이가 0이 되지 않게 해요 */
+.scene { aspect-ratio: auto; height: auto; }
+.scene::before { content: ""; display: block; padding-top: 56.25%; }
+@media (max-width: 640px) {
+  .scene::before { padding-top: 72%; } /* 폰에서는 가운데를 크게 보여줘서 캐릭터가 잘 보여요 */
+}
+.player-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.badge-card { grid-column: 1 / -1; display: grid; gap: 10px; padding: 18px 24px; }
+.badge-card .badges { grid-template-columns: repeat(auto-fill, minmax(128px, 1fr)); }
+@media (max-width: 400px) { .badge-card .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

@@ -203,8 +203,7 @@
         <div class="scene">${scene(g)}<div class="scene-lv"><b>Lv.${g.lv + 1}</b>${g.cur.name}</div></div>
         <div class="panel-card player">
           <div>
-            <p class="hint">우리 캠퍼 레벨</p>
-            <h2>${g.cur.name}</h2>
+            <div class="player-head"><div><p class="hint">우리 캠퍼 레벨</p><h2>${g.cur.name}</h2></div><button class="btn btn-sm" id="lvPreview">레벨 미리보기</button></div>
             <div class="xp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct * 100)}" aria-label="다음 레벨까지 경험치"><i style="--p:${pct}"></i></div>
             <div class="xp-row"><span class="num">${g.xp} XP</span><span>${g.next ? `다음 레벨 ${g.next.name}까지 ${g.next.xp - g.xp} XP` : "최고 레벨이에요"}</span></div>
           </div>
@@ -213,8 +212,10 @@
             <div class="stat"><span class="stat-k">필수 남음</span><strong>${stats.must}</strong></div>
             <div class="stat"><span class="stat-k">준비율</span><strong>${stats.pct}</strong></div>
           </div>
-          <button class="btn btn-sm lv-btn" id="lvPreview">레벨 미리보기</button>
           ${g.quest ? `<div class="next-quest"><strong>다음 퀘스트: ${g.quest.name}</strong><span>구매 완료로 옮기면 +${(XP_BY_PRI[g.quest.pri] || 10)} XP, 가격까지 적으면 +5 XP 더 받아요.</span></div>` : ""}
+        </div>
+        <div class="panel-card badge-card">
+          <span class="hint">뱃지 ${g.badges.filter((b) => b.on).length} / ${g.badges.length}</span>
           <div class="badges" aria-label="뱃지">${g.badges.map((b) => `<span class="medal ${b.on ? "on" : ""}" title="${b.need ? "필요: " + b.need.length + "개 품목" : ""}">${medalSVG(b.on)}${b.name}</span>`).join("")}</div>
         </div>`;
       el.querySelector("#lvPreview").onclick = () => openPreview(g, items);
