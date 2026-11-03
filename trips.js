@@ -36,8 +36,8 @@
   /* 첫 캠핑도 목록의 한 줄로 보여줘요 (고칠 수는 없어요) */
   function firstTrip() {
     const cost = FIRST.site + FIRST.spent.reduce((s, x) => s + x.price, 0);
-    return { id: "first", fixed: true, date: FIRST.dateISO, dateLabel: "2026-11 초", place: FIRST.place, cost, weather: FIRST.weather, temp: "", dog: false,
-      notes: FIRST.lessons.map((l) => l.t).join("\n"), needs: [], photos: [], gear: FIRST.gear };
+    return { id: "first", fixed: true, date: FIRST.dateISO || "2026-11-01", dateLabel: "2026-11 초", place: FIRST.place, cost, weather: FIRST.weather, temp: "", dog: false,
+      notes: (FIRST.lessons || []).map((l) => l.t).join("\n"), needs: [], photos: [], gear: FIRST.gear || ["tent", "mat", "firepit", "gloves", "table1", "chairs", "cookset", "burner", "moodlamp"] };
   }
   function allTrips() {
     return trips().slice().concat([firstTrip()]).sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")));

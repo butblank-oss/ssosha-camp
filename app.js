@@ -86,6 +86,7 @@
         <span>${esc(catName(it.cat))}</span>
         ${paid ? `<span class="price">${won(it.purchase.price)}${it.purchase.where ? ", " + esc(it.purchase.where) : ""}</span>` : ""}
         ${!paid && (it.status === "todo" || it.status === "research") && window.SoshaGame ? `<span class="xp-tag">+${window.SoshaGame.xpFor(it)} XP</span>` : ""}
+        ${it.status === "todo" || it.status === "research" ? `<button class="quick-move" data-move="${esc(it.id)}" aria-label="${esc(it.name)} 구매 완료로 옮기기">샀어요</button>` : ""}
       </div>
     </article>`;
   }
@@ -108,7 +109,7 @@
       board.querySelectorAll(".list").forEach((list) => {
         sortables.push(new Sortable(list, {
           group: "board", animation: 180, ghostClass: "ghost", dragClass: "drag",
-          delay: 150, delayOnTouchOnly: true, filter: ".empty", forceFallback: true, fallbackTolerance: 4,
+          delay: 150, delayOnTouchOnly: true, filter: ".empty, .quick-move", preventOnFilter: false, forceFallback: true, fallbackOnBody: true, fallbackTolerance: 4, scroll: true, bubbleScroll: true, scrollSensitivity: 80,
           onEnd: syncFromDOM,
         }));
       });
@@ -392,7 +393,18 @@
   document.querySelector(".tabs").onclick = (e) => { const t = e.target.closest(".tab"); if (t) showTab(t.dataset.tab); };
 
   /* ---------- 이벤트 ---------- */
-  $("#board").addEventListener("click", (e) => { const c = e.target.closest(".card"); if (c) openItem(c.dataset.id); });
+  $("#board").addEventListener("click", (e) => {
+    const mv = e.target.closest("[data-move]");
+    if (mv) {
+      e.stopPropagation();
+      setField(mv.dataset.move, { status: "bought" });
+      state.order.bought = [mv.dataset.move].concat((state.order.bought || []).filter((x) => x !== mv.dataset.move));
+      save(); renderBoard(); renderUsed();
+      const t = $("#toast"); if (t) { t.textContent = "구매 완료로 옮겼어요. 카드를 눌러 가격을 적으면 +5 XP예요"; t.classList.add("show"); setTimeout(() => t.classList.remove("show"), 2600); }
+      return;
+    }
+    const c = e.target.closest(".card"); if (c) openItem(c.dataset.id);
+  });
   $("#board").addEventListener("keydown", (e) => {
     const c = e.target.closest(".card");
     if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openItem(c.dataset.id); }

@@ -508,3 +508,27 @@ dialog[open] { animation: sheet .25s var(--ease); }
   .gear-group { grid-template-columns: minmax(0, 1fr); gap: 4px; }
 }
 .btn { white-space: nowrap; }
+
+/* 캠프 영역 정렬: 그림 카드와 레벨 카드 높이를 맞추고, 뱃지를 같은 폭 칸에 정렬해요 */
+.camp { align-items: stretch; }
+@media (min-width: 1025px) {
+  .scene { aspect-ratio: auto; min-height: 100%; }
+}
+.badges { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.medal { width: 100%; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.medal svg { flex: none; }
+@media (max-width: 400px) { .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* 보드: 네 칸이 항상 한눈에 보이게 칸 안에서 스크롤해요 */
+.list { max-height: calc(100dvh - 220px); overflow-y: auto; overscroll-behavior: contain; padding: 2px; margin: -2px; scrollbar-width: thin; }
+.drag { pointer-events: none; opacity: .95; }
+.card:active { transform: none; }
+.quick-move { min-height: 28px; padding: 0 10px; border: 1px solid var(--teal-300); border-radius: 999px; background: var(--card); color: var(--teal-700); font-size: 12px; font-weight: 700; cursor: pointer; transition: background-color .15s var(--ease); }
+.quick-move:hover { background: var(--mint); }
+.meta .xp-tag { margin-left: auto; }
+@media (max-width: 640px) {
+  .board { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 82%; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+  .col { scroll-snap-align: start; }
+  .list { max-height: calc(100dvh - 260px); }
+}
+.card, .col-head { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
