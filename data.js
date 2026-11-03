@@ -280,3 +280,30 @@ window.SOSHA_DANAWA = [
   { name: "타프", q: "렉타타프", filter: "4×3m, 폴대 포함", pri: 3 },
   { name: "리빙쉘·쉘터 (동계 업그레이드)", q: "리빙쉘 텐트", filter: "2~4인, 스커트 있음", pri: 3 },
 ];
+
+/* 적재 계산용 수납 크기 [가로, 세로(깊이), 높이 cm, 무게 kg]. est = 추정치, 제품 조사로 덮어써요. */
+window.SOSHA_PACK = {
+  tent: [105, 18, 18, 4.2], mat: [68, 30, 30, 4.5], peg: [35, 10, 8, 2.5], rope: [20, 15, 5, 0.4],
+  groundsheet: [30, 20, 8, 0.8], rug: [40, 30, 20, 1.5], bedding: [50, 40, 30, 3], pillow: [40, 30, 15, 0.5],
+  tarp: [55, 20, 20, 4], cot: [80, 20, 20, 5],
+  reel: [35, 25, 30, 4.5], eblanket: [40, 30, 15, 2.5], heater: [25, 20, 35, 2], co: [12, 12, 4, 0.2],
+  hotpack: [20, 15, 10, 0.5], circulator: [25, 20, 30, 1.5],
+  burner: [37, 30, 12, 2], gas: [30, 20, 10, 1.6], windscreen: [30, 10, 5, 0.4], torch: [20, 8, 6, 0.3],
+  cookset: [25, 25, 18, 1.5], griddle: [35, 35, 5, 1.5], tongs: [40, 8, 4, 0.4], scissors: [25, 8, 3, 0.2],
+  board: [32, 22, 3, 0.6], spice: [25, 15, 12, 0.8], cooler: [49, 31, 33, 4.5], jug: [25, 20, 30, 1],
+  dishbag: [30, 25, 15, 0.5], coffee: [20, 15, 15, 0.6],
+  dishes: [25, 25, 10, 1.5], cutlery: [25, 6, 4, 0.2], cups: [20, 10, 12, 0.5],
+  firepit: [45, 45, 8, 3], gloves: [30, 15, 3, 0.3], wood: [45, 30, 25, 8], extinguisher: [10, 10, 30, 1], firemat: [40, 30, 3, 0.5],
+  table1: [60, 40, 8, 3], chairs: [55, 15, 30, 3], storage: [53, 36, 30, 2.4], shelf: [80, 40, 8, 5],
+  trash: [50, 10, 10, 0.8], carabiner: [15, 10, 5, 0.3],
+  mainlamp: [15, 15, 25, 0.8], headlamp: [15, 10, 8, 0.3], moodlamp: [12, 12, 15, 0.4],
+  toiletry: [25, 15, 10, 1], tissue: [30, 20, 15, 0.8], clothes: [50, 30, 30, 3], battery: [15, 8, 3, 0.4],
+  dogleash: [20, 15, 10, 0.8], dogbowl: [15, 15, 4, 0.2], dogbed: [50, 40, 15, 1], dogwear: [25, 20, 8, 0.4],
+  dogpoop: [20, 15, 8, 0.5], dogfence: [60, 60, 10, 4],
+};
+
+/* 차량 트렁크 (안쪽 치수 cm). 제품 조사 결과로 덮어써요. */
+window.SOSHA_CARS = [
+  { id: "f60", name: "미니 컨트리맨 F60 (2017~2023)", w: 100, d: 80, h: 45, dFolded: 150, est: true, liters: 450, litersFolded: 1390 },
+  { id: "custom", name: "직접 입력", w: 100, d: 80, h: 50, dFolded: 150 },
+];

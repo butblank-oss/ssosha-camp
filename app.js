@@ -84,6 +84,7 @@
         <span class="badge ${pc}">${pl}</span>
         <span>${esc(catName(it.cat))}</span>
         ${paid ? `<span class="price">${won(it.purchase.price)}${it.purchase.where ? ", " + esc(it.purchase.where) : ""}</span>` : ""}
+        ${!paid && (it.status === "todo" || it.status === "research") && window.SoshaGame ? `<span class="xp-tag">+${window.SoshaGame.xpFor(it)} XP</span>` : ""}
       </div>
     </article>`;
   }
@@ -136,10 +137,24 @@
     const must = items.filter((i) => i.pri === 1 && (i.status === "todo" || i.status === "research")).length;
     const have = items.filter((i) => i.status === "bought" || i.status === "owned").length;
     const pct = Math.round((have / items.length) * 100);
-    $("#statSpent").textContent = won(spent);
-    $("#statMust").textContent = must + "개";
-    $("#statPct").textContent = pct + "%";
-    $("#statBar").style.setProperty("--pct", pct / 100);
+    if (window.SoshaGame) window.SoshaGame.render(items, { spent: won(spent), must: must + "개", pct: pct + "%" });
+    if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(items, state, save);
+  }
+
+  /* ---------- 추천 제품 ---------- */
+  function picksHTML(id) {
+    const ps = (window.SOSHA_PICKS || {})[id];
+    if (!ps || !ps.length) return "";
+    return `<div class="field"><span>추천 제품 (다나와 최저가 기준, 무게와 크기에 '추정' 표시가 있으면 판매 페이지에서 확인)</span><div class="picks">${ps.map((p) => {
+      const sz = p.packedCm ? p.packedCm.join("×") + "cm" : "";
+      const spec = [p.weightKg ? p.weightKg + "kg" : "", sz].filter(Boolean).join(", ") + (p.est ? " (추정)" : "");
+      return `<div class="pick ${p.pick ? "best" : ""}">
+        <div class="pick-top"><strong>${p.pick ? '<span class="badge b-ok">추천</span> ' : ""}${esc(p.brand)} ${esc(p.model)}</strong><span>${p.price ? won(p.price) : "-"}</span></div>
+        <p>${esc(p.why)}</p>
+        ${spec ? `<span class="spec">${esc(spec)}</span>` : ""}
+        ${p.url ? `<a href="${esc(p.url)}" target="_blank" rel="noopener">상품 보기</a>` : ""}
+      </div>`;
+    }).join("")}</div></div>`;
   }
 
   /* ---------- 상세 다이얼로그 ---------- */
@@ -167,7 +182,8 @@
         ${it.model ? `<div class="box"><h4>우리 모델</h4><p>${esc(it.model)}</p></div>` : ""}
         <div class="box"><h4>추천 스펙</h4><p>${esc(it.spec)}</p></div>
         <div class="box"><h4>왜 필요해요?</h4><p>${esc(it.why)}</p></div>
-        <div class="prices"><div class="box"><h4>신품 시세</h4><p class="num">${esc(it.newPrice || "-")}</p></div><div class="box"><h4>중고 시세</h4><p class="num">${esc(it.usedPrice || "-")}</p></div></div>`}
+        <div class="prices"><div class="box"><h4>신품 시세</h4><p class="num">${esc(it.newPrice || "-")}</p></div><div class="box"><h4>중고 시세</h4><p class="num">${esc(it.usedPrice || "-")}</p></div></div>
+        ${picksHTML(it.id)}`}
       ${it.q || it.name ? `<div class="field"><span>매물 찾아보기: "${esc(it.q || it.name)}"</span>${linksHTML(it.q || it.name)}${it.link ? `<a class="link" href="${esc(it.link)}" target="_blank" rel="noopener">다나와 제품 페이지</a>` : ""}</div>` : ""}
       <div class="grid2">
         <label class="field"><span>상태</span><select name="status">${opt(COLS.map((c) => [c.id, c.name]), it.status)}</select></label>
@@ -227,7 +243,7 @@
   };
   function renderGuide() {
     $("#guide").innerHTML = `
-    <article class="g"><h3>${I.box}아이스박스는 몇 리터?</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.box}</span>아이스박스는 몇 리터?</h3>
       <table class="mini"><tr><th>상황</th><th>추천 용량</th></tr>
       <tr><td>2인 1박 (지금 우리)</td><td><strong>25~30L</strong></td></tr>
       <tr><td>2인 2박, 여름</td><td>40~45L</td></tr>
@@ -236,7 +252,7 @@
       <li>하드쿨러는 의자나 테이블로도 쓸 수 있어요. 바퀴 달린 45L 이상은 2인에겐 무거워요.</li>
       <li>아이스팩은 위아래에 하나씩. 얼린 생수를 넣으면 다음 날 마실 물이 돼요.</li></ul></article>
 
-    <article class="g"><h3>${I.bowl}그릇은 뭘 사야 해요?</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.bowl}</span>그릇은 뭘 사야 해요?</h3>
       <table class="mini"><tr><th></th><th>스테인리스</th><th>멜라민</th></tr>
       <tr><td>무게</td><td>보통</td><td>가벼움</td></tr>
       <tr><td>불·열</td><td>강함</td><td>약함 (변형)</td></tr>
@@ -246,7 +262,7 @@
       <li>떡볶이·찌개처럼 국물 요리가 많으면 볼을 깊은 것으로 골라요.</li>
       <li>겹쳐서 수납되는 세트를 고르면 폴딩박스에 쏙 들어가요.</li></ul></article>
 
-    <article class="g"><h3>${I.bolt}캠핑장 전기 계산법</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.bolt}</span>캠핑장 전기 계산법</h3>
       <p>캠핑장 전기는 보통 <strong>사이트당 600W~1kW</strong>로 제한돼요. 넘으면 차단기가 내려가요.</p>
       <table class="mini"><tr><th>기기</th><th>전력</th></tr>
       <tr><td>전기장판 더블</td><td>약 150~200W</td></tr>
@@ -255,31 +271,59 @@
       <tr><td>전기포트</td><td>1000W 이상 (대부분 금지)</td></tr></table>
       <ul><li>릴선은 <strong>2.5sq 굵기</strong>, 쓸 때는 끝까지 풀어서 써야 열이 안 나요.</li></ul></article>
 
-    <article class="g warn"><h3>${I.alert}겨울 안전 (꼭 읽기)</h3>
+    <article class="g warn panel-card"><h3><span class="ico-wrap">${I.alert}</span>겨울 안전 (꼭 읽기)</h3>
       <ul><li><strong>부탄가스를 불 옆에서 데우지 마세요.</strong> 가스통이 터질 수 있어요. 동계용(이소부탄) 가스를 쓰고, 쓰기 전까지 침낭이나 주머니에 넣어 체온으로 데워요.</li>
       <li>원터치 텐트 안에서는 <strong>가스·숯·등유 난로를 쓰지 마세요.</strong> 환기가 안 되고 천이 얇아서 화재와 일산화탄소 중독 위험이 커요. 전기장판과 전기 온풍기만 써요.</li>
       <li>일산화탄소 경보기는 사람과 강아지 모두를 위한 장비예요.</li>
       <li>화로대 근처에 소화기와 물 한 통을 놓아요.</li></ul></article>
 
-    <article class="g"><h3>${I.moon}어두워지기 전 루틴</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.moon}</span>어두워지기 전 루틴</h3>
       <ul><li>도착하면 해 지기 전에 <strong>텐트 → 팩질 → 전기 → 조명</strong> 순서로 설치해요.</li>
       <li>저녁 재료 손질은 밝을 때 끝내요. 떡볶이처럼 불기 쉬운 메뉴는 먹기 직전에 끓여요.</li>
       <li>헤드랜턴은 1인당 하나. 메인 랜턴은 높이 걸면 넓게 비춰요.</li>
       <li>철수할 때는 폴딩박스 2개(주방 / 생활)에 정해진 물건만 넣어요. 박스가 정리 순서가 돼요.</li></ul></article>
 
-    <article class="g"><h3>${I.paw}강아지 동반 체크</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.paw}</span>강아지 동반 체크</h3>
       <ul><li>'애견 동반 가능'인지, 몸무게나 마릿수 제한이 있는지 예약 전에 확인해요.</li>
       <li>리드줄 고정 앵커로 화로대에서 2m 이상 떨어진 곳에 자리를 만들어줘요.</li>
       <li>집에서 쓰던 담요, 물그릇, 사료 1회분 소분, 배변봉투, 발 닦을 물티슈를 챙겨요.</li>
       <li>장작 연기는 강아지에게 자극적이니 바람 반대쪽에 두어요.</li>
       <li>소형견은 밤에 체온이 금방 떨어져요. 패딩을 입히고 전기장판 위에 같이 재워요.</li></ul></article>
 
-    <article class="g"><h3>${I.list}구매 순서 추천</h3>
+    <article class="g panel-card"><h3><span class="ico-wrap">${I.list}</span>구매 순서 추천</h3>
       <ol>
       <li><strong>1순위 (다음 캠핑 전)</strong>: 릴선, 전기장판, 헤드랜턴·메인 랜턴, 단조팩·망치, 동계용 가스, 가위·집게·양념통, 식기·수저, 폴딩박스, 일산화탄소 경보기</li>
       <li><strong>2순위</strong>: 그라운드시트, 아이스박스, 그리들, 설거지 가방, 방염포, 강아지 앵커·방석</li>
       <li><strong>3순위 (취향이 생기면)</strong>: 타프, 야전침대, 동계 침낭, 리빙쉘 텐트(한겨울용)</li></ol>
-      <p class="hint">릴선, 랜턴, 폴딩박스는 중고가 많고 상태 차이가 적어서 중고로 사기 좋아요. 전기장판과 가스류는 신품을 추천해요.</p></article>`;
+      <p class="hint">릴선, 랜턴, 폴딩박스는 중고가 많고 상태 차이가 적어서 중고로 사기 좋아요. 전기장판과 가스류는 신품을 추천해요.</p></article>
+    ${guideExtra()}`;
+  }
+  function guideExtra() {
+    const PICKS = window.SOSHA_PICKS || {};
+    const top = Object.keys(PICKS).map((id) => ({ id, it: getItem(id), p: PICKS[id].find((x) => x.pick) })).filter((x) => x.it && x.p);
+    const shops = window.SOSHA_SHOPS || [], tips = window.SOSHA_TIPS || [];
+    const usedNew = `<table class="mini"><tr><th>중고로 사도 괜찮아요</th><th>새로 사요</th></tr>
+      <tr><td>랜턴, 테이블, 의자, 폴딩박스, 릴선(차단기 작동 확인), 아이스박스, 타프</td><td>침낭과 매트(위생, 보온 성능), 전기장판, 부탄가스, 소화기, 일산화탄소 경보기</td></tr></table>`;
+    const byTopic = {};
+    tips.forEach((t) => { (byTopic[t.topic] = byTopic[t.topic] || []).push(t); });
+    return `
+    <article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.list}</span>필수 품목 추천 제품 한눈에</h3>
+      <p class="hint">다나와 최저가 기준으로 조사했어요(2026년 11월). 카드를 누르면 다른 후보 2개도 볼 수 있어요.</p>
+      <div class="table-wrap"><table class="tbl"><thead><tr><th>품목</th><th>추천 제품</th><th>가격</th><th>무게</th><th>왜</th></tr></thead><tbody>
+      ${top.map(({ it, p }) => `<tr><td><strong>${esc(it.name)}</strong></td><td>${esc(p.brand)} ${esc(p.model)}</td><td class="num">${won(p.price)}</td><td class="num">${p.weightKg ? p.weightKg + "kg" + (p.est ? " (추정)" : "") : "-"}</td><td>${esc(p.why)}</td></tr>`).join("")}
+      </tbody></table></div></article>
+
+    <article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.box}</span>어디서 사요? 생활 매장 구매 경로</h3>
+      <div class="shop-grid">${shops.map((sh) => `<div class="shop"><strong>${esc(sh.shop)}</strong>
+        ${sh.buy && sh.buy.length ? `<ul>${sh.buy.map((b) => `<li>${esc(b.product || b.item)}${b.price && b.price !== "미확인" ? `, ${esc(b.price)}` : ""}${b.note ? `: ${esc(b.note)}` : ""}${b.url ? ` <a class="src" href="${esc(b.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>` : ""}
+        ${sh.avoid && sh.avoid.length ? `<ul>${sh.avoid.map((a) => `<li><strong>${esc(a.item)}</strong>: ${esc(a.why)}${a.url ? ` <a class="src" href="${esc(a.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>` : ""}
+      </div>`).join("")}</div>
+      <p class="hint">트레이더스, 이마트, 노브랜드, 홈플러스, 데카트론, 무인양품은 믿을 만한 후기를 찾지 못해서 넣지 않았어요. 매장에서 보면 위 '새로 사요' 목록만 피하면 돼요.</p>
+      ${usedNew}</article>
+
+    <article class="g panel-card g-wide"><h3><span class="ico-wrap">${I.moon}</span>베테랑 캠퍼들의 조언</h3>
+      <div class="shop-grid">${Object.entries(byTopic).map(([topic, ts]) => `<div class="shop"><strong>${esc(topic)}</strong><ul>${ts.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul></div>`).join("")}</div>
+    </article>`;
   }
 
   /* ---------- 중고·다나와 ---------- */
@@ -323,6 +367,7 @@
   function showTab(name) {
     document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", t.dataset.tab === name));
     document.querySelectorAll(".panel").forEach((p) => (p.hidden = p.id !== "tab-" + name));
+    if (name === "pack" && window.SoshaPack) window.SoshaPack.render(allItems(), state, save);
     try { history.replaceState(null, "", "#" + name); } catch { /* noop */ }
   }
   document.querySelector(".tabs").onclick = (e) => { const t = e.target.closest(".tab"); if (t) showTab(t.dataset.tab); };
@@ -359,7 +404,8 @@
     state = { items: {}, custom: [], order: {} }; save(); renderBoard(); renderUsed();
   };
 
+  window.SOSHA = { allItems, save, get state() { return state; } };
   renderChips(); renderBoard(); renderGuide(); renderMarket(); renderLog();
   const h = location.hash.slice(1);
-  if (["board", "guide", "market", "log"].includes(h)) showTab(h);
+  if (["board", "guide", "pack", "market", "log"].includes(h)) showTab(h);
 })();
