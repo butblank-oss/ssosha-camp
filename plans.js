@@ -4,6 +4,7 @@
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const CATS = window.SOSHA_CATEGORIES || [];
   const api = () => window.SOSHA;
+  const views = {}; // 계획마다 보고 있는 탭 (저장하지 않아요)
   const plans = () => { const st = api().state; st.plans = st.plans || []; return st.plans; };
   const items = () => api().allItems();
   const itemById = (id) => items().find((i) => i.id === id);
@@ -64,7 +65,7 @@
     const packed = new Set(p.packed || []);
     const done = gear.filter((g) => packed.has(g.id)).length;
     const bp = buyPlan(p);
-    const view = p.view || "pack";
+    const view = views[p.id] || "pack";
     const others = items().filter((i) => !(p.gear || []).includes(i.id) && i.id !== "foodmenu");
     const byCat = CATS.map((c) => {
       const xs = gear.filter((g) => g.cat === c.id);
@@ -118,7 +119,7 @@
     root.querySelectorAll("[data-addg]").forEach((sel) => (sel.onchange = () => {
       if (!sel.value) return; const p = find(sel.dataset.addg); p.gear = (p.gear || []).concat(sel.value); persist();
     }));
-    root.querySelectorAll("[data-pview]").forEach((b) => (b.onclick = () => { const p = find(b.dataset.pview); p.view = b.value; render(); }));
+    root.querySelectorAll("[data-pview]").forEach((b) => (b.onclick = () => { views[b.dataset.pview] = b.value; render(); }));
     root.querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => { if (window.SOSHA.openItem) window.SOSHA.openItem(b.dataset.open); }));
     root.querySelectorAll("[data-pdel]").forEach((b) => (b.onclick = () => {
       if (b.dataset.armed !== "1") { b.dataset.armed = "1"; b.textContent = "한 번 더 누르면 삭제"; setTimeout(() => { b.dataset.armed = ""; b.textContent = "계획 삭제"; }, 3000); return; }
