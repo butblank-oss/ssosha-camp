@@ -258,7 +258,8 @@
         <button class="icon-btn" value="cancel" aria-label="닫기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
       <div class="dlg-body">
         <p class="hint">레벨이 오르면 텐트 크기와 분위기, 강아지 용품이 바뀌어요. 랜턴이나 아이스박스 같은 장비는 실제로 사야 그림에 생겨요. 아래 그림은 지금 가진 장비 기준이에요.</p>
-        <div class="lv-grid">${LEVELS.map((l, i) => `<div class="lv-step ${i === g.lv ? "now" : ""} ${i < g.lv ? "past" : ""}">
+        <div class="lv-zoom" id="lvZoom" hidden></div>
+        <div class="lv-grid">${LEVELS.map((l, i) => `<div class="lv-step ${i === g.lv ? "now" : ""} ${i < g.lv ? "past" : ""}" role="button" tabindex="0" data-lvz="${i}" aria-label="Lv.${i + 1} ${l.name} 크게 보기">
           <div class="lv-scene">${scene({ h: g.h, lv: i })}</div>
           <div class="lv-meta"><strong>Lv.${i + 1} ${l.name}</strong><span>${l.xp} XP${i === g.lv ? ", 지금" : i > g.lv ? `, ${l.xp - g.xp} XP 남음` : ", 달성"}</span></div>
           <p>${LEVEL_FX[i]}</p></div>`).join("")}</div>
@@ -267,6 +268,22 @@
         <h3 class="lv-sub">다 갖추면 이런 모습이에요</h3>
         <div class="lv-scene lv-final">${scene({ h: all, lv: 4 })}</div>
       </div></form>`;
+    const zoom = dlg.querySelector("#lvZoom");
+    const showZoom = (i) => {
+      const l = LEVELS[i];
+      zoom.innerHTML = `<div class="lvz-head"><strong>Lv.${i + 1} ${l.name}</strong><span class="hint">${l.xp} XP${i === g.lv ? ", 지금 레벨" : i > g.lv ? `, ${l.xp - g.xp} XP 남음` : ", 달성"}</span></div>
+        <div class="lv-scene lvz-scene">${scene({ h: g.h, lv: i })}</div>
+        <p>${LEVEL_FX[i]}</p>
+        <div class="lvz-nav"><button type="button" class="btn btn-sm" data-zgo="${i - 1}" ${i === 0 ? "disabled" : ""}>이전 레벨</button><button type="button" class="btn btn-sm" data-zclose="1">목록으로</button><button type="button" class="btn btn-sm" data-zgo="${i + 1}" ${i === LEVELS.length - 1 ? "disabled" : ""}>다음 레벨</button></div>`;
+      zoom.hidden = false;
+      zoom.querySelectorAll("[data-zgo]").forEach((b) => (b.onclick = () => showZoom(+b.dataset.zgo)));
+      zoom.querySelector("[data-zclose]").onclick = () => { zoom.hidden = true; };
+      zoom.scrollIntoView({ block: "nearest" });
+    };
+    dlg.querySelectorAll("[data-lvz]").forEach((el) => {
+      el.onclick = () => showZoom(+el.dataset.lvz);
+      el.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); showZoom(+el.dataset.lvz); } };
+    });
     dlg.showModal();
   }
 

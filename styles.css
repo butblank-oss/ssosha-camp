@@ -701,3 +701,11 @@ dialog[open] { animation: sheet .25s var(--ease); }
   .buy-acts { grid-column: 1 / -1; grid-row: 3; }
 }
 .b-lesson { background: var(--foreground); color: var(--card); }
+.lv-step { cursor: zoom-in; transition: border-color .15s var(--ease), box-shadow .15s var(--ease); }
+.lv-step:hover { border-color: var(--teal-300); }
+.lv-zoom { display: grid; gap: 10px; padding: 14px; border-radius: 16px; background: var(--tint); border: 1px solid color-mix(in srgb, var(--teal-300) 55%, var(--border)); }
+.lvz-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.lvz-head strong { font-size: 18px; }
+.lvz-scene { width: 100%; }
+.lv-zoom p { font-size: 15px; }
+.lvz-nav { display: flex; justify-content: space-between; gap: 8px; }
