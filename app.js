@@ -5,10 +5,10 @@
   const BASE = window.SOSHA_ITEMS;
   const TRIP = window.SOSHA_FIRST_TRIP;
   const COLS = [
-    { id: "todo", name: "사야 해요", color: "var(--ember)" },
-    { id: "research", name: "알아보는 중", color: "var(--warn)" },
-    { id: "bought", name: "구매 완료", color: "var(--primary)" },
-    { id: "owned", name: "원래 있던 것", color: "var(--muted)" },
+    { id: "todo", name: "사야 해요" },
+    { id: "research", name: "알아보는 중" },
+    { id: "bought", name: "구매 완료" },
+    { id: "owned", name: "원래 있던 것" },
   ];
   const PRI = { 1: ["필수", "b-must"], 2: ["권장", "b-nice"], 3: ["나중에", ""] };
   const catName = (id) => (CATS.find((c) => c.id === id) || {}).name || "기타";
@@ -40,7 +40,7 @@
     ];
   }
   const linksHTML = (q) => `<div class="links">${linksFor(q).map(([c, n, u]) =>
-    `<a class="link ${c}" href="${u}" target="_blank" rel="noopener"><i aria-hidden="true"></i>${n}</a>`).join("")}</div>`;
+    `<a class="link ${c}" href="${u}" target="_blank" rel="noopener">${n}</a>`).join("")}</div>`;
 
   /* ---------- 필터 ---------- */
   const filter = { cat: "all", q: "", pri: 0, dog: true };
@@ -74,18 +74,16 @@
       return a.pri - b.pri;
     });
   }
-  const starSVG = '<svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>';
   function cardHTML(it) {
     const [pl, pc] = PRI[it.pri] || PRI[3];
     const paid = it.purchase && it.purchase.price;
-    return `<article class="card" data-id="${esc(it.id)}" tabindex="0" role="button" aria-label="${esc(it.name)} 자세히 보기">
-      <div class="card-top"><h3>${esc(it.name)}</h3>${it.rating ? `<span class="stars" aria-label="활용도 ${it.rating}점">${"★".repeat(it.rating)}</span>` : ""}</div>
+    return `<article class="card" data-id="${esc(it.id)}" data-pri="${it.pri}" tabindex="0" role="button" aria-label="${esc(it.name)} 자세히 보기">
+      <div class="card-top"><h3>${esc(it.name)}</h3>${it.rating ? `<span class="rating">활용도 ${it.rating}/5</span>` : ""}</div>
       <p>${esc(it.model || it.spec)}</p>
       <div class="meta">
         <span class="badge ${pc}">${pl}</span>
-        <span class="badge">${esc(catName(it.cat))}</span>
-        ${it.cat === "dog" ? '<span class="badge b-dog">강아지</span>' : ""}
-        ${paid ? `<span class="badge b-paid">${won(it.purchase.price)} · ${esc(it.purchase.where || "")}</span>` : ""}
+        <span>${esc(catName(it.cat))}</span>
+        ${paid ? `<span class="price">${won(it.purchase.price)}${it.purchase.where ? ", " + esc(it.purchase.where) : ""}</span>` : ""}
       </div>
     </article>`;
   }
@@ -96,8 +94,8 @@
       const all = sorted(c.id);
       const vis = all.filter(visible);
       const sum = all.reduce((s, i) => s + ((i.purchase && +i.purchase.price) || 0), 0);
-      return `<section class="col" aria-label="${c.name}">
-        <div class="col-head"><h2><span class="dot" style="background:${c.color}"></span>${c.name}</h2><span class="count">${vis.length}${vis.length !== all.length ? " / " + all.length : ""}개</span></div>
+      return `<section class="col" data-col="${c.id}" aria-label="${c.name}">
+        <div class="col-head"><h2>${c.name}</h2><span class="count">${vis.length}${vis.length !== all.length ? " / " + all.length : ""}개</span></div>
         ${sum ? `<div class="col-sum">합계 ${won(sum)}</div>` : ""}
         <div class="list" data-status="${c.id}">${vis.map(cardHTML).join("") || '<div class="empty">여기로 끌어다 놓으세요</div>'}</div>
       </section>`;
@@ -141,7 +139,7 @@
     $("#statSpent").textContent = won(spent);
     $("#statMust").textContent = must + "개";
     $("#statPct").textContent = pct + "%";
-    $("#statBar").style.width = pct + "%";
+    $("#statBar").style.setProperty("--pct", pct / 100);
   }
 
   /* ---------- 상세 다이얼로그 ---------- */
@@ -170,13 +168,13 @@
         <div class="box"><h4>추천 스펙</h4><p>${esc(it.spec)}</p></div>
         <div class="box"><h4>왜 필요해요?</h4><p>${esc(it.why)}</p></div>
         <div class="prices"><div class="box"><h4>신품 시세</h4><p class="num">${esc(it.newPrice || "-")}</p></div><div class="box"><h4>중고 시세</h4><p class="num">${esc(it.usedPrice || "-")}</p></div></div>`}
-      ${it.q || it.name ? `<div class="field"><span>매물 찾아보기 · "${esc(it.q || it.name)}"</span>${linksHTML(it.q || it.name)}${it.link ? `<a class="link" href="${esc(it.link)}" target="_blank" rel="noopener">다나와 제품 페이지</a>` : ""}</div>` : ""}
+      ${it.q || it.name ? `<div class="field"><span>매물 찾아보기: "${esc(it.q || it.name)}"</span>${linksHTML(it.q || it.name)}${it.link ? `<a class="link" href="${esc(it.link)}" target="_blank" rel="noopener">다나와 제품 페이지</a>` : ""}</div>` : ""}
       <div class="grid2">
         <label class="field"><span>상태</span><select name="status">${opt(COLS.map((c) => [c.id, c.name]), it.status)}</select></label>
         <label class="field"><span>우선순위</span><select name="pri">${opt([[1, "필수"], [2, "권장"], [3, "나중에"]], it.pri)}</select></label>
       </div>
-      <fieldset class="box" style="border:0;display:grid;gap:10px">
-        <h4>구매 기록</h4>
+      <fieldset class="purchase">
+        <legend>구매 기록</legend>
         <div class="grid2">
           <label class="field"><span>어디서</span><input type="text" name="where" value="${esc(p.where)}" placeholder="예: 당근, 고릴라캠핑"></label>
           <label class="field"><span>얼마에 (원)</span><input type="number" inputmode="numeric" name="price" value="${esc(p.price)}" placeholder="59000"></label>
@@ -186,7 +184,7 @@
         <label class="field"><span>어떻게 샀는지 메모</span><input type="text" name="how" value="${esc(p.how)}" placeholder="예: 직거래, 쿠폰 할인, 세트로 구매"></label>
       </fieldset>
       <div class="field"><span>활용도</span><div class="rate" id="rate" role="radiogroup" aria-label="활용도">${[1, 2, 3, 4, 5].map((n) =>
-        `<button type="button" role="radio" aria-checked="${n === draftRating}" aria-label="${n}점" data-n="${n}" class="${n <= draftRating ? "on" : ""}">${starSVG}</button>`).join("")}</div></div>
+        `<button type="button" role="radio" aria-checked="${n === draftRating}" aria-label="${n}점" data-n="${n}" class="${n <= draftRating ? "on" : ""}">${n}</button>`).join("")}</div></div>
       <label class="field"><span>활용도 메모 (써보니 어땠는지)</span><textarea name="memo" placeholder="예: 11월 밤에도 전기장판 2단이면 충분했음">${esc(it.memo)}</textarea></label>`;
     $("#rate").onclick = (e) => {
       const b = e.target.closest("button"); if (!b) return;
@@ -232,7 +230,7 @@
     <article class="g"><h3>${I.box}아이스박스는 몇 리터?</h3>
       <table class="mini"><tr><th>상황</th><th>추천 용량</th></tr>
       <tr><td>2인 1박 (지금 우리)</td><td><strong>25~30L</strong></td></tr>
-      <tr><td>2인 2박 · 여름</td><td>40~45L</td></tr>
+      <tr><td>2인 2박, 여름</td><td>40~45L</td></tr>
       <tr><td>겨울 1박</td><td>소프트쿨러 20L로 충분</td></tr></table>
       <ul><li>1L 정도 = 캔 1.5개라고 생각하면 쉬워요. 고기 1kg + 반찬 + 음료 8캔이면 25L면 돼요.</li>
       <li>하드쿨러는 의자나 테이블로도 쓸 수 있어요. 바퀴 달린 45L 이상은 2인에겐 무거워요.</li>
@@ -244,7 +242,7 @@
       <tr><td>불·열</td><td>강함</td><td>약함 (변형)</td></tr>
       <tr><td>깨짐</td><td>안 깨짐</td><td>잘 안 깨짐</td></tr>
       <tr><td>추천</td><td><strong>우리에게 추천</strong></td><td>피크닉용</td></tr></table>
-      <ul><li>2인 기본: 큰 접시 2 · 앞접시 2 · 국그릇(볼) 2 · 보온 머그 2 · 수저 2벌</li>
+      <ul><li>2인 기본: 큰 접시 2, 앞접시 2, 국그릇(볼) 2, 보온 머그 2, 수저 2벌</li>
       <li>떡볶이·찌개처럼 국물 요리가 많으면 볼을 깊은 것으로 골라요.</li>
       <li>겹쳐서 수납되는 세트를 고르면 폴딩박스에 쏙 들어가요.</li></ul></article>
 
@@ -277,7 +275,7 @@
       <li>소형견은 밤에 체온이 금방 떨어져요. 패딩을 입히고 전기장판 위에 같이 재워요.</li></ul></article>
 
     <article class="g"><h3>${I.list}구매 순서 추천</h3>
-      <ol style="padding-left:18px;margin:6px 0;font-size:14px">
+      <ol>
       <li><strong>1순위 (다음 캠핑 전)</strong>: 릴선, 전기장판, 헤드랜턴·메인 랜턴, 단조팩·망치, 동계용 가스, 가위·집게·양념통, 식기·수저, 폴딩박스, 일산화탄소 경보기</li>
       <li><strong>2순위</strong>: 그라운드시트, 아이스박스, 그리들, 설거지 가방, 방염포, 강아지 앵커·방석</li>
       <li><strong>3순위 (취향이 생기면)</strong>: 타프, 야전침대, 동계 침낭, 리빙쉘 텐트(한겨울용)</li></ol>
@@ -308,15 +306,15 @@
   function renderLog() {
     const spentItems = TRIP.spent.reduce((s, x) => s + x.price, 0);
     $("#log").innerHTML = `<article class="trip">
-      <span class="badge b-paid">첫 캠핑</span>
+      <span class="badge b-must">첫 캠핑</span>
       <h2>${esc(TRIP.place)}</h2>
-      <p class="hint">${esc(TRIP.date)} · 사이트 ${won(TRIP.site)} · 장비 ${won(spentItems)} · 합계 <strong class="num">${won(TRIP.site + spentItems)}</strong></p>
-      <div class="table-wrap" style="margin-top:12px"><table class="tbl" style="min-width:0"><thead><tr><th>품목</th><th>구매처</th><th>가격</th><th>상태</th></tr></thead><tbody>
+      <p class="hint">${esc(TRIP.date)}에 다녀왔어요. 사이트 ${won(TRIP.site)}와 장비 ${won(spentItems)}로 합계 <strong class="num">${won(TRIP.site + spentItems)}</strong>을 썼어요.</p>
+      <div class="table-wrap"><table class="tbl"><thead><tr><th>품목</th><th>구매처</th><th>가격</th><th>상태</th></tr></thead><tbody>
         <tr><td>캠핑장 (평일)</td><td>-</td><td class="num">${won(TRIP.site)}</td><td>-</td></tr>
         ${TRIP.spent.map((s) => `<tr><td>${esc(s.name)}</td><td>${esc(s.where)}</td><td class="num">${won(s.price)}</td><td>${esc(s.cond)}</td></tr>`).join("")}
         <tr><td colspan="4" class="hint">원래 있던 것: 화로대, 내열 장갑, 메쉬 테이블, 의자 2개, 집 냄비, 가스버너, 작은 도마와 칼, 램프 1개</td></tr>
       </tbody></table></div>
-      <h3 style="margin:18px 0 0;font-size:16px">배운 점</h3>
+      <h3 class="h2">배운 점</h3>
       <div class="lessons">${TRIP.lessons.map((l) => `<div class="lesson"><strong>${esc(l.t)}</strong><p>${esc(l.d)}</p></div>`).join("")}</div>
     </article>`;
   }
