@@ -700,3 +700,4 @@ dialog[open] { animation: sheet .25s var(--ease); }
   .buy-pick { grid-column: 1 / -1; grid-row: 2; }
   .buy-acts { grid-column: 1 / -1; grid-row: 3; }
 }
+.b-lesson { background: var(--foreground); color: var(--card); }

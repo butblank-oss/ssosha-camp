@@ -237,21 +237,6 @@ window.SOSHA_PICKS = {
  ],
  "gas": [
   {
-   "brand": "서울산업",
-   "model": "알프스 파워 이소가스 230g (4개)",
-   "price": 9930,
-   "weightKg": 1.24,
-   "packedCm": [
-    13,
-    13,
-    20
-   ],
-   "est": true,
-   "why": "4개에 1만 원이 안 돼서 제일 저렴한 동계용 이소가스예요. 무게·크기는 추정치예요.",
-   "url": "https://prod.danawa.com/info/?pcode=61541918",
-   "pick": true
-  },
-  {
    "brand": "맥선",
    "model": "맥스 캠핑가스 230g (4개)",
    "price": 10440,
@@ -262,9 +247,9 @@ window.SOSHA_PICKS = {
     20
    ],
    "est": true,
-   "why": "이소가스 표기에 230g 4개입이라 가볍게 챙기기 좋아요. 이소부탄 혼합 비율은 상세에서 확인이 필요해요.",
+   "why": "둥근 이소가스(OD캔)라 이소가스용 버너가 따로 필요해요. 이소가스 표기에 230g 4개입이라 가볍게 챙기기 좋아요. 이소부탄 혼합 비율은 상세에서 확인이 필요해요.",
    "url": "https://prod.danawa.com/info/?pcode=2390902",
-   "pick": false
+   "pick": true
   },
   {
    "brand": "맥선",
@@ -277,7 +262,7 @@ window.SOSHA_PICKS = {
     23
    ],
    "est": true,
-   "why": "450g 대용량이라 겨울 1박 이상 쓰기에 넉넉하지만 부피가 커요.",
+   "why": "둥근 이소가스(OD캔)라 이소가스용 버너가 따로 필요해요. 450g 대용량이라 겨울 1박 이상 쓰기에 넉넉하지만 부피가 커요.",
    "url": "https://prod.danawa.com/info/?pcode=14216645",
    "pick": false
   }

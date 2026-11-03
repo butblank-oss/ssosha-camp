@@ -38,7 +38,8 @@
   }
   function buyPlan(p) {
     const PICKS = window.SOSHA_PICKS || {};
-    const miss = needIds(p).map(itemById).filter((i) => i && !have(i)).sort((a, b) => a.pri - b.pri);
+    const L = window.SOSHA.lessonIds ? window.SOSHA.lessonIds() : new Set();
+    const miss = needIds(p).map(itemById).filter((i) => i && !have(i)).sort((a, b) => (L.has(b.id) - L.has(a.id)) || a.pri - b.pri);
     let cheap = 0, full = 0, unknown = 0, cheapMust = 0, fullMust = 0;
     const rows = miss.map((i) => {
       const ps = (PICKS[i.id] || []).filter((x) => x.price);
@@ -65,6 +66,7 @@
     const packed = new Set(p.packed || []);
     const done = gear.filter((g) => packed.has(g.id)).length;
     const bp = buyPlan(p);
+    const L = window.SOSHA.lessonIds ? window.SOSHA.lessonIds() : new Set();
     const view = views[p.id] || "pack";
     const others = items().filter((i) => !(p.gear || []).includes(i.id) && i.id !== "foodmenu");
     const byCat = CATS.map((c) => {
@@ -90,7 +92,7 @@
       : bp.rows.length ? `
         <div class="buy-sum"><div><span>필수만 사면</span><strong class="num">${won(view === "cheap" ? bp.cheapMust : bp.fullMust)}</strong></div><div><span>${view === "cheap" ? "가장 싼 제품으로 다 사면" : "추천 제품으로 다 갖추면"}</span><strong class="num">${won(view === "cheap" ? bp.cheap : bp.full)}</strong></div>${bp.unknown ? `<span class="hint">가격 정보가 없는 ${bp.unknown}개는 빼고 계산했어요</span>` : ""}</div>
         <ul class="buy-list">${bp.rows.map(({ i, low, best }) => { const x = view === "cheap" ? low : best; return `<li>
-          <button class="buy-name" data-open="${esc(i.id)}"><strong>${esc(i.name)}</strong><span class="badge ${i.pri === 1 ? "b-must" : i.pri === 2 ? "b-nice" : ""}">${i.pri === 1 ? "필수" : i.pri === 2 ? "권장" : "나중에"}</span></button>
+          <button class="buy-name" data-open="${esc(i.id)}"><strong>${esc(i.name)}</strong>${L.has(i.id) ? '<span class="badge b-lesson">교훈</span>' : ""}<span class="badge ${i.pri === 1 ? "b-must" : i.pri === 2 ? "b-nice" : ""}">${i.pri === 1 ? "필수" : i.pri === 2 ? "권장" : "나중에"}</span></button>
           <span class="buy-pick">${x ? `${esc(x.brand)} ${esc(x.model)}` : `${esc(i.newPrice || "추천 제품 조사 전")}${i.usedPrice && i.usedPrice !== "-" ? `, 중고 ${esc(i.usedPrice)}` : ""}`}</span>
           <span class="buy-price num">${x ? won(x.price) : ""}</span>
           <span class="buy-acts"><button class="btn btn-sm" data-got="${esc(p.id)}" data-item="${esc(i.id)}" value="bought">샀어요</button><button class="btn btn-sm btn-ghost" data-got="${esc(p.id)}" data-item="${esc(i.id)}" value="owned">원래 있어요</button></span></li>`; }).join("")}</ul>

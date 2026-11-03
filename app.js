@@ -67,10 +67,20 @@
   }
 
   /* ---------- 보드 ---------- */
+  /* 다녀온 캠핑의 배운 점에 걸린 장비는 우선순위를 맨 위로 올려요 */
+  function lessonIds() {
+    const ids = new Set();
+    (TRIP.lessons || []).forEach((l) => (l.items || []).forEach((id) => ids.add(id)));
+    allItems().forEach((i) => { if (i.lesson) ids.add(i.id); });
+    return ids;
+  }
+  const isLesson = (it) => lessonIds().has(it.id);
   function sorted(status) {
     const items = allItems().filter((i) => i.status === status);
     const ord = state.order[status] || [];
+    const L = lessonIds();
     return items.sort((a, b) => {
+      if ((status === "todo" || status === "research") && L.has(a.id) !== L.has(b.id)) return L.has(a.id) ? -1 : 1;
       const ia = ord.indexOf(a.id), ib = ord.indexOf(b.id);
       if (ia !== -1 || ib !== -1) return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
       return a.pri - b.pri;
@@ -83,7 +93,7 @@
       <div class="card-top"><h3>${esc(it.name)}</h3>${it.rating ? `<span class="rating">활용도 ${it.rating}/5</span>` : ""}</div>
       <p>${esc(it.model || it.spec)}</p>
       <div class="meta">
-        <span class="badge ${pc}">${pl}</span>
+        ${isLesson(it) && it.status !== "bought" && it.status !== "owned" ? '<span class="badge b-lesson">교훈</span>' : ""}<span class="badge ${pc}">${pl}</span>
         <span>${esc(catName(it.cat))}</span>
         ${paid ? `<span class="price">${won(it.purchase.price)}${it.purchase.where ? ", " + esc(it.purchase.where) : ""}</span>` : ""}
         ${!paid && (it.status === "todo" || it.status === "research") && window.SoshaGame ? `<span class="xp-tag">+${window.SoshaGame.xpFor(it)} XP</span>` : ""}
@@ -489,7 +499,7 @@
   };
 
   window.SOSHA = {
-    allItems, save, openItem, moveTo, get state() { return state; },
+    allItems, save, openItem, moveTo, lessonIds, get state() { return state; },
     replaceState(next) {
       state = Object.assign({ items: {}, custom: [], order: {} }, next);
       try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장 불가 환경 */ }

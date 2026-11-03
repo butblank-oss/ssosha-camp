@@ -99,7 +99,7 @@
     root.querySelectorAll("[data-add]").forEach((b) => (b.onclick = () => {
       const t = trips().find((x) => x.id === b.dataset.add); if (!t) return;
       const text = b.dataset.text;
-      api().state.custom.push({ id: "c" + Date.now(), custom: true, name: text, cat: "life", status: "todo", pri: 1, spec: `${t.place}에서 아쉬웠던 것`, why: t.notes || "", q: text, newPrice: "", usedPrice: "" });
+      api().state.custom.push({ id: "c" + Date.now(), custom: true, name: text, cat: "life", status: "todo", pri: 1, lesson: true, spec: `${t.place}에서 아쉬웠던 것`, why: t.notes || "", q: text, newPrice: "", usedPrice: "" });
       const n = (t.needs || []).find((x) => x.text === text); if (n) n.added = true;
       persist();
     }));
