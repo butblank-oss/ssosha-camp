@@ -137,6 +137,7 @@
     const must = items.filter((i) => i.pri === 1 && (i.status === "todo" || i.status === "research")).length;
     const have = items.filter((i) => i.status === "bought" || i.status === "owned").length;
     const pct = Math.round((have / items.length) * 100);
+    if ($("#log") && $("#log").childElementCount) renderLog();
     if (window.SoshaGame) window.SoshaGame.render(items, { spent: won(spent), must: must + "개", pct: pct + "%" });
     if (window.SoshaPack && !$("#tab-pack").hidden) window.SoshaPack.render(items, state, save);
   }
@@ -352,18 +353,32 @@
   /* ---------- 기록 ---------- */
   function renderLog() {
     const spentItems = TRIP.spent.reduce((s, x) => s + x.price, 0);
+    const haveIt = (id) => { const it = getItem(id); return it && (it.status === "bought" || it.status === "owned"); };
+    const solved = TRIP.lessons.filter((l) => (l.items || []).every(haveIt)).length;
     $("#log").innerHTML = `<article class="trip">
-      <span class="badge b-must">첫 캠핑</span>
-      <h2>${esc(TRIP.place)}</h2>
-      <p class="hint">${esc(TRIP.date)}에 다녀왔어요. 사이트 ${won(TRIP.site)}와 장비 ${won(spentItems)}로 합계 <strong class="num">${won(TRIP.site + spentItems)}</strong>을 썼어요.</p>
-      <div class="table-wrap"><table class="tbl"><thead><tr><th>품목</th><th>구매처</th><th>가격</th><th>상태</th></tr></thead><tbody>
-        <tr><td>캠핑장 (평일)</td><td>-</td><td class="num">${won(TRIP.site)}</td><td>-</td></tr>
-        ${TRIP.spent.map((s) => `<tr><td>${esc(s.name)}</td><td>${esc(s.where)}</td><td class="num">${won(s.price)}</td><td>${esc(s.cond)}</td></tr>`).join("")}
-        <tr><td colspan="4" class="hint">원래 있던 것: 화로대, 내열 장갑, 메쉬 테이블, 의자 2개, 집 냄비, 가스버너, 작은 도마와 칼, 램프 1개</td></tr>
-      </tbody></table></div>
-      <h3 class="h2">배운 점</h3>
-      <div class="lessons">${TRIP.lessons.map((l) => `<div class="lesson"><strong>${esc(l.t)}</strong><p>${esc(l.d)}</p></div>`).join("")}</div>
+      <div class="trip-head">
+        <span class="badge b-ok">첫 캠핑</span>
+        <h2>${esc(TRIP.place)}</h2>
+        <div class="trip-sum">
+          <span>${esc(TRIP.date)}</span>
+          <span>합계 <strong class="num">${won(TRIP.site + spentItems)}</strong></span>
+          <span>사이트 ${won(TRIP.site)}</span>
+          ${TRIP.spent.map((x) => `<span>${esc(x.name.replace(/ \(.*\)/, ""))} ${won(x.price)}, ${esc(x.where)} ${esc(x.cond)}</span>`).join("")}
+        </div>
+      </div>
+      <div class="lesson-head"><h3>배운 점과 다음엔 이렇게</h3><span class="lesson-score">해결 ${solved} / ${TRIP.lessons.length}</span></div>
+      <p class="hint">장비를 사서 구매 완료로 옮기면 그 교훈이 해결로 바뀌어요. 장비 이름을 누르면 추천 제품을 볼 수 있어요.</p>
+      <div class="lessons">${TRIP.lessons.map((l, i) => {
+        const done = (l.items || []).every(haveIt);
+        return `<div class="lesson ${done ? "done" : ""}">
+          <div class="lesson-top"><span class="lesson-n">${i + 1}</span><strong>${esc(l.t)}</strong>${done ? '<span class="badge b-ok">해결</span>' : ""}</div>
+          <p class="lesson-what">${esc(l.d)}</p>
+          <div class="lesson-fix"><span>다음엔 이렇게</span><p>${esc(l.fix || "")}</p></div>
+          <div class="lesson-items">${(l.items || []).map((id) => { const it = getItem(id); if (!it) return ""; const h = haveIt(id); return `<button class="item-chip ${h ? "have" : ""}" data-open="${esc(id)}">${h ? "가짐" : "필요"} ${esc(it.name)}</button>`; }).join("")}</div>
+        </div>`;
+      }).join("")}</div>
     </article>`;
+    $("#log").querySelectorAll("[data-open]").forEach((b) => (b.onclick = () => openItem(b.dataset.open)));
   }
 
   /* ---------- 탭 ---------- */
@@ -382,6 +397,8 @@
     if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); openItem(c.dataset.id); }
   });
   $("#q").oninput = (e) => { filter.q = e.target.value.trim(); renderBoard(); };
+  const topQ = $("#topQ");
+  if (topQ) topQ.oninput = (e) => { filter.q = e.target.value.trim(); $("#q").value = e.target.value; showTab("board"); renderBoard(); };
   $("#priSel").onchange = (e) => { filter.pri = +e.target.value; renderBoard(); };
   $("#dogToggle").onchange = (e) => { filter.dog = e.target.checked; renderBoard(); };
   $("#addBtn").onclick = () => openItem(null);
