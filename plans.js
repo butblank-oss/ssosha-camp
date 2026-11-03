@@ -48,7 +48,7 @@
     const list = plans().slice().sort((a, b) => String(a.date).localeCompare(String(b.date)));
     root.innerHTML = `<div class="section-head"><div><h2>다음 캠핑</h2><p class="hint">날짜와 캠핑장을 정하면 가진 장비로 짐 목록이 만들어져요. 다녀오면 '다녀왔어요'로 바로 기록해요.</p></div>
       <button class="btn" id="planAdd"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>계획 추가</button></div>
-      ${list.length ? list.map(card).join("") : '<div class="empty">계획한 캠핑이 없어요. \'계획 추가\'를 누르거나 캠핑장 탭에서 \'이곳으로 계획\'을 눌러 보세요.</div>'}`;
+      ${list.length ? list.map(card).join("") : '<div class="empty">계획한 캠핑이 없어요. \'계획 추가\'를 눌러 보세요.</div>'}`;
     const find = (id) => plans().find((p) => p.id === id);
     root.querySelector("#planAdd").onclick = () => openNew({});
     root.querySelectorAll("[data-pack]").forEach((cb) => (cb.onchange = () => {
