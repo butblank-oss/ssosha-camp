@@ -241,9 +241,12 @@ img { max-width: 100%; }
 .stage { display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: var(--r-lg); background: var(--mint); }
 .stage-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
 .stage-head small { display: block; font-size: 13px; font-weight: 600; color: var(--brand-ink); }
-.stage-head strong { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; }
+.stage-head strong { display: block; font-size: clamp(17px, 5.2vw, 20px); font-weight: 700; letter-spacing: -0.03em; }
+.stage-head .nw { white-space: nowrap; }
 .stage-head .xp { font-size: 13px; font-weight: 600; color: var(--brand-ink); white-space: nowrap; }
-.steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.steps { display: flex; gap: 4px; width: 100%; }
+.steps i { flex: 1 1 0; min-width: 0; }
+@media (max-width: 360px) { .steps { gap: 3px; } }
 .steps i { height: 6px; border-radius: 999px; background: color-mix(in srgb, var(--brand) 18%, transparent); overflow: hidden; }
 .steps i b { display: block; height: 100%; background: var(--brand); border-radius: inherit; width: var(--p, 0%); transition: width .6s var(--ease); }
 .mission { display: flex; flex-direction: column; border-radius: var(--r); background: var(--card); }

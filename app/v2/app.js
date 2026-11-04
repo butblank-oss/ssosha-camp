@@ -282,7 +282,7 @@
         <div class="home-grid">
           <section class="stage" aria-label="캠퍼 단계">
             <div class="stage-head">
-              <div><small>캠퍼 단계 ${g.lv + 1} / ${steps}</small><strong>${esc(g.cur.name)}${g.next ? ` → ${esc(g.next.name)}` : ""}</strong></div>
+              <div><small>캠퍼 단계 ${g.lv + 1} / ${steps}</small><strong><span class="nw">${esc(g.cur.name)}</span>${g.next ? ` <span class="nw">→ ${esc(g.next.name)}</span>` : ""}</strong></div>
               <span class="xp num">${g.next ? `${g.xp} / ${g.next.xp} XP` : `${g.xp} XP`}</span>
             </div>
             <div class="steps" aria-hidden="true">${Array.from({ length: steps }, (_, i) => `<i><b style="--p:${i < g.lv ? 100 : i === g.lv ? Math.round(pct * 100) : 0}%"></b></i>`).join("")}</div>
