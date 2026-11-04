@@ -132,7 +132,7 @@
     cooler: "ice", jug: "droplet", dishbag: "shopping-bags", coffee: "hot-beverage", dishes: "bowl-with-spoon", cutlery: "fork-and-knife",
     cups: "hot-beverage", foodmenu: "pot-of-food", firepit: "fire", gloves: "gloves", wood: "wood", extinguisher: "fire-extinguisher",
     firemat: "fire", table1: "package", chairs: "chair", storage: "package", igt: "cooking", shelf: "package", trash: "wastebasket",
-    carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
+    carabiner: "link", mainlamp: "light-bulb", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
     clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
@@ -472,11 +472,23 @@
         <div class="card" style="padding:16px;display:grid;gap:10px">
           <p class="muted" style="font-size:14px">${shared.mode === "live" ? "지금 시아와 실시간으로 같은 기록을 보고 있어요. 백업은 혹시 모를 때를 위한 거예요." : shared.mode === "readonly" ? "보기 전용으로 공유된 기록을 보고 있어요." : "기록은 이 브라우저에 저장돼요. 둘이 같이 보려면 공유 링크(Claude 아티팩트)로 열어요. 다른 폰으로 옮기려면 백업 글자를 복사해서 붙여넣어요."}</p>
           <div class="grid2"><button class="btn" type="button" data-backup>백업 복사</button><button class="btn" type="button" data-restore>붙여넣어 불러오기</button></div>
+          <button class="btn btn-danger-ghost" type="button" data-reset>기록 초기화</button>
         </div>
       </section>
       ${footNote()}
     </div>`;
     bindCommon();
+    $("[data-reset]").onclick = () => openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">기록 초기화</h2><span class="muted" style="font-size:14px">지운 뒤에는 되돌릴 수 없어요. 걱정되면 먼저 백업 복사를 해 두세요.</span></div>${xBtn()}</div>
+      <div style="display:grid;gap:10px">
+        <button class="btn btn-block" type="button" data-wipe="trips">캠핑 기록만 지우기<br><small class="muted">다녀온 캠핑 ${(state.trips || []).length}개와 일정이 지워져요. 장비는 그대로예요.</small></button>
+        <button class="btn btn-block btn-danger" type="button" data-wipe="all">처음 상태로 되돌리기<br><small>장비 체크, 구매 기록, 캠핑 기록이 모두 지워져요.</small></button>
+      </div>`, {
+      after: () => $$("[data-wipe]").forEach((b) => (b.onclick = () => {
+        if (b.dataset.wipe === "all") { Object.keys(state).forEach((k) => delete state[k]); Object.assign(state, { items: {}, custom: [], order: {}, trips: [], plans: [] }); }
+        else { state.trips = []; state.plans = []; }
+        save(); closeSheet(); rerender(); toast(b.dataset.wipe === "all" ? "처음 상태로 되돌렸어요" : "캠핑 기록을 지웠어요");
+      })),
+    });
     $("[data-backup]").onclick = async () => {
       const text = JSON.stringify(state);
       try { await navigator.clipboard.writeText(text); toast("백업을 복사했어요. 메모나 카톡에 붙여 둬요"); }
@@ -674,8 +686,15 @@
       <label class="field"><span>어디로</span><input id="tPlace" placeholder="예: 가평 자라섬" value="${esc(t.place)}"></label>
       <div class="pills"><button class="chip" type="button" id="tDog" aria-pressed="${!!t.dog}">강아지 동반</button></div>
       <label class="field"><span>후기 · 배운 점</span><textarea id="tNotes" placeholder="예: 새벽에 결로가 심했어요. 다음엔 문을 조금 열어둘래요.">${esc(t.notes)}</textarea></label>
-      <div class="sheet-foot"><button class="btn" type="button" data-close>취소</button><button class="btn btn-primary" style="flex:1" type="button" id="tSave">${existing ? "저장" : "기록하기"}</button></div>`, {
+      <div class="sheet-foot">${existing ? '<button class="btn btn-danger" type="button" id="tDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="tSave">${existing ? "저장" : "기록하기"}</button></div>`, {
       after: () => {
+        const del = $("#tDel");
+        if (del) del.onclick = () => {
+          const at = state.trips.indexOf(existing);
+          state.trips = state.trips.filter((x) => x !== existing);
+          save(); closeSheet(); rerender();
+          toast("캠핑 기록을 지웠어요", [{ label: "되돌리기", run: () => { state.trips.splice(Math.max(0, at), 0, existing); save(); rerender(); } }]);
+        };
         $("#tDog").onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true");
         $("#tSave").onclick = () => {
           const before = game();

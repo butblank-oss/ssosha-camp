@@ -456,6 +456,14 @@ img { max-width: 100%; }
 .sync-banner.readonly { color: var(--brand-ink); }
 .sync-banner.error { color: var(--warn); }
 
+/* 지우기 버튼 */
+.btn-danger { background: #FDECEC; color: #B42318; }
+.btn-danger:hover { background: #FAD7D7; }
+.btn-danger-ghost { background: transparent; color: #B42318; min-height: 44px; }
+[data-wipe] { flex-direction: column; gap: 2px; white-space: normal; padding: 12px 16px; line-height: 1.35; }
+[data-wipe] small { font-size: 13px; font-weight: 400; }
+@media (prefers-color-scheme: dark) { .btn-danger { background: #3A1616; color: #FCA5A5; } .btn-danger-ghost { color: #FCA5A5; } }
+
 </style>
 
   <a class="skip" href="#view">본문으로 건너뛰기</a>
