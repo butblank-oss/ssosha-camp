@@ -132,7 +132,7 @@
     cooler: "ice", jug: "droplet", dishbag: "shopping-bags", coffee: "hot-beverage", dishes: "bowl-with-spoon", cutlery: "fork-and-knife",
     cups: "hot-beverage", foodmenu: "pot-of-food", firepit: "fire", gloves: "gloves", wood: "wood", extinguisher: "fire-extinguisher",
     firemat: "fire", table1: "package", chairs: "chair", storage: "package", igt: "cooking", shelf: "package", trash: "wastebasket",
-    carabiner: "link", mainlamp: "light-bulb", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
+    carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
     clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
