@@ -8,12 +8,15 @@ import math
 import os
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
 KEY = os.environ.get("GOCAMPING_KEY", "").strip()
 if not KEY:
     sys.exit("GOCAMPING_KEY 시크릿이 비어 있어요.")
+if "%" in KEY:  # Encoding 키를 넣었으면 Decoding 키로 바꿔서 한 번만 인코딩되게 해요
+    KEY = urllib.parse.unquote(KEY)
 
 BASE = "https://apis.data.go.kr/B551011/GoCamping/basedList"
 HOME = (37.3899, 126.9507)  # 안양 범계역
@@ -27,7 +30,14 @@ def page(no, rows=1000):
         try:
             with urllib.request.urlopen(f"{BASE}?{q}", timeout=60) as r:
                 return json.loads(r.read().decode("utf-8"))
-        except Exception:  # 네트워크가 잠깐 끊기면 다시 시도해요
+        except urllib.error.HTTPError as e:
+            body = e.read().decode("utf-8", "replace")[:300]
+            print(f"HTTP {e.code} (시도 {attempt + 1}/4): {body}")
+            if attempt == 3:
+                sys.exit("공공데이터 API가 요청을 거절했어요. 인증키가 막 발급됐다면 1~2시간 뒤 다시 실행해요.")
+            time.sleep(2 ** attempt)
+        except Exception as e:  # 네트워크가 잠깐 끊기면 다시 시도해요
+            print(f"오류 (시도 {attempt + 1}/4): {e}")
             if attempt == 3:
                 raise
             time.sleep(2 ** attempt)

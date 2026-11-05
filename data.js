@@ -482,4 +482,198 @@ window.SOSHA_DAISO = [
 
 /* 우리 추천 캠핑장 (직접 조사). 캠핑장 찾기에서 맨 위에 '우리 추천'으로 떠요.
  * { id, name, area, min(집에서 차로 분), fire, wood, elec, elecW, pet, petNote, winter, floor:[], tarp, price, url, note } */
-window.SOSHA_CAMPSITES = [];
+/* fire/elec/pet/winter: true 확인됨, false 안 됨, null 확인 필요 (2026-11-05 조사, 예약 전 전화 확인) */
+window.SOSHA_CAMPSITES = [
+ {
+  "id": "hwarang",
+  "name": "안산 화랑오토캠핑장",
+  "area": "경기 안산",
+  "min": 30,
+  "fire": true,
+  "wood": false,
+  "elec": true,
+  "elecW": "전기 3천 원",
+  "pet": null,
+  "winter": true,
+  "floor": [
+   "파쇄석"
+  ],
+  "price": "2만~3.3만",
+  "url": "https://www.ktriptips.com/kor/leisure/2729945",
+  "note": "화로·장작 가능(블로그 기준). 장작은 미리 챙겨요. 안산도시공사 매월 1~7일 추첨, 15일부터 잔여 선착순."
+ },
+ {
+  "id": "nanji",
+  "name": "난지캠핑장",
+  "area": "서울 마포",
+  "min": 55,
+  "fire": true,
+  "wood": false,
+  "elec": true,
+  "elecW": "릴선 개인 준비",
+  "pet": null,
+  "winter": null,
+  "floor": [
+   "잔디"
+  ],
+  "price": "1.5만~2만",
+  "url": "https://www.seoul.go.kr/storyw/campingjang/nanji.do",
+  "note": "캠프파이어존 5곳(19~22시, 5천~1만 원). 바비큐존 낮 이용 가능. 서울시 공공예약 매월 15일 14시 오픈. 주차 하루 1만 원."
+ },
+ {
+  "id": "mulwang",
+  "name": "물왕호수캠핑",
+  "area": "경기 시흥",
+  "min": 30,
+  "fire": null,
+  "wood": false,
+  "elec": null,
+  "pet": null,
+  "winter": true,
+  "floor": [],
+  "price": "",
+  "url": "https://campingfriend.co.kr/listing-camp-detail/2540",
+  "note": "화로대는 있다고 나오지만 장작 가능 여부는 전화 확인 필요(010-8762-5460). 사이트가 좁고 모기가 많다는 후기."
+ },
+ {
+  "id": "gokgyo",
+  "name": "아산 곡교천야영장",
+  "area": "충남 아산",
+  "min": 80,
+  "fire": true,
+  "wood": true,
+  "elec": true,
+  "pet": true,
+  "petNote": "크기 무관",
+  "winter": true,
+  "floor": [],
+  "price": "1.5만~2만",
+  "url": "https://www.ktriptips.com/kor/leisure/2728615",
+  "note": "장작·전기·반려견·겨울 4가지 모두 확인된 곳. 화로 대여, 온수 샤워. 월요일 휴무."
+ },
+ {
+  "id": "eunhasu",
+  "name": "은하수 캠핑장",
+  "area": "경기 양주",
+  "min": 90,
+  "fire": true,
+  "wood": true,
+  "elec": true,
+  "pet": true,
+  "petNote": "반려견 전용",
+  "winter": true,
+  "floor": [
+   "잔디"
+  ],
+  "tarp": "넓은 잔디",
+  "price": "5만",
+  "url": "https://www.ktriptips.com/kor/leisure/2792248",
+  "note": "반려견 전용 캠핑장. 도그풀·펜스, 1견당 2인. 화로 대여, 온수. 매점 없음. 선착순 전화 예약."
+ },
+ {
+  "id": "haneul",
+  "name": "가평 설악 하늘계곡",
+  "area": "경기 가평",
+  "min": 90,
+  "fire": true,
+  "wood": true,
+  "elec": true,
+  "pet": true,
+  "petNote": "소형견",
+  "winter": true,
+  "floor": [
+   "파쇄석",
+   "데크"
+  ],
+  "tarp": "대형 데크",
+  "price": "4만",
+  "url": "https://www.ktriptips.com/kor/leisure/2740086",
+  "note": "금~일·공휴일만 운영. 대형 데크 42면, 화로 대여, 온수, 매점. 031-584-6423."
+ },
+ {
+  "id": "sangwabyeol",
+  "name": "산과별캠핑장",
+  "area": "충남 공주",
+  "min": 100,
+  "fire": true,
+  "wood": true,
+  "elec": true,
+  "pet": true,
+  "petNote": "소형견",
+  "winter": true,
+  "floor": [
+   "파쇄석"
+  ],
+  "price": "4만",
+  "url": "https://www.ktriptips.com/kor/leisure/2728604",
+  "note": "연중무휴, 사계절, 온수. 파쇄석 26면."
+ },
+ {
+  "id": "eoeundol",
+  "name": "어은돌송림캠핑장",
+  "area": "충남 태안",
+  "min": 110,
+  "fire": true,
+  "wood": true,
+  "elec": true,
+  "pet": true,
+  "petNote": "반려견 가능",
+  "winter": true,
+  "floor": [
+   "파쇄석"
+  ],
+  "price": "5만~7만",
+  "url": "https://www.ktriptips.com/kor/leisure/2729953",
+  "note": "바닷가 송림, 연중무휴, 온수, 매점. 010-3420-3470."
+ },
+ {
+  "id": "wangsong",
+  "name": "의왕 왕송호수캠핑장",
+  "area": "경기 의왕",
+  "min": 15,
+  "fire": false,
+  "wood": false,
+  "elec": true,
+  "elecW": "데크 600W",
+  "pet": false,
+  "winter": true,
+  "floor": [
+   "데크"
+  ],
+  "price": "2만~2.5만",
+  "url": "https://www.uuc.or.kr/camp/main/view",
+  "note": "장작·불멍 금지, 숯만 가능(2022년 공지 기준). 제일 가깝고 싸요. 의왕도시공사 추첨 후 잔여 선착순."
+ },
+ {
+  "id": "gaetgol",
+  "name": "시흥 갯골캠핑장",
+  "area": "경기 시흥",
+  "min": 35,
+  "fire": false,
+  "wood": false,
+  "elec": true,
+  "pet": null,
+  "winter": false,
+  "floor": [],
+  "price": "3.5만~10만",
+  "url": "https://www.ktriptips.com/kor/leisure/2726656",
+  "note": "화로대 불허. 12~2월 동계 휴장. 시흥도시공사 예약."
+ },
+ {
+  "id": "daebu",
+  "name": "대부도 경기도청소년수련원 캠핑장",
+  "area": "경기 안산 대부도",
+  "min": 50,
+  "fire": false,
+  "wood": false,
+  "elec": null,
+  "pet": null,
+  "winter": null,
+  "floor": [
+   "데크"
+  ],
+  "price": "2.2만~2.75만",
+  "url": "https://www.localnaeil.com/News/View/654475",
+  "note": "장작·모닥불 금지, 숯 바비큐만 가능. 경기도민 우선 예약."
+ }
+];

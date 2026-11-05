@@ -788,26 +788,27 @@
   function campList() {
     const cur = (window.SOSHA_CAMPSITES || []).map((c) => Object.assign({ ours: true }, c));
     const pub = ((CAMPS && CAMPS.items) || []).map((c) => Object.assign({}, c, { min: driveMin(c.km) }));
-    const ok = (c) => (!campF.fire || (c.ours ? c.fire !== false : c.fire === "개별" || c.fire === "공용"))
+    const ok = (c) => (!campF.fire || (c.ours ? c.fire === true || c.fire === null : c.fire === "개별" || c.fire === "공용"))
       && (!campF.elec || (c.ours ? c.elec !== false : c.elec))
       && (!campF.pet || (c.ours ? c.pet !== false : /^가능/.test(c.pet)))
       && (!campF.winter || (c.ours ? c.winter !== false : /겨울/.test(c.season)))
       && (!campF.near || (c.min || 999) <= 120)
       && (!campF.floor || (c.ours ? (c.floor || []).includes(campF.floor) : !!(c.floor || {})[campF.floor]));
     const seen = new Set(cur.map((c) => c.name.replace(/\s/g, "")));
-    return { ours: cur.filter(ok), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => x.km - y.km) };
+    return { ours: cur.filter(ok).sort((x, y) => (x.fire === false) - (y.fire === false) || x.min - y.min), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => x.km - y.km) };
   }
   function campCard(c) {
     const floor = c.ours ? (c.floor || []).join("·") : Object.keys(c.floor || {}).join("·");
     const tags = [
-      c.ours ? (c.fire === false ? "" : `🔥 ${c.wood ? "장작 판매" : "장작 가능"}`) : c.fire && c.fire !== "불가" ? `🔥 화로 ${c.fire}${c.wood ? " · 장작 판매" : ""}` : "",
-      (c.ours ? c.elec !== false : c.elec) ? `⚡ ${c.ours && c.elecW ? c.elecW : "전기"}` : "",
-      c.ours ? (c.petNote ? `🐶 ${c.petNote}` : "") : c.pet ? `🐶 ${c.pet}` : "",
+      c.ours ? (c.fire === false ? "🚫 불멍 안 됨" : c.fire === null ? "🔥 장작 전화 확인" : `🔥 ${c.wood ? "장작 판매" : "장작 가능"}`) : c.fire && c.fire !== "불가" ? `🔥 화로 ${c.fire}${c.wood ? " · 장작 판매" : ""}` : "",
+      (c.ours ? c.elec : c.elec) ? `⚡ ${c.ours && c.elecW ? c.elecW : "전기"}` : c.ours && c.elec === null ? "⚡ 전기 확인" : "",
+      c.ours ? (c.pet === false ? "🐾 반려견 불가" : c.petNote ? `🐶 ${c.petNote}` : c.pet === null ? "🐾 반려견 확인" : "") : c.pet ? `🐶 ${c.pet}` : "",
+      c.ours && c.winter === false ? "❄️ 겨울 휴장" : "",
       floor ? `바닥 ${floor}` : "",
       c.ours && c.tarp ? `타프 ${c.tarp}` : "",
     ].filter(Boolean);
     const where = [c.area, c.min ? `차로 약 ${c.min >= 60 ? `${Math.floor(c.min / 60)}시간 ${c.min % 60 ? `${c.min % 60}분` : ""}` : `${c.min}분`}` : ""].filter(Boolean).join(" · ");
-    return `<div class="camp-card">
+    return `<div class="camp-card${c.ours && c.fire === false ? " nofire" : ""}">
       <div class="camp-top"><b>${esc(c.name)}</b>${c.ours ? '<span class="tag tag-pick">우리 추천</span>' : ""}${c.price ? `<span class="camp-price">${esc(c.price)}</span>` : ""}</div>
       <small class="muted">${esc(where)}</small>
       <div class="camp-tags">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
