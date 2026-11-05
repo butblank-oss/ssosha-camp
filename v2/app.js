@@ -936,28 +936,39 @@
     keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id)) out.push(id); }));
     return out;
   }
+  /* 항상 챙기는 장비: state.packAlways. 아직 정한 적 없으면 멀티바스켓·육각스툴을 기본으로 넣어요 */
+  function alwaysIds() {
+    if (Array.isArray(state.packAlways)) return state.packAlways;
+    const txt = (i) => `${i.name || ""} ${i.spec || ""} ${(i.purchase && (i.purchase.where || "") + " " + (i.purchase.model || "")) || ""}`;
+    return items().filter((i) => have(i) && /멀티바스켓|육각스툴/.test(txt(i))).map((i) => i.id);
+  }
   function packData(p) {
     const c = packConds(p);
-    const ids = packIds(c);
+    const rule = packIds(c);
+    const rem = new Set(p.remove || []);
+    const always = alwaysIds();
+    const ids = [...new Set(rule.concat(always, p.add || []))].filter((id) => !rem.has(id));
     const all = items();
-    const want = ids.map((id) => all.find((i) => i.id === id)).filter(Boolean);
-    const take = want.filter(have);
-    const need = want.filter((i) => !have(i)).sort((x, y) => x.pri - y.pri);
-    const extra = all.filter((i) => have(i) && !ids.includes(i.id) && (i.custom || !i.dog || c.dog) && !(c.picnic && ["tent", "peg", "bedding", "pillow", "cot", "shelter"].includes(i.id)));
+    const byId = (id) => all.find((i) => i.id === id);
+    const take = ids.map(byId).filter(Boolean).filter((i) => have(i) || (p.add || []).includes(i.id));
+    const need = rule.filter((id) => !rem.has(id) && !(p.add || []).includes(id)).map(byId).filter((i) => i && !have(i)).sort((x, y) => x.pri - y.pri);
+    const extra = all.filter((i) => have(i) && !take.includes(i) && (i.custom || !i.dog || c.dog) && !(c.picnic && ["tent", "peg", "bedding", "pillow", "cot", "shelter"].includes(i.id)));
     const packed = new Set(p.packed || []);
-    const total = take.length + extra.filter((i) => packed.has(i.id)).length;
-    const done = take.filter((i) => packed.has(i.id)).length + extra.filter((i) => packed.has(i.id)).length;
-    return { c, take, need, extra, packed, total, done };
+    const total = take.length;
+    const done = take.filter((i) => packed.has(i.id)).length;
+    return { c, take, need, extra, packed, total, done, always: new Set(always) };
   }
+  let packOpenExtra = false;
   function openPack(planId) {
     const p = planById(planId) || nextPlan();
     if (!p) { openPlan(); return; }
     const pid = p.id;
     if (p.camp && p.camp.src === "g" && !CAMPS) loadCamps().then(() => sheetState.refresh && sheetState.refresh());
     const catName = (id) => (CATS.find((x) => x.id === id) || {}).name || "기타";
-    const row = (i, packed) => `<label class="pack-row"><input type="checkbox" data-packid="${esc(i.id)}"${packed.has(i.id) ? " checked" : ""}><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><b>${esc(i.name)}</b></label>`;
-    const byCat = (list, packed) => CATS.map((ct) => ({ ct, rows: list.filter((i) => i.cat === ct.id) })).concat([{ ct: { name: "기타" }, rows: list.filter((i) => !CATS.some((ct) => ct.id === i.cat)) }])
-      .filter((g) => g.rows.length).map((g) => `<div class="pack-cat">${esc(g.ct.name)}</div>${g.rows.map((i) => row(i, packed)).join("")}`).join("");
+    const row = (i, d) => `<div class="pack-row"><label class="pack-check"><input type="checkbox" data-packid="${esc(i.id)}"${d.packed.has(i.id) ? " checked" : ""}><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><b>${esc(i.name)}${have(i) ? "" : ' <em class="pack-none">아직 없음</em>'}</b></label><button class="pack-pin" type="button" data-ppin="${esc(i.id)}" aria-pressed="${d.always.has(i.id)}" title="매번 챙기기">${d.always.has(i.id) ? "📌 항상" : "📌"}</button><button class="pack-btn rem" type="button" data-prem="${esc(i.id)}" aria-label="${esc(i.name)} 빼기">빼기</button></div>`;
+    const addRow = (i) => `<div class="pack-row"><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><button class="pack-name" type="button" data-open="${esc(i.id)}">${esc(i.name)}${have(i) ? "" : ` <span class="tag ${PRI[i.pri][1]}">${PRI[i.pri][0]}</span>`}</button><button class="pack-btn add" type="button" data-padd="${esc(i.id)}" aria-label="${esc(i.name)} 챙길 것에 추가">+ 추가</button></div>`;
+    const byCat = (list, fn) => CATS.map((ct) => ({ ct, rows: list.filter((i) => i.cat === ct.id) })).concat([{ ct: { name: "기타" }, rows: list.filter((i) => !CATS.some((ct) => ct.id === i.cat)) }])
+      .filter((g) => g.rows.length).map((g) => `<div class="pack-cat">${esc(g.ct.name)}</div>${g.rows.map(fn).join("")}`).join("");
     openSheet(() => {
       const q = planById(pid) || p;
       const d = packData(q);
@@ -970,10 +981,11 @@
       ${c.picnic ? `<div class="pills"><button class="chip" type="button" data-cook aria-pressed="${!!q.cook}">🍳 요리해 먹기</button></div>` : ""}
       <div class="pack-prog"><span>챙긴 짐 <b class="num">${d.done} / ${d.total}</b></span><i><b style="width:${pct}%"></b></i></div>
       <h3 class="camp-h">가진 장비 중 챙길 것 <span class="faint">${d.take.length}개</span></h3>
-      ${d.take.length ? byCat(d.take, d.packed) : '<p class="muted" style="font-size:14px">이번 일정에 맞는 가진 장비가 아직 없어요.</p>'}
+      ${d.take.length ? byCat(d.take, (i) => row(i, d)) : '<p class="muted" style="font-size:14px">이번 일정에 맞는 가진 장비가 아직 없어요.</p>'}
       ${d.need.length ? `<h3 class="camp-h">있으면 좋은 것 <span class="faint">아직 없어요 · ${d.need.length}개</span></h3>
-        <div class="list">${d.need.map((i) => `<button class="link-row" type="button" data-open="${esc(i.id)}"><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><b>${esc(i.name)}</b><small><span class="tag ${PRI[i.pri][1]}">${PRI[i.pri][0]}</span></small></button>`).join("")}</div>` : ""}
-      ${d.extra.length ? `<details class="pack-extra"><summary>그 외 가진 장비 ${d.extra.length}개 · 필요하면 체크</summary>${byCat(d.extra, d.packed)}</details>` : ""}
+        ${d.need.map(addRow).join("")}
+        <p class="faint" style="font-size:12.5px">이름을 누르면 추천 제품을 봐요. 빌려 가거나 이미 있으면 '+ 추가'로 챙길 것에 넣어요.</p>` : ""}
+      ${d.extra.length ? `<details class="pack-extra"${packOpenExtra ? " open" : ""}><summary>그 외 가진 장비 ${d.extra.length}개 · 필요하면 추가</summary>${byCat(d.extra, addRow)}</details>` : ""}
       <div class="sheet-foot"><button class="btn btn-block" type="button" data-close>닫기</button></div>`;
     }, {
       after: () => {
@@ -983,6 +995,11 @@
           if (b.checked) s.add(b.dataset.packid); else s.delete(b.dataset.packid);
           q.packed = [...s]; save(); sheetState.refresh();
         }));
+        const edit = (fn) => { const q = planById(pid); if (!q) return; fn(q); save(); const ex = $("#sheet .pack-extra"); packOpenExtra = !!(ex && ex.open); sheetState.refresh(); };
+        $$("#sheet [data-padd]").forEach((b) => (b.onclick = () => edit((q) => { const id = b.dataset.padd; q.add = [...new Set((q.add || []).concat(id))]; q.remove = (q.remove || []).filter((x) => x !== id); toast("챙길 것에 넣었어요"); })));
+        $$("#sheet [data-prem]").forEach((b) => (b.onclick = () => edit((q) => { const id = b.dataset.prem; q.remove = [...new Set((q.remove || []).concat(id))]; q.add = (q.add || []).filter((x) => x !== id); q.packed = (q.packed || []).filter((x) => x !== id);
+          toast("이번 짐에서 뺐어요", [{ label: "되돌리기", run: () => { const r = planById(pid); r.remove = (r.remove || []).filter((x) => x !== id); save(); sheetState.refresh(); } }]); })));
+        $$("#sheet [data-ppin]").forEach((b) => (b.onclick = () => edit(() => { const id = b.dataset.ppin; const cur = new Set(alwaysIds()); if (cur.has(id)) cur.delete(id); else cur.add(id); state.packAlways = [...cur]; toast(cur.has(id) ? "캠핑·피크닉 때마다 챙길게요" : "매번 챙기기에서 뺐어요"); })));
         const ck = $("#sheet [data-cook]"); if (ck) ck.onclick = () => { const q = planById(pid); q.cook = !q.cook; save(); sheetState.refresh(); };
         $("#sheet [data-editplan]").onclick = () => openPlan(null, pid);
       },
