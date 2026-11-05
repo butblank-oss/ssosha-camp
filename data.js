@@ -490,6 +490,7 @@ window.SOSHA_DAISO = [
  * { id, name, area, min(집에서 차로 분), fire, wood, elec, elecW, pet, petNote, winter, floor:[], tarp, price, url, note } */
 /* fire/elec/pet/winter: true 확인됨, false 안 됨, null 확인 필요 (2026-11-05 조사, 예약 전 전화 확인) */
 window.SOSHA_CAMPSITES = [
+{"id": "gwanggyo", "name": "광교호수공원 가족캠핑장", "area": "경기 수원 영통구", "min": 25, "fire": false, "wood": false, "elec": true, "elecW": "전기 3천 원", "pet": true, "petNote": "소형견 가능", "winter": true, "floor": ["데크", "잔디"], "price": "", "url": "https://www.suwonudc.co.kr/ggcamping/mainPage.do", "note": "직접 가 본 곳. 장작·숯 불가, 버너만 가능. 데크 20·잔디 6면, 호수공원 산책하기 좋아요. 수원도시공사 추첨 예약. 031-548-0075."},
 {"id": "sanmaeul", "name": "안양 산마을캠핑장", "area": "경기 안양 동안구", "min": 10, "fire": true, "wood": false, "elec": null, "pet": true, "petNote": "반려견 가능 (가 봄)", "winter": true, "floor": ["파쇄석", "데크"], "price": "5만~6만", "url": "https://naver.me/xdpFqiYi", "note": "직접 가 본 곳. 장작 가능, 반려견 동반 가능. 파쇄석 15면·데크 18면, 화로대·릴선·난방기구 대여. 0507-1379-7772."},
 {"id": "solip", "name": "시흥 솔잎향캠핑파크", "area": "경기 시흥 조남동", "min": 20, "fire": true, "wood": false, "elec": null, "pet": false, "winter": true, "floor": ["데크", "파쇄석"], "price": "5만~6만", "url": "https://naver.me/GrmaE3Xv", "note": "직접 가 봤는데 매우 좋았어요. 장작 가능, 반려견 불가라 둘이 갈 때. 수리산 자락, 고속도로 옆. 031-402-7732.", "fav": true},
  {
@@ -683,5 +684,70 @@ window.SOSHA_CAMPSITES = [
   "price": "2.2만~2.75만",
   "url": "https://www.localnaeil.com/News/View/654475",
   "note": "장작·모닥불 금지, 숯 바비큐만 가능. 경기도민 우선 예약."
+ }
+];
+
+/* 피크닉 장소 (당일). 피크닉 일정에서 '피크닉 장소 고르기'로 떠요.
+ * dog 반려견, shade 그늘막·텐트 가능, cook 버너 취사 가능 — 규정은 바뀔 수 있어서 가기 전에 확인해요 */
+window.SOSHA_PICNICS = [
+ {
+  "id": "pyeongchon",
+  "name": "평촌중앙공원",
+  "area": "안양 동안구",
+  "min": 5,
+  "dog": true,
+  "shade": false,
+  "cook": false,
+  "park": "공영주차장",
+  "note": "집 앞 잔디밭. 돗자리 피크닉과 강아지 산책하기 좋아요. 리드줄 필수.",
+  "url": ""
+ },
+ {
+  "id": "hangang",
+  "name": "한강공원 (반포·여의도·뚝섬)",
+  "area": "서울",
+  "min": 40,
+  "dog": true,
+  "shade": true,
+  "cook": false,
+  "park": "한강공원 주차장 (유료)",
+  "note": "지정 구역에서 그늘막 텐트 가능(보통 09~19시, 두 면 이상 개방). 반려견 리드줄 필수. 배달 음식 받기 좋아요. 취사·불은 안 돼요.",
+  "url": "https://hangang.seoul.go.kr"
+ },
+ {
+  "id": "gwanggyopark",
+  "name": "광교호수공원",
+  "area": "수원 영통구",
+  "min": 25,
+  "dog": true,
+  "shade": false,
+  "cook": false,
+  "park": "공영주차장",
+  "note": "호수 둘레길이 넓어서 강아지 산책 겸 피크닉. 같은 공원 안에 가족캠핑장(버너만 가능)이 있어요.",
+  "url": ""
+ },
+ {
+  "id": "dongtan",
+  "name": "동탄호수공원 피크닉장",
+  "area": "화성 동탄",
+  "min": 40,
+  "dog": true,
+  "shade": false,
+  "cook": false,
+  "park": "1일 최대 1만 원",
+  "note": "호숫가 넓은 잔디밭과 대규모 피크닉장. 월·화 시설 점검으로 일부 미운영일 수 있어요. 화성시 공원관리과 031-5189-6232.",
+  "url": "https://tour.hscity.go.kr/NEW/1tour/nature20.jsp"
+ },
+ {
+  "id": "seoulpark",
+  "name": "서울대공원 캠핑장 피크닉",
+  "area": "과천",
+  "min": 20,
+  "dog": false,
+  "shade": true,
+  "cook": true,
+  "park": "서울대공원 주차장",
+  "note": "09~19시 피크닉 자리 2.5만 원(그늘막·테이블 포함), 4인 텐트+그늘막 3.5만 원, 입장료 별도. 3월 하순~11월 중순 운영, 월요일 휴장. 매월 15일 14시 예약 오픈.",
+  "url": "https://www.seoul.go.kr/storyw/campingjang/park.do"
  }
 ];

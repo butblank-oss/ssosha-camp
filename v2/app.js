@@ -806,15 +806,15 @@
     openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${p ? "캠핑 계획 고치기" : "캠핑 계획 추가"}</h2></div>${xBtn()}</div>
       <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(dv("date", p ? p.date : ""))}" min="${new Date().toISOString().slice(0, 10)}"></label>
       <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(dv("place", p ? p.place : ""))}"></label>
-      <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>조건에 맞는 캠핑장 찾기</span></button>
+      <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>${dv("kind", p ? p.kind || "camp" : "camp") === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"}</span></button>
       <div class="pills pills-wrap">${kindChips("data-pkind", dv("kind", p ? p.kind || "camp" : "camp"))}</div>
       <p class="faint" style="font-size:12.5px;margin-top:-4px">텐트만 치고 밤엔 집에서 자면 '당일 캠핑'이에요. 잠자리 짐이 빠져요. 가서 바뀌면 나중에 고쳐도 돼요.</p>
       <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${dv("dog", p ? !!p.dog : true)}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${dv("elec", p ? !!p.elec : true)}">전기 있음</button></div>
       <div class="sheet-foot">${p ? '<button class="btn" type="button" id="pDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="pSave">저장</button></div>`, {
       after: () => {
         const curKind = () => (($("#sheet [data-pkind][aria-pressed=true]") || {}).dataset || {}).pkind || "camp";
-        $$("#sheet [data-pkind]").forEach((b) => (b.onclick = () => $$("#sheet [data-pkind]").forEach((x) => x.setAttribute("aria-pressed", x === b))));
-        $("#pFind").onclick = () => openCampFinder({ planId: p ? p.id : null, date: $("#pDate").value, place: $("#pPlace").value, kind: curKind(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" });
+        $$("#sheet [data-pkind]").forEach((b) => (b.onclick = () => { $$("#sheet [data-pkind]").forEach((x) => x.setAttribute("aria-pressed", x === b)); $("#pFind span").textContent = b.dataset.pkind === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"; }));
+        $("#pFind").onclick = () => (curKind() === "picnic" ? openPicnicFinder : openCampFinder)({ planId: p ? p.id : null, date: $("#pDate").value, place: $("#pPlace").value, kind: curKind(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" });
         ["pDog", "pElec"].forEach((k) => ($("#" + k).onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true")));
         $("#pSave").onclick = () => {
           const date = $("#pDate").value;
@@ -1017,6 +1017,29 @@
         $$("#sheet [data-tent]").forEach((b) => (b.onclick = () => { const q = planById(pid); q.tent = b.dataset.tent; save(); sheetState.refresh(); }));
         const ck = $("#sheet [data-cook]"); if (ck) ck.onclick = () => { const q = planById(pid); q.cook = !q.cook; save(); sheetState.refresh(); };
         $("#sheet [data-editplan]").onclick = () => openPlan(null, pid);
+      },
+    });
+  }
+
+  /* ---------- 피크닉 장소 고르기 ---------- */
+  function openPicnicFinder(draft) {
+    const P = window.SOSHA_PICNICS || [];
+    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">피크닉 장소</h2><span class="muted" style="font-size:13px">집(범계역)에서 가까운 순이에요</span></div>${xBtn()}</div>
+      ${P.slice().sort((x, y) => x.min - y.min).map((c) => `<div class="camp-card">
+        <div class="camp-top"><b>${esc(c.name)}</b></div>
+        <small class="muted">${esc(c.area)} · 차로 약 ${c.min}분</small>
+        <div class="camp-tags">${[c.dog ? "🐶 반려견 가능" : "🐾 반려견 불가", c.shade ? "⛺ 그늘막·텐트 가능" : "", c.cook ? "🍳 버너 가능" : "🚫 취사 불가", c.park ? `🅿️ ${c.park}` : ""].filter(Boolean).map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+        <p class="camp-note">${esc(c.note)}</p>
+        <div class="camp-acts">${c.url ? `<a class="btn btn-sm" href="${esc(c.url)}" target="_blank" rel="noopener">정보</a>` : ""}<button class="btn btn-sm btn-primary" type="button" data-pickpic="${esc(c.id)}">여기로 정하기</button></div>
+      </div>`).join("")}
+      <p class="faint" style="font-size:12.5px">공원 규정(그늘막 시간, 반려견, 취사)은 바뀔 수 있어서 가기 전에 확인해요.</p>
+      <div class="sheet-foot"><button class="btn btn-block" type="button" data-cback>일정으로 돌아가기</button></div>`, {
+      after: () => {
+        $("#sheet [data-cback]").onclick = () => openPlan(draft);
+        $$("#sheet [data-pickpic]").forEach((b) => (b.onclick = () => {
+          const c = P.find((x) => x.id === b.dataset.pickpic); if (!c) return;
+          openPlan(Object.assign({}, draft, { place: c.name, camp: null, dog: draft.dog !== undefined ? draft.dog && c.dog : c.dog }));
+        }));
       },
     });
   }
