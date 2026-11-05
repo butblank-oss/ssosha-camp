@@ -414,26 +414,37 @@
     const groups = [1, 2, 3].map((p) => ({ p, rows: list.filter((i) => i.pri === p) })).filter((g) => g.rows.length);
     const showSum = !ui.q && (ui.status === "todo" || ui.status === "research");
     const s = summary();
-    $("#view").innerHTML = `<div class="page">
-      <header class="page-head"><h1>장비</h1><button class="btn btn-soft btn-sm" type="button" data-add><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>추가</button></header>
-      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">장비 검색</span>
-        <input id="gearQ" type="search" placeholder="장비 이름으로 찾기 (예: 릴선)" value="${esc(ui.q)}" autocomplete="off">
-        ${ui.q ? '<button class="clear" type="button" data-clear aria-label="검색어 지우기">✕</button>' : ""}</label>
-      ${ui.q ? "" : `<div class="seg" role="tablist" aria-label="상태">${STATUS.map(([k, n]) => `<button role="tab" type="button" data-status="${k}" aria-selected="${ui.status === k}">${n}<b>${counts[k]}</b></button>`).join("")}</div>
+    const body = () => `${ui.q ? "" : `<div class="seg" role="tablist" aria-label="상태">${STATUS.map(([k, n]) => `<button role="tab" type="button" data-status="${k}" aria-selected="${ui.status === k}">${n}<b>${counts[k]}</b></button>`).join("")}</div>
       <div class="chips" role="group" aria-label="분류">${[["all", "전체"], ["lesson", "교훈만"]].concat(CATS.map((c) => [c.id, c.name])).map(([k, n]) => `<button class="chip" type="button" data-cat="${k}" aria-pressed="${ui.cat === k}">${n}</button>`).join("")}</div>`}
       <div class="list" aria-live="polite">
         ${groups.length ? groups.map((g) => `<div class="group-head"><span><span class="tag ${PRI[g.p][1]}">${PRI[g.p][0]}</span> ${g.rows.length}개</span>${g.p === 1 && ui.status !== "owned" ? "<small>교훈 품목이 위에 와요</small>" : ""}</div>${g.rows.map(rowHTML).join("")}`).join("")
           : `<div class="empty"><img src="v2/icons/${ui.q ? "label" : "party-popper"}.png" alt="">${ui.q ? "찾는 장비가 없어요. 이름을 바꿔 보거나 직접 추가해요." : ui.status === "todo" ? "사야 할 장비가 없어요!" : "여기엔 아직 아무것도 없어요"}</div>`}
       </div>
       ${footNote()}
-      ${showSum && s.must.length ? `<div class="sumbar"><span>필수 ${s.must.length}개 다 사면 (가성비)</span><strong>${won(s.cheap)}</strong></div>` : ""}
+      ${showSum && s.must.length ? `<div class="sumbar"><span>필수 ${s.must.length}개 다 사면 (가성비)</span><strong>${won(s.cheap)}</strong></div>` : ""}`;
+    // 검색 중에는 입력창은 그대로 두고 아래 목록만 다시 그려요 (한글 조합이 끊기지 않게)
+    const live = $("#gearQ");
+    if (live && document.activeElement === live && $("#gearBody")) {
+      $("#gearBody").innerHTML = body();
+      const c = $("[data-clear]"); if (c) c.hidden = !ui.q;
+      bindCommon($("#gearBody"));
+      $$("#gearBody [data-status]").forEach((b) => (b.onclick = () => { ui.status = b.dataset.status; renderGear(); }));
+      $$("#gearBody [data-cat]").forEach((b) => (b.onclick = () => { ui.cat = b.dataset.cat; renderGear(); }));
+      return;
+    }
+    $("#view").innerHTML = `<div class="page">
+      <header class="page-head"><h1>장비</h1><button class="btn btn-soft btn-sm" type="button" data-add><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>추가</button></header>
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">장비 검색</span>
+        <input id="gearQ" type="search" placeholder="장비 이름으로 찾기 (예: 릴선)" value="${esc(ui.q)}" autocomplete="off">
+        <button class="clear" type="button" data-clear aria-label="검색어 지우기"${ui.q ? "" : " hidden"}>✕</button></label>
+      <div id="gearBody">${body()}</div>
     </div>`;
     bindCommon();
     const q = $("#gearQ");
-    q.oninput = () => { ui.q = q.value; const pos = q.selectionStart; renderGear(); const nq = $("#gearQ"); nq.focus(); nq.setSelectionRange(pos, pos); };
+    q.oninput = () => { ui.q = q.value; renderGear(); };
     $$("[data-status]").forEach((b) => (b.onclick = () => { ui.status = b.dataset.status; renderGear(); }));
     $$("[data-cat]").forEach((b) => (b.onclick = () => { ui.cat = b.dataset.cat; renderGear(); }));
-    const c = $("[data-clear]"); if (c) c.onclick = () => { ui.q = ""; renderGear(); $("#gearQ").focus(); };
+    const c = $("[data-clear]"); if (c) c.onclick = () => { ui.q = ""; q.value = ""; renderGear(); q.focus(); };
   }
 
   /* ---------- 알아보기 ---------- */
