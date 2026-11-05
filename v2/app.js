@@ -176,7 +176,7 @@
     carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
     clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face",
     deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
-    spicecase: "salt", kitchentool: "cooking", foldbasin: "droplet", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
+    kitchentool: "cooking", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
     dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
@@ -862,14 +862,14 @@
    * 아직 없는 건 '있으면 좋은 것'으로 따로 보여줘요. 체크 상태는 일정(plan.packed)에 저장돼 둘이 같이 봐요. */
   const R = window.SOSHA_RULES || {};
   const CAMP_RULES = {
-    base: (R.base || []).concat(["thorbox", "thortop", "lanternpole", "lanternhook", "spicecase", "kitchentool", "foldbasin", "toiletry", "tissue", "clothes"]),
+    base: (R.base || []).concat(["thorbox", "thortop", "lanternpole", "lanternhook", "kitchentool", "dishbag", "toiletry", "tissue", "clothes"]),
     fire: R.fire || [], winter: (R.winter || []).concat(["thermo", "hotwater", "flask", "condtowel"]), winterElec: R.winterElec || [], elec: R.elec || [],
     summer: R.summer || [], mild: R.mild || [], nights2: R.nights2 || [], dog: (R.dog || []).concat(["dogharness"]), dogWinter: (R.dogWinter || []).concat(["dogpad", "pawwax"]),
     deck: (R.deck || []).concat(["deckpeg"]),
   };
   const PICNIC_RULES = {
     base: ["rug", "mat", "table1", "chairs", "cups", "cutlery", "trash", "tissue", "coffee", "flask", "storage", "toiletry"],
-    cook: ["isoburner", "gas", "windscreen", "cookset", "tongs", "scissors", "kitchentool", "spicecase", "dishes", "board"],
+    cook: ["isoburner", "gas", "windscreen", "cookset", "tongs", "scissors", "kitchentool", "spice", "dishes", "board"],
     winter: ["hotpack", "clothes", "hotwater"], summer: ["cooler", "jug"], mild: ["cooler"],
     dog: ["dogleash", "dogharness", "dogbowl", "dogpoop"], dogWinter: ["dogwear", "pawwax"],
   };
