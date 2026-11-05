@@ -37,17 +37,40 @@
   /* ---------- 저장 ---------- */
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } }
   const state = Object.assign({ items: {}, custom: [], order: {}, trips: [], plans: [] }, load());
-  /* 영수증 반영: data.js의 SOSHA_RECEIPTS를 한 번만 적용해요 */
+  /* 영수증 반영: data.js의 SOSHA_RECEIPTS를 한 번만 적용해요.
+   * 이미 같은 물건을 '샀어요'로 적어 둔 기록(구매처·제품명·직접 추가한 품목 설명)이 있으면 건너뛰어요. */
   function applyReceipts() {
     const done = new Set(state.receipts || []);
+    const recText = (i, cust) => [(cust || i.custom) ? `${i.name || ""} ${i.spec || ""}` : "", i.purchase ? `${i.purchase.where || ""} ${i.purchase.model || ""}` : ""].join(" ");
+    const records = (skipId) => {
+      const out = [];
+      Object.entries(state.items || {}).forEach(([id, v]) => { if (id !== skipId && (v.status === "bought" || v.status === "owned") && v.purchase) out.push(recText(v, false)); });
+      (state.custom || []).forEach((c) => { if (c.id !== skipId && (c.status === "bought" || c.status === "owned")) out.push(recText(c, true)); });
+      return out;
+    };
+    const covered = (e, skipId) => records(skipId).some((t) => e.keys.some((k) => t.includes(k)));
     let changed = false;
     (window.SOSHA_RECEIPTS || []).forEach((r) => {
       if (done.has(r.id)) return;
-      Object.entries(r.items).forEach(([id, p]) => {
-        const cur = state.items[id] || {};
-        const pur = cur.purchase || {};
-        if (cur.status === "bought" && pur.price !== undefined && pur.price !== "") return;
-        state.items[id] = Object.assign({}, cur, { status: "bought", purchase: Object.assign({}, pur, { where: r.where, date: r.date, cond: r.cond, how: r.how, price: p.price, model: p.model }) });
+      // 예전 버전이 이미 적용됐다면, 그때 넣은 기록 중 다른 기록과 겹치는 것을 되돌려요
+      if (r.replaces && done.has(r.replaces)) {
+        r.entries.forEach((e) => {
+          const v = e.id && state.items[e.id];
+          if (v && v.purchase && v.purchase.model === e.model && v.purchase.where === r.where && covered(e, e.id)) { delete state.items[e.id]; changed = true; }
+        });
+        done.delete(r.replaces);
+      }
+      r.entries.forEach((e) => {
+        if (e.id) {
+          const cur = state.items[e.id] || {};
+          const pur = cur.purchase || {};
+          if (cur.status === "bought" && pur.price !== undefined && pur.price !== "") return;
+          if (covered(e, e.id)) return;
+          state.items[e.id] = Object.assign({}, cur, { status: "bought", purchase: Object.assign({}, pur, { where: r.where, date: r.date, cond: r.cond, how: r.how, price: e.price, model: e.model }) });
+        } else if (e.add) {
+          if ((state.custom || []).some((c) => c.id === e.add.id) || covered(e, null)) return;
+          state.custom = (state.custom || []).concat([Object.assign({ custom: true, pri: 3, q: e.add.name, spec: e.model, newPrice: "", usedPrice: "" }, e.add, { status: "bought", purchase: { where: r.where, date: r.date, cond: r.cond, how: r.how, price: e.price, model: e.model } })]);
+        }
       });
       done.add(r.id); changed = true;
     });
@@ -155,7 +178,6 @@
     deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
     spicecase: "salt", kitchentool: "cooking", foldbasin: "droplet", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
     dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
-    basket: "shopping-bags", igtnet: "shopping-bags", stool: "chair", chaircover: "chair", gasbag: "fuel-pump", santoku: "kitchen-knife", pouch: "package",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
   const iconSrc = (i) => `v2/icons/${ICON_BY_ID[i.id] || ICON_BY_CAT[i.cat] || "package"}.png`;
