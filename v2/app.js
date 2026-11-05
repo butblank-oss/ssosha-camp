@@ -850,7 +850,7 @@
       && (!campF.near || (c.min == null ? /서울|경기|인천/.test(c.area || "") : c.min <= 120))
       && (!campF.floor || (c.ours ? (c.floor || []).includes(campF.floor) : !!(c.floor || {})[campF.floor]));
     const seen = new Set(cur.map((c) => c.name.replace(/\s/g, "")));
-    return { ours: cur.filter(ok).sort((x, y) => (x.fire === false) - (y.fire === false) || x.min - y.min), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => (x.km == null) - (y.km == null) || (x.km || 0) - (y.km || 0)) };
+    return { ours: cur.filter(ok).sort((x, y) => (x.fire === false) - (y.fire === false) || !!y.fav - !!x.fav || x.min - y.min), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => (x.km == null) - (y.km == null) || (x.km || 0) - (y.km || 0)) };
   }
   function campCard(c) {
     const floor = c.ours ? (c.floor || []).join("·") : Object.keys(c.floor || {}).join("·");
@@ -864,7 +864,7 @@
     ].filter(Boolean);
     const where = [c.area, c.min ? `차로 약 ${c.min >= 60 ? `${Math.floor(c.min / 60)}시간 ${c.min % 60 ? `${c.min % 60}분` : ""}` : `${c.min}분`}` : ""].filter(Boolean).join(" · ");
     return `<div class="camp-card${c.ours && c.fire === false ? " nofire" : ""}">
-      <div class="camp-top"><b>${esc(c.name)}</b>${c.ours ? '<span class="tag tag-pick">우리 추천</span>' : ""}${c.price ? `<span class="camp-price">${esc(c.price)}</span>` : ""}</div>
+      <div class="camp-top"><b>${esc(c.name)}</b>${c.fav ? '<span class="tag tag-pick">⭐ 좋았던 곳</span>' : c.ours ? '<span class="tag tag-pick">우리 추천</span>' : ""}${c.price ? `<span class="camp-price">${esc(c.price)}</span>` : ""}</div>
       <small class="muted">${esc(where)}</small>
       <div class="camp-tags">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
       ${c.note ? `<p class="camp-note">${esc(c.note)}</p>` : ""}

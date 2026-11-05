@@ -491,7 +491,7 @@ window.SOSHA_DAISO = [
 /* fire/elec/pet/winter: true 확인됨, false 안 됨, null 확인 필요 (2026-11-05 조사, 예약 전 전화 확인) */
 window.SOSHA_CAMPSITES = [
 {"id": "sanmaeul", "name": "안양 산마을캠핑장", "area": "경기 안양 동안구", "min": 10, "fire": true, "wood": false, "elec": null, "pet": true, "petNote": "반려견 가능 (가 봄)", "winter": true, "floor": ["파쇄석", "데크"], "price": "5만~6만", "url": "https://naver.me/xdpFqiYi", "note": "직접 가 본 곳. 장작 가능, 반려견 동반 가능. 파쇄석 15면·데크 18면, 화로대·릴선·난방기구 대여. 0507-1379-7772."},
-{"id": "solip", "name": "시흥 솔잎향캠핑파크", "area": "경기 시흥 조남동", "min": 20, "fire": true, "wood": false, "elec": null, "pet": false, "winter": true, "floor": ["데크", "파쇄석"], "price": "5만~6만", "url": "https://naver.me/GrmaE3Xv", "note": "직접 가 본 곳. 장작 가능, 반려견 불가라 둘이 갈 때. 수리산 자락, 고속도로 옆. 031-402-7732."},
+{"id": "solip", "name": "시흥 솔잎향캠핑파크", "area": "경기 시흥 조남동", "min": 20, "fire": true, "wood": false, "elec": null, "pet": false, "winter": true, "floor": ["데크", "파쇄석"], "price": "5만~6만", "url": "https://naver.me/GrmaE3Xv", "note": "직접 가 봤는데 매우 좋았어요. 장작 가능, 반려견 불가라 둘이 갈 때. 수리산 자락, 고속도로 옆. 031-402-7732.", "fav": true},
  {
   "id": "hwarang",
   "name": "안산 화랑오토캠핑장",
