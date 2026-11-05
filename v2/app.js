@@ -331,7 +331,7 @@
     const p = bestPick(i.id);
     const paid = i.purchase && i.purchase.price;
     const done = have(i);
-    const sub = paid ? `${esc(i.purchase.where || "")} 구매` : p ? `${esc(p.brand)} ${esc(p.model)}` : "추천 제품 조사 전";
+    const sub = paid ? esc([i.purchase.model, i.purchase.where ? `${i.purchase.where} 구매` : ""].filter(Boolean).join(" · ") || "구매") : p ? `${esc(p.brand)} ${esc(p.model)}` : "추천 제품 조사 전";
     const price = paid ? won(i.purchase.price) : p ? won(p.price) : esc((i.newPrice || "").replace(/\s*\(.*\)/, "")) || "가격 미정";
     const est = !paid && !p;
     return `<div class="row ${done ? "done" : ""}">
@@ -590,11 +590,13 @@
         </div>
         ${done ? `<form class="form" id="purForm" novalidate>
           <h3>${i.status === "owned" ? "메모" : "구매 기록"} <span class="faint" style="font-size:12px;font-weight:500">적으면 +2 XP</span></h3>
-          ${i.status === "bought" ? `<div class="grid2">
+          ${i.status === "bought" ? `<label class="field"><span>어떤 제품</span><input id="fModel" placeholder="예: 버티탭 슬림릴 1.5SQ 10m" value="${esc(pur.model || "")}"></label>
+          ${ps.length ? `<div class="pills pills-wrap" role="group" aria-label="추천 제품에서 고르기">${ps.slice(0, 4).map((q, n) => { const nm = `${q.brand} ${q.model}`.trim(); return `<button class="chip chip-pick" type="button" data-pickfill="${n}" aria-pressed="${pur.model === nm}">${esc(nm)}</button>`; }).join("")}</div>` : ""}
+          <div class="grid2">
             <label class="field"><span>얼마에</span><input id="fPrice" inputmode="numeric" pattern="[0-9]*" placeholder="예: 18900" value="${esc(pur.price || "")}"></label>
             <label class="field"><span>어디서</span><input id="fWhere" placeholder="예: 쿠팡, 당근" value="${esc(pur.where || "")}"></label>
           </div>
-          <div class="pills" role="group" aria-label="상태">${["신품", "중고"].map((c) => `<button class="chip" type="button" data-cond="${c}" aria-pressed="${(pur.cond || "신품") === c}">${c}</button>`).join("")}</div>` : ""}
+          <div class="pills" role="group" aria-label="상태">${["신품", "중고"].map((c) => `<button class="chip" type="button" data-cond="${c}" aria-pressed="${(pur.cond || "신품") === c}">${c}</button>`).join("")}<span class="pills-gap" aria-hidden="true"></span>${["매장", "기타"].map((c) => `<button class="chip" type="button" data-how="${c}" aria-pressed="${pur.how === c}">${c}</button>`).join("")}</div>` : ""}
           <label class="field"><span>써 보니 어땠어요?</span><textarea id="fMemo" placeholder="다음에 살 사람에게 남기는 한마디">${esc((draft && draft.memo) != null ? draft.memo : i.memo || "")}</textarea></label>
         </form>` : ""}
         <div class="sheet-foot">
@@ -604,7 +606,8 @@
     };
     const readDraft = () => {
       if (!$("#purForm")) return;
-      draft = { price: ($("#fPrice") || {}).value ? $("#fPrice").value.replace(/[^0-9]/g, "") : (draft && draft.price) || "", where: ($("#fWhere") || {}).value || "", cond: (draft && draft.cond) || ((get(id).purchase || {}).cond) || "신품", memo: ($("#fMemo") || {}).value || "" };
+      const prev = draft || get(id).purchase || {};
+      draft = { model: ($("#fModel") || {}).value || "", price: ($("#fPrice") || {}).value ? $("#fPrice").value.replace(/[^0-9]/g, "") : "", where: ($("#fWhere") || {}).value || "", cond: prev.cond || "신품", how: prev.how || "", memo: ($("#fMemo") || {}).value || "" };
     };
     openSheet(build, {
       after: () => {
@@ -617,12 +620,21 @@
         }));
         $$("#sheet [data-more]").forEach((b) => (b.onclick = () => { readDraft(); more = !more; sheetState.refresh(); }));
         $$("#sheet [data-cond]").forEach((b) => (b.onclick = () => { readDraft(); draft.cond = b.dataset.cond; sheetState.refresh(); }));
+        $$("#sheet [data-how]").forEach((b) => (b.onclick = () => { readDraft(); draft.how = draft.how === b.dataset.how ? "" : b.dataset.how; sheetState.refresh(); }));
+        $$("#sheet [data-pickfill]").forEach((b) => (b.onclick = () => {
+          readDraft();
+          const q = (PICKS[id] || []).slice().sort((a, c) => (c.pick ? 1 : 0) - (a.pick ? 1 : 0))[+b.dataset.pickfill];
+          if (!q) return;
+          draft.model = `${q.brand} ${q.model}`.trim();
+          if (q.price) draft.price = String(q.price);
+          sheetState.refresh();
+        }));
         const sv = $("#sheet [data-savepur]");
         if (sv) sv.onclick = () => {
           readDraft();
           const i = get(id);
           const p = { memo: draft.memo };
-          if (i.status === "bought") p.purchase = Object.assign({}, i.purchase || {}, { price: draft.price ? +draft.price : "", where: draft.where, cond: draft.cond, date: (i.purchase && i.purchase.date) || new Date().toISOString().slice(0, 7) });
+          if (i.status === "bought") p.purchase = Object.assign({}, i.purchase || {}, { model: draft.model.trim(), price: draft.price ? +draft.price : "", where: draft.where, cond: draft.cond, how: draft.how, date: (i.purchase && i.purchase.date) || new Date().toISOString().slice(0, 7) });
           const before = game();
           patch(id, p); draft = null; closeSheet(); rerender(); toast("기록했어요 · +2 XP");
           const after = game(); if (after.lv > before.lv) showLevelUp(after);
