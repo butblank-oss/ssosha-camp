@@ -501,14 +501,14 @@ window.SOSHA_CAMPSITES = [
   "wood": false,
   "elec": true,
   "elecW": "전기 3천 원",
-  "pet": null,
+  "pet": false,
   "winter": true,
   "floor": [
    "파쇄석"
   ],
   "price": "2만~3.3만",
   "url": "https://www.ktriptips.com/kor/leisure/2729945",
-  "note": "화로·장작 가능(블로그 기준). 장작은 미리 챙겨요. 안산도시공사 매월 1~7일 추첨, 15일부터 잔여 선착순."
+  "note": "반려견 불가(직접 확인). 화로·장작 가능(블로그 기준). 장작은 미리 챙겨요. 안산도시공사 매월 1~7일 추첨, 15일부터 잔여 선착순."
  },
  {
   "id": "nanji",
