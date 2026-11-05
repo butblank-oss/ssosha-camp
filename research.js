@@ -1464,3 +1464,679 @@ window.SOSHA_IGT_BURNER = [
   "url": "https://www.camp-gazua.com/snowpeak-igt/"
  }
 ];
+
+/* 추천 제품이 없던 28개 장비 조사 (2026-11, 다나와 최저가 스냅샷) */
+Object.assign(window.SOSHA_PICKS, {
+ "rope": [
+  {
+   "brand": "자이시스",
+   "model": "다용도 반사 스트링로프 4m + 스토퍼 세트 4개입",
+   "price": 5300,
+   "why": "반사 스트링 4m에 스토퍼까지 들어 있어서 따로 맞출 게 없어요. 밤에 빛을 반사해서 줄에 걸려 넘어질 일이 줄어요. 아쉬운 점: 한 팩이 4개라 6줄을 쓰려면 2팩(약 1만 원)을 사야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=121769201",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "다담기",
+   "model": "5파이 스트링 세트 (20m, 땅콩스토퍼 4개)",
+   "price": 4410,
+   "why": "리뷰가 121개(4.6점)로 많고 20m라 원하는 길이로 잘라 쓸 수 있어요. 아쉬운 점: 5mm라 사양(4mm)보다 조금 굵고, 반사 기능이 있는지는 확인하지 못했어요.",
+   "url": "https://prod.danawa.com/info/?pcode=5420722",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "rug": [
+  {
+   "brand": "갤러리데코",
+   "model": "프리미엄 극세사 더블헤링본 러그 카페트 (250x200)",
+   "price": 15400,
+   "why": "극세사라 푹신하고 미끄럼 방지에 물세탁도 돼서 강아지 털이나 발자국을 관리하기 편해요. 리뷰 평점은 4.6점이에요. 아쉬운 점: 250x200이라 텐트 바닥이 작으면 접어서 깔아야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=6461994",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "아망떼",
+   "model": "소울메이트 플란넬 극세사 퀼팅러그 (200x150)",
+   "price": 19920,
+   "why": "퀼팅이 들어가 도톰하고 미끄럼 방지가 있으며 파는 곳이 많아 구하기 쉬워요. 아쉬운 점: 200x150이라 두 사람과 강아지 두 마리가 쓰기엔 조금 좁을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=29930675",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "pillow": [
+  {
+   "brand": "콘츠",
+   "model": "퀵 에어 베개",
+   "price": 10890,
+   "why": "79g으로 가볍고 금방 부풀어요. 리뷰 49개에 평점 4.7점으로 반응이 좋아요. 아쉬운 점: 에어 베개라 집 베개처럼 폭신하지는 않아요.",
+   "url": "https://prod.danawa.com/info/?pcode=4177947",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "카즈미",
+   "model": "스너그 에어 필로우",
+   "price": 10263,
+   "why": "국내 캠핑 브랜드 제품이고 95g으로 가볍고 저렴해요. 아쉬운 점: 리뷰가 4개뿐이라 참고할 후기가 적어요.",
+   "url": "https://prod.danawa.com/info/?pcode=12998666",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "tarp": [
+  {
+   "brand": "커스커즈",
+   "model": "미니 타프 300 + 180폴대 2개 (300x370)",
+   "price": 69370,
+   "why": "300x370 크기라 원하신 4x3에 가장 가깝고, 폴대 2개가 같이 와서 바로 칠 수 있어요. 내수압 3000mm라 비에도 괜찮아요. 아쉬운 점: 210T 폴리에 PU 코팅이라 블랙코팅 타프보다 햇빛 차단은 약해요.",
+   "url": "https://prod.danawa.com/info/?pcode=13204658",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "BUCK703",
+   "model": "블랙코팅 렉타 타프 중형 폴대세트 (300x300)",
+   "price": 60740,
+   "why": "블랙코팅이라 그늘이 진하고 폴대도 함께 와요. 리뷰 평점은 4.5점이에요. 아쉬운 점: 300x300이라 4x3보다 조금 작아요.",
+   "url": "https://prod.danawa.com/info/?pcode=17004809",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "cot": [
+  {
+   "brand": "네이처하이크",
+   "model": "XJC05 경량코트 (로우, 높이 15cm)",
+   "price": 92470,
+   "why": "높이가 15cm로 낮아서 강아지가 오르내리기 쉽고, 알루미늄 프레임이라 2.2kg으로 가벼워요. 버티는 무게도 150kg이에요. 아쉬운 점: 폭이 65cm라 강아지와 같이 누우면 좁아요.",
+   "url": "https://prod.danawa.com/info/?pcode=106734956",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "반고",
+   "model": "허쉬 캠프베드 그란데 (높이 20cm)",
+   "price": 47600,
+   "why": "폭이 76cm로 넓고 높이가 20cm라 사양에 딱 맞으면서 값도 저렴해요. 아쉬운 점: 4.26kg으로 무겁고, 버티는 무게가 120kg으로 조금 낮아요.",
+   "url": "https://prod.danawa.com/info/?pcode=14879948",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "heater": [
+  {
+   "brand": "툴콘",
+   "model": "TP-800D (PTC 800W)",
+   "price": 29700,
+   "why": "불꽃이 없는 PTC 방식이고, 넘어지면 자동으로 꺼지며 과열 방지 기능도 있어서 강아지가 있어도 안심이 돼요. 리뷰 32개에 평점 4.6점이에요. 아쉬운 점: 최대 800W라 전기 용량이 작은 캠핑장에서는 약하게 틀어야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=6517138",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "모아캠핑",
+   "model": "MF-3050 (PTC 500W)",
+   "price": 30800,
+   "why": "500W라 전기 용량이 작은 사이트에서도 부담이 적고, 넘어지면 꺼지는 기능과 과열 방지가 있어요. 카라비너로 걸어 둘 수도 있어요. 아쉬운 점: 출력이 낮아 영하로 내려가는 날엔 따뜻함이 부족할 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=13162725",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "hotpack": [
+  {
+   "brand": "다봉산업",
+   "model": "마이핫 보온대 대용량 160g (10개)",
+   "price": 7120,
+   "why": "리뷰가 999개 넘는 국민 핫팩이에요. 최대 15시간 가고 한 개에 700원 정도라 부담이 없어요. 아쉬운 점: 일회용이라 쓰레기가 생기고, 맨살에 오래 대면 저온화상을 입을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=10180392",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "제임스프레슬리",
+   "model": "논슬립 남녀 수면양말 JP001",
+   "price": 8510,
+   "why": "바닥에 미끄럼 방지가 있어서 텐트 안에서 걸어 다니기 좋아요. 리뷰 514개에 평점 4.6점이에요. 아쉬운 점: 극세사라 강아지 털이 잘 붙어요.",
+   "url": "https://prod.danawa.com/info/?pcode=5694081",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "circulator": [
+  {
+   "brand": "프리즘",
+   "model": "크레모아 팬 V600 플러스 CLFN-V610",
+   "price": 58990,
+   "why": "7800mAh 배터리로 최대 32시간 쓰고 타프에 걸 수도 있어요. 겨울엔 히터 바람을 텐트 안에 고루 돌려줘요. 리뷰 191개에 평점 4.7점이에요. 아쉬운 점: 좌우 회전 기능이 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=13866977",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "엠에이치앤코",
+   "model": "버터 비사이드 아웃도어 캠핑 서큘레이터 MH-BSIDE",
+   "price": 69900,
+   "why": "좌우 회전과 리모컨, 조명이 있고 10000mAh로 최대 50시간 써요. 삼각대 거치도 돼요. 아쉬운 점: 리뷰가 16개(4.3점)로 적고 값이 조금 더 비싸요.",
+   "url": "https://prod.danawa.com/info/?pcode=17134256",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "windscreen": [
+  {
+   "brand": "라온 공구",
+   "model": "캠핑 버너 바람막이 10단 알루미늄 (고정핀)",
+   "price": 6300,
+   "why": "10단으로 접혀서 작게 넣어 다닐 수 있고 고정핀이 있어 바람에 잘 안 넘어져요. 리뷰 평점은 4.3점이에요. 아쉬운 점: 얇은 알루미늄이라 오래 쓰면 휘어질 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=114540545",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "에코벨",
+   "model": "10단 버너 바람막이",
+   "price": 3160,
+   "why": "3천 원대로 아주 싸고 리뷰 평점도 4.5점이라 입문용으로 무난해요. 아쉬운 점: 고정핀이 있는지 확인하지 못했고 마감이 단순해요.",
+   "url": "https://prod.danawa.com/info/?pcode=3218690",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "board": [
+  {
+   "brand": "도루코",
+   "model": "마이셰프 캠핑용 다용도 파우치 (칼·도마·주방가위)",
+   "price": 16393,
+   "why": "칼, 도마, 가위가 전용 파우치에 다 들어 있어서 칼날을 따로 감쌀 필요가 없어요. 국내 칼 브랜드라 믿을 만해요. 아쉬운 점: 도마가 작아서 고기를 크게 손질하기엔 좁아요.",
+   "url": "https://prod.danawa.com/info/?pcode=30877343",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "카즈미",
+   "model": "키친툴세트 레드 (칼·도마·집게)",
+   "price": 24030,
+   "why": "칼과 도마에 집게까지 들어 있어서 조리도구를 한 번에 갖출 수 있어요. 아쉬운 점: 예산(1~2만 원)보다 조금 비싸고 리뷰가 아직 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=116544169",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "jug": [
+  {
+   "brand": "해천",
+   "model": "SKMT 차박용 대용량 캠핑 물통 5L",
+   "price": 19160,
+   "why": "납작한 사각형이라 차 트렁크에 세워 싣기 좋고, 다나와 리뷰가 76개로 많고 평점도 4.6점이에요. 아쉬운 점: 보온은 안 되고, 꼭지(코크) 모양은 상세페이지에서 꼭 확인해야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=13333334",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "로이첸",
+   "model": "미니비 보온 보냉통 7L",
+   "price": 10910,
+   "why": "7L라 둘이 1박 하기에 넉넉하고, 보온이 돼서 겨울에 물이 덜 차가워져요. 아쉬운 점: 다나와 리뷰가 7개(평점 4.2)로 적고, 꼭지 모양은 상세페이지에서 확인이 필요해요.",
+   "url": "https://prod.danawa.com/info/?pcode=9995838",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "dishbag": [
+  {
+   "brand": "지플랫로드",
+   "model": "캠핑 설거지가방 식기 건조망 세트",
+   "price": 23680,
+   "why": "가방에 식기 건조망까지 같이 들어 있어서 씻은 그릇을 바로 걸어 말릴 수 있어요. 아쉬운 점: 가방 무게가 1kg 정도로 조금 무겁고, 다나와 리뷰가 1개뿐이에요.",
+   "url": "https://prod.danawa.com/info/?pcode=17605220",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "스노우라인",
+   "model": "SNE5ULA006 캠핑 설거지가방",
+   "price": 25620,
+   "why": "640g으로 가볍고 38x28x27cm라 둘이 쓸 식기가 넉넉히 들어가요. 아쉬운 점: 건조망은 없고, 바닥 물빠짐은 상세페이지에서 확인해야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=14686832",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "coffee": [
+  {
+   "brand": "캠핑문",
+   "model": "캠핑 백패킹 초경량 1리터 주전자",
+   "price": 10050,
+   "why": "197g으로 가볍고 값이 싸서 처음 사기 부담이 없어요. 다나와 리뷰 25개, 평점 4.2점이에요. 아쉬운 점: 드리퍼는 따로 사야 하고, 드립 전용 주전자가 아니라 물줄기를 섬세하게 조절하긴 어려워요.",
+   "url": "https://prod.danawa.com/info/?pcode=15078878",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "갈라파고스",
+   "model": "캠핑 폴딩 주전자 1L",
+   "price": 26700,
+   "why": "실리콘이라 납작하게 접혀서 짐이 줄어요. 다나와 리뷰 47개, 평점 4.4점이에요. 아쉬운 점: 드리퍼가 없고, 접히는 구조라 드립용으로 천천히 붓기는 불편해요.",
+   "url": "https://prod.danawa.com/info/?pcode=29481206",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "cups": [
+  {
+   "brand": "파비스",
+   "model": "캠핑용 이중 스텐 머그컵 (컵 2개+뚜껑 2개+전용가방)",
+   "price": 48830,
+   "why": "컵 2개와 뚜껑이 한 세트라서 둘이 쓰기 딱 맞고, 이중 구조라 겨울에 커피가 덜 식어요. 아쉬운 점: 세트라 한 번에 나가는 돈이 예산보다 크고(1개 2.4만 원꼴), 다나와 리뷰가 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=16844507",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "브루클린웍스",
+   "model": "스테인리스 더블월 이중 머그컵 355ml",
+   "price": 23750,
+   "why": "이중 벽이라 보온이 되고, 색상이 4가지라 둘이 다른 색으로 고를 수 있어요. 다나와 평점은 4.7점이에요. 아쉬운 점: 뚜껑 포함 여부는 상세페이지에서 확인해야 하고, 리뷰가 8개로 적어요.",
+   "url": "https://prod.danawa.com/info/?pcode=16531430",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "wood": [
+  {
+   "brand": "조선땔감",
+   "model": "캠핑 장작 10kg (참나무)",
+   "price": 6800,
+   "why": "참나무라 오래 타고, 10kg이면 1박 불멍에 충분해요. 다나와 리뷰 57개, 평점 4.7점이에요. 아쉬운 점: 무거워서 택배비가 따로 붙을 수 있어서 최종 금액을 확인해야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=15578051",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "메타노이아",
+   "model": "파이어 깍두기 착화제 3개입 120g (10개)",
+   "price": 13960,
+   "why": "작은 조각 하나만 넣어도 장작에 불이 잘 붙어서 초보도 쉽게 불을 피울 수 있어요. 아쉬운 점: 장작은 따로 사야 하고, 10개 묶음이라 처음에는 많을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=16166159",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "firemat": [
+  {
+   "brand": "아이두젠",
+   "model": "불멍 세이프티 방염 매트 방염포 (L)",
+   "price": 18900,
+   "why": "60x105cm라 화로대 밑을 넉넉하게 덮고, 740g이라 가벼워요. 다나와 리뷰 14개, 평점 4.5점이에요. 아쉬운 점: 실리카 소재인지는 상세페이지에서 확인해야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=16693976",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "해피센스",
+   "model": "방염포 L (80x60)",
+   "price": 13500,
+   "why": "값이 싸고 다나와 평점이 4.6점이에요. 아쉬운 점: 80x60cm로 원하는 크기(100x60)보다 조금 작아서 작은 화로대에만 맞아요.",
+   "url": "https://prod.danawa.com/info/?pcode=31386878",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "shelf": [
+  {
+   "brand": "로티캠프",
+   "model": "RCE 사다리형 캠핑 선반 워터저그 받침대 쉘프",
+   "price": 23210,
+   "why": "다나와 리뷰가 150개, 평점이 4.7점이라 믿을 만하고, 워터저그 받침대로도 쓸 수 있어요. 아쉬운 점: 스틸이라 3.3kg으로 무겁고, 상판이 철망이에요.",
+   "url": "https://prod.danawa.com/info/?pcode=15953459",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "스노우라인",
+   "model": "벤자민 2단 선반",
+   "price": 80850,
+   "why": "나무 상판에 알루미늄 프레임이라 보기 좋고, 버너나 식재료를 올려두기 좋아요. 아쉬운 점: 높이가 36cm로 낮고, 다나와 리뷰가 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=15203057",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "trash": [
+  {
+   "brand": "톨른캠퍼",
+   "model": "쓰레기 봉투 거치대",
+   "price": 4830,
+   "why": "아주 싸고 다나와 리뷰 35개에 평점 4.6점이라 검증된 제품이에요. 아쉬운 점: 뚜껑이 없어서 강아지들이 뒤지지 못하게 높은 곳에 두는 게 좋아요.",
+   "url": "https://prod.danawa.com/info/?pcode=15609209",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "스네프",
+   "model": "접이식 우드 봉투걸이",
+   "price": 11560,
+   "why": "나무 소재라 다른 캠핑 장비와 잘 어울리고, 접어서 들고 다닐 수 있어요. 아쉬운 점: 다나와 리뷰가 없고, 이 제품도 뚜껑은 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=17021600",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "carabiner": [
+  {
+   "brand": "나잇아이즈",
+   "model": "알루미늄 슬라이드락 S 비너 세트",
+   "price": 17810,
+   "why": "S고리와 카라비너를 합친 모양이라 양쪽 끝을 잠글 수 있어서 랜턴이나 컵을 걸어도 잘 빠지지 않아요. 크기가 3가지라 쓸 데가 많아요. 아쉬운 점: 개수가 적어서 많이 걸려면 더 사야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=6891061",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "소망상사",
+   "model": "삼각 알루미늄 카라비너 M 6mm 세트 (12개)",
+   "price": 7570,
+   "why": "12개가 7천 원대라 싸고, 타프나 행어에 넉넉하게 쓸 수 있어요. 아쉬운 점: S고리는 없어서 따로 사야 하고, 무거운 걸 거는 용도는 아니에요.",
+   "url": "https://prod.danawa.com/info/?pcode=2774752",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "toiletry": [
+  {
+   "brand": "카즈미",
+   "model": "패밀리 워시백",
+   "price": 23150,
+   "why": "고리에 걸어 쓰는 펼침형이고, 미니파우치와 거울이 같이 들어 있어서 두 사람이 함께 쓰기 좋아요. 다나와 평점 4.7점이에요. 아쉬운 점: 예산 2만 원을 조금 넘어요.",
+   "url": "https://prod.danawa.com/info/?pcode=9235314",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "카즈미",
+   "model": "슬림 워시백",
+   "price": 9023,
+   "why": "155g으로 가볍고 길게 펼쳐 거는 구조라 칫솔과 기초화장품만 챙기기 좋아요. 가격도 1만 원이 안 돼요. 아쉬운 점: 칸이 적어서 두 사람 짐을 다 넣기엔 좁을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=9235203",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "tissue": [
+  {
+   "brand": "카즈미",
+   "model": "에버닌 휴지 케이스",
+   "price": 13713,
+   "why": "두루마리 휴지를 통째로 넣어 폴대나 랜턴걸이에 걸어 두는 케이스라 바람이나 습기에 휴지가 덜 젖어요. 판매처가 많은 꾸준한 인기 모델이에요. 아쉬운 점: 다나와 리뷰가 아직 거의 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=16274735",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "카즈미",
+   "model": "감성 휴지 케이스",
+   "price": 6010,
+   "why": "96g으로 아주 가볍고 6천 원대라 부담 없이 챙기기 좋아요. 리뷰 평점은 5.0점이에요. 아쉬운 점: 크기가 작고 천이 얇아서 비 오는 날에는 방수력이 약해요.",
+   "url": "https://prod.danawa.com/info/?pcode=2848227",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "clothes": [
+  {
+   "brand": "카멜로",
+   "model": "용접 자켓 W151",
+   "price": 39350,
+   "why": "용접할 때 입는 면 소재 난연 자켓이라 불똥이 튀어도 패딩처럼 쉽게 구멍이 나지 않아요. 평점 4.7점이에요. 아쉬운 점: 사이즈가 L, XL뿐이라 여성에게는 크게 맞을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=28189037",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "티뷰크",
+   "model": "방염복 상의 TB-793J",
+   "price": 40480,
+   "why": "불이 잘 안 붙는 방염 작업복 상의이고 M부터 3XL까지 있어서 각자 맞는 치수를 고르기 쉬워요. 아쉬운 점: 작업복 디자인이라 캠핑룩 느낌은 덜해요.",
+   "url": "https://prod.danawa.com/info/?pcode=13555505",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "battery": [
+  {
+   "brand": "삼성전자",
+   "model": "PD PPS 45W 보조배터리 EB-P4520 (20000mAh)",
+   "price": 41650,
+   "why": "45W 고속충전이라 휴대폰은 물론 태블릿까지 빨리 채워요. 리뷰 826개에 평점 4.7점으로 검증된 모델이에요. 아쉬운 점: 무게가 400g대라 조금 묵직해요.",
+   "url": "https://prod.danawa.com/info/?pcode=42284972",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "액티몬",
+   "model": "PD PPS 65W 3포트 GaN 충전기 MON-PD65W-HC7",
+   "price": 13800,
+   "why": "릴선에 꽂아 두고 C타입 2개, A타입 1개로 세 기기를 한 번에 충전해요. 리뷰 306개에 평점 4.6점이고 케이블도 들어 있어요. 아쉬운 점: 콘센트가 있어야만 쓸 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=28272551",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "dogbed": [
+  {
+   "brand": "눕자",
+   "model": "커버 펫 탄소 온열 방석 (중형 60x40cm)",
+   "price": 31500,
+   "why": "전기 사이트에서 쓰기 좋은 온열 방석이에요. 생활방수 원단에 커버는 세탁기에 돌릴 수 있고 온도를 3단으로 맞춰서 겨울밤에 따뜻해요. 아쉬운 점: 전기선을 물어뜯지 않는지 지켜봐야 하고 리뷰가 적어요.",
+   "url": "https://prod.danawa.com/info/?pcode=124183788",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "리디아넬",
+   "model": "접이식 방수 원단 3단 애견 캠핑 방석",
+   "price": 21090,
+   "why": "방수 원단이라 이슬이나 흙에 젖어도 닦아내면 되고, 3단으로 접혀서 싣기 편해요. 아쉬운 점: 보온 기능은 없어서 겨울에는 담요를 같이 깔아 주는 게 좋아요.",
+   "url": "https://search.danawa.com/dsearch.php?query=리디아넬+접이식+방수+3단+애견+캠핑+방석",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "dogwear": [
+  {
+   "brand": "패리스독",
+   "model": "싸인 램프 패딩",
+   "price": 25250,
+   "why": "M부터 3XL까지 사이즈가 넓어서 8kg, 4kg 아이에게 각각 맞는 치수를 고를 수 있어요. 판매처가 많아 구하기 쉬워요. 아쉬운 점: 시츄는 가슴이 넓은 편이라 가슴둘레를 재고 한 치수 크게 사는 게 안전해요.",
+   "url": "https://prod.danawa.com/info/?pcode=100388483",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "퍼피엔젤",
+   "model": "클라우드 패딩 조끼 (그레이)",
+   "price": 29610,
+   "why": "조끼형이라 입히고 벗기기 쉽고 앞다리 움직임이 편해요. 소형견 옷으로 잘 알려진 브랜드예요. 아쉬운 점: 사이즈가 S부터 XL까지라 8kg 아이에게는 작을 수 있어요.",
+   "url": "https://prod.danawa.com/info/?pcode=100274435",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "dogpoop": [
+  {
+   "brand": "인터펫코리아",
+   "model": "풉백 배변통 & 봉투 15매",
+   "price": 4900,
+   "why": "케이스와 봉투가 함께 오는 세트라 리드줄에 달고 산책하기 좋아요. 냄새 제거 기능도 있어요. 리뷰 134개에 평점 4.4점이에요. 아쉬운 점: 봉투가 15매뿐이라 리필을 따로 사 두세요.",
+   "url": "https://prod.danawa.com/info/?pcode=33140168",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "그린백",
+   "model": "친환경 배변봉투 본품세트",
+   "price": 1850,
+   "why": "친환경 봉투에 케이스가 같이 있는 기본 세트로 값이 아주 싸요. 리뷰 105개에 평점 4.5점이에요. 아쉬운 점: 냄새를 막는 기능은 따로 없어요.",
+   "url": "https://prod.danawa.com/info/?pcode=99812021",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "dogfence": [
+  {
+   "brand": "AXLWP",
+   "model": "접이식 옥타곤 펫플레이펜 (캠핑용)",
+   "price": 27360,
+   "why": "8각형 천 울타리라 우산처럼 접어 가방에 넣고 다녀요. 사이트에 금방 펼쳐서 두 아이 놀이터로 쓰기 좋아요. 아쉬운 점: 잘 알려진 브랜드가 아니고, 천이라 물어뜯는 아이에게는 약해요.",
+   "url": "https://search.danawa.com/dsearch.php?query=옥타곤+펫플레이펜",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "라이프란스",
+   "model": "애견 울타리 투명 대형 50x70cm 8P",
+   "price": 19360,
+   "why": "투명 패널 8장이라 아이들이 바깥을 보면서도 답답해하지 않아요. 리뷰 80개에 평점 4.6점이에요. 아쉬운 점: 천 울타리보다 부피가 커서 짐이 늘어요.",
+   "url": "https://prod.danawa.com/info/?pcode=33169562",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ],
+ "foodmenu": [
+  {
+   "brand": "박참봉",
+   "model": "부대찌개 밀키트 1240g (2~3인분)",
+   "price": 13370,
+   "why": "재료가 다 들어 있어서 물 붓고 끓이기만 하면 되고, 2~3인분이라 둘이 넉넉히 먹어요. 리뷰 43개에 평점 4.4점이에요. 아쉬운 점: 냉장 제품이라 아이스박스에 넣어 가야 해요.",
+   "url": "https://prod.danawa.com/info/?pcode=55002596",
+   "pick": true,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  },
+  {
+   "brand": "투다리",
+   "model": "김치오뎅전골 653g",
+   "price": 15980,
+   "why": "리뷰가 688개에 평점 4.6점일 만큼 실패가 적은 어묵전골이에요. 추운 밤 불멍하면서 먹기 좋아요. 아쉬운 점: 1~2인분이라 양이 조금 적고, 냉동이라 보냉 준비가 필요해요.",
+   "url": "https://prod.danawa.com/info/?pcode=32210264",
+   "pick": false,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false
+  }
+ ]
+});

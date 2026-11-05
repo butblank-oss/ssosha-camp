@@ -1,15 +1,20 @@
 /* 캠퍼 성장 시스템: 경험치, 레벨, 뱃지, 자라는 캠프 장면 */
 (() => {
   "use strict";
+  /* 7단계: 장비로 3~4단계, 그 뒤는 캠핑을 다녀오며 올라가요 */
   const LEVELS = [
     { xp: 0, name: "거지 캠퍼" },
-    { xp: 200, name: "불멍 입문" },
-    { xp: 450, name: "주말 캠퍼" },
-    { xp: 750, name: "동계 캠퍼" },
-    { xp: 1100, name: "베테랑 캠퍼" },
+    { xp: 150, name: "초보 캠퍼" },
+    { xp: 300, name: "불멍 캠퍼" },
+    { xp: 500, name: "주말 캠퍼" },
+    { xp: 800, name: "초대 캠퍼" },
+    { xp: 1200, name: "풀패키지 캠퍼" },
+    { xp: 1700, name: "쌉고수" },
   ];
+  /* 단계별 장면: 그림은 5가지 모습이라 7단계를 이렇게 이어 붙여요. 6·7단계는 장식이 더해져요 */
+  const SCENE_LV = [0, 1, 1, 2, 3, 4, 4];
   const XP_BY_PRI = { 1: 15, 2: 10, 3: 5 };
-  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 20;
+  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 60, XP_REVIEW = 10; /* 장비보다 '다녀오기'로 크게 성장해요 */
   const BADGES = [
     { id: "first", name: "첫 구매", test: (h, its) => its.some((i) => i.status === "bought") },
     { id: "warm", name: "따뜻한 밤", need: ["reel", "eblanket"] },
@@ -36,7 +41,8 @@
     const h = new Set(items.filter(have).map((i) => i.id));
     const trips = window.SoshaTrips ? window.SoshaTrips.list() : [];
     const tripCount = trips.length + 1; // 첫 캠핑 포함
-    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP;
+    const reviews = trips.filter((t) => String(t.notes || "").trim()).length;
+    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP + reviews * XP_REVIEW;
     let lv = 0;
     LEVELS.forEach((l, i) => { if (xp >= l.xp) lv = i; });
     const cur = LEVELS[lv], next = LEVELS[lv + 1];
@@ -166,7 +172,13 @@
       ${lv >= 4 ? `<path class="sc-tent-2" d="M${398 + w},304 L${430 + w},304 L${398 + w},250z"/>` : ""}`;
   }
   function scene(g) {
-    const h = g.h, lv = g.lv;
+    const h = g.h, rank = g.lv, lv = SCENE_LV[g.lv] != null ? SCENE_LV[g.lv] : 4;
+    /* 3단계 불멍: 모닥불 불티와 더 큰 불빛 */
+    const extra3 = rank >= 2 ? `<ellipse class="sc-glow" cx="460" cy="286" rx="96" ry="40"/>${[[452,252],[468,240],[444,232],[476,222],[458,214]].map(([x, y], i) => `<circle class="sc-fire-2 twinkle" style="animation-delay:${i * 0.35}s" cx="${x}" cy="${y}" r="${i % 2 ? 1.6 : 2.2}"/>`).join("")}` : "";
+    /* 6단계 풀패키지: 전구 줄 하나 더, 7단계 쌉고수: 황금 깃발과 별똥별 */
+    const extra6 = rank >= 5 ? `<path class="sc-line" d="M360,170 Q480,206 620,166" style="opacity:.6"/>${[390, 430, 470, 510, 550, 590].map((x, i) => `<circle class="${i % 2 ? "sc-cushion" : "sc-fire-2"} twinkle" style="animation-delay:${i * 0.25}s" cx="${x}" cy="${178 + Math.sin(((x - 360) / 260) * Math.PI) * 16}" r="4"/>`).join("")}` : "";
+    const extra7 = rank >= 6 ? `<path class="sc-star" d="M300,60 l70,-20 l-68,24z" opacity=".85"/><path class="sc-star" d="M150,90 l50,-14 l-48,17z" opacity=".7"/>
+      <line class="sc-line" x1="252" y1="182" x2="252" y2="126"/><path class="sc-tag" d="M252,126 l34,9 -34,10z"/><circle class="sc-tag" cx="252" cy="124" r="4"/>` : "";
     const warm = on(h, lv, "eblanket", 2);
     const stars = STARS.slice(0, 4 + lv * 4).map(([x, y], i) => `<circle class="sc-star twinkle" style="animation-delay:${(i % 5) * 0.6}s" cx="${x}" cy="${y}" r="${i % 3 ? 1.4 : 2}"/>`).join("");
     const trees = [pine(40, 262, 1.2, "sc-tree"), pine(612, 262, 1.3, "sc-tree")]
@@ -209,16 +221,16 @@
     const stake = on(h, lv, "dogleash", 3) ? `<rect class="sc-metal" x="306" y="318" width="4" height="16"/><path class="sc-leash" d="M168,316 q70,18 138,6"/><path class="sc-leash" d="M232,318 q40,12 74,4"/>` : "";
     const bone = lv >= 4 ? `<path class="sc-star" d="M250,342 h14 m-16,-3 a3,3 0 1,0 0,6 m16,-6 a3,3 0 1,1 0,6"/>` : "";
     const chairs = lv >= 1 || h.has("chairs");
-    return `<svg viewBox="0 0 640 360" role="img" aria-label="우리 캠프 장면: 레벨 ${lv + 1}, 레벨이 오르고 장비를 살수록 캠프가 꾸며져요" preserveAspectRatio="xMidYMax meet">
+    return `<svg viewBox="0 0 640 360" role="img" aria-label="우리 캠프 장면: 레벨 ${rank + 1}, 레벨이 오르고 장비를 살수록 캠프가 꾸며져요" preserveAspectRatio="xMidYMax meet">
       <defs><linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="sc-sky-a"/><stop offset="1" class="sc-sky-b"/></linearGradient></defs>
       <rect width="640" height="360" fill="url(#skyGrad)"/>
       ${stars}<circle class="sc-moon" cx="536" cy="66" r="20"/><circle cx="545" cy="60" r="17" style="fill:var(--s-sky)"/>
       ${shoot}${trees}
       <path class="sc-ground" d="M0,262 Q160,244 320,256 T640,252 V360 H0z"/>
       <path class="sc-ground-2" d="M0,320 Q200,306 420,318 T640,312 V360 H0z"/>
-      ${car}${garland}${tarp}${cable}${boxes}
+      ${car}${garland}${extra6}${tarp}${cable}${boxes}
       ${warm ? '<ellipse class="sc-glow" cx="252" cy="268" rx="110" ry="34"/>' : ""}
-      ${tent(lv, warm)}${flag}${trash}${lantern}${fire}${table}${cooler}
+      ${tent(lv, warm)}${flag}${extra7}${trash}${lantern}${extra3}${fire}${table}${cooler}
       ${dogHouse}${ground}${bed}${bowls}${stake}
       ${dog(166, 314, 1, "sc-coat-2", h, lv, 1, 1.15)}
       ${dog(250, 318, 2, "sc-coat-1", h, lv, -1, 0.82)}
@@ -233,9 +245,11 @@
   const LEVEL_FX = [
     "찌그러진 작은 텐트에 테이프를 덕지덕지, 박스에 앉아 깡통 촛불을 쬐요. 강아지들은 신문지 위에서 덜덜.",
     "번듯한 원터치 텐트와 캠핑 의자, 강아지 방석이 생기고 별과 나무가 늘어요.",
+    "모닥불이 피어오르고 불멍이 시작돼요. 둘의 얼굴에도 여유가 생겨요.",
     "돔 텐트로 커지고 둘은 털모자를 쓰고 마시멜로를 구워요. 강아지들은 옷을 입고 밥그릇이 생겨요.",
-    "커다란 터널형 텐트에 타프가 쳐지고 전구 줄이 켜져요. 강아지 집과 리드줄이 생겨요.",
-    "텐트 위에 깃발, 루프박스를 단 차, 강아지 울타리와 장난감, 머플러에 따뜻한 머그잔까지!",
+    "친구를 초대해도 될 만큼 커다란 터널형 텐트에 타프가 쳐지고 전구 줄이 켜져요. 강아지 집과 리드줄이 생겨요.",
+    "루프박스를 단 차, 강아지 울타리와 장난감, 전구 줄이 하나 더. 장비가 다 갖춰졌어요.",
+    "텐트 위에 황금 깃발이 서고 별똥별이 떨어져요. 이제 누가 봐도 쌉고수예요!",
   ];
   const ITEM_FX = [
     ["chairs", "두 사람이 의자에 앉아요"], ["firepit", "모닥불이 타올라요"], ["eblanket", "텐트 문에 따뜻한 불빛이 켜져요"],
@@ -266,7 +280,7 @@
         <h3 class="lv-sub">장비가 바꾸는 장면</h3>
         <ul class="fx-list">${ITEM_FX.map(([id, fx]) => `<li class="${g.h.has(id) ? "on" : ""}"><span class="badge ${g.h.has(id) ? "b-ok" : ""}">${g.h.has(id) ? "생김" : "아직"}</span><strong>${nameOf(id)}</strong> ${fx}</li>`).join("")}</ul>
         <h3 class="lv-sub">다 갖추면 이런 모습이에요</h3>
-        <div class="lv-scene lv-final">${scene({ h: all, lv: 4 })}</div>
+        <div class="lv-scene lv-final">${scene({ h: all, lv: LEVELS.length - 1 })}</div>
       </div></form>`;
     const zoom = dlg.querySelector("#lvZoom");
     const showZoom = (i) => {
@@ -299,6 +313,13 @@
 
   window.SoshaGame = {
     xpOf: itemXP,
+    /* v2 프로토타입용: 계산과 장면만 따로 꺼내 써요 */
+    levels: LEVELS,
+    levelFx: LEVEL_FX,
+    xpTrip: XP_TRIP,
+    xpReview: XP_REVIEW,
+    compute: (items) => compute(items),
+    sceneSVG: (items) => scene(compute(items)),
     xpFor: (it) => (XP_BY_PRI[it.pri] || 5) + XP_RECORD,
     render(items, stats) {
       const g = compute(items);
@@ -309,7 +330,7 @@
         <div class="scene">${scene(g)}<div class="scene-lv"><b>Lv.${g.lv + 1}</b>${g.cur.name}</div></div>
         <div class="panel-card player">
           <div>
-            <div class="player-head"><div><p class="hint">우리 캠퍼 레벨</p><h2>${g.cur.name}</h2></div><button class="btn btn-sm" id="lvPreview">레벨 미리보기</button></div>
+            <div class="player-head"><div><p class="hero-k">우리 캠퍼 레벨 · Lv.${g.lv + 1}</p><h2>${g.cur.name}</h2></div><button class="btn btn-sm" id="lvPreview">레벨 미리보기</button></div>
             <div class="xp-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct * 100)}" aria-label="다음 레벨까지 경험치"><i style="--p:${pct}"></i></div>
             <div class="xp-row"><span class="num">${g.xp} XP</span><span>${g.next ? `다음 레벨 ${g.next.name}까지 ${g.next.xp - g.xp} XP` : "최고 레벨이에요"}</span></div>
           </div>
@@ -322,7 +343,7 @@
         </div>
         <div class="panel-card badge-card">
           <span class="hint">뱃지 ${g.badges.filter((b) => b.on).length} / ${g.badges.length}</span>
-          <div class="badges" aria-label="뱃지">${g.badges.map((b) => `<span class="medal ${b.on ? "on" : ""}" title="${b.need ? "필요: " + b.need.length + "개 품목" : ""}">${medalSVG(b.on)}${b.name}</span>`).join("")}</div>
+          <div class="badges" aria-label="뱃지">${g.badges.slice().sort((a, b) => b.on - a.on).map((b) => `<span class="medal ${b.on ? "on" : ""}" title="${b.need ? "필요: " + b.need.length + "개 품목" : ""}">${medalSVG(b.on)}${b.name}</span>`).join("")}</div>
         </div>`;
       el.querySelector("#lvPreview").onclick = () => openPreview(g, items);
       const onIds = g.badges.filter((b) => b.on).map((b) => b.id);
