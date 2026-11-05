@@ -199,7 +199,10 @@
   const xpFor = (i) => (GAME && GAME.xpFor ? GAME.xpFor(i) : 15);
   const LEVELS = (GAME && GAME.levels) || [];
   const LEVEL_FX = (GAME && GAME.levelFx) || [];
-  const XP_TRIP = (GAME && GAME.xpTrip) || 60, XP_PICNIC = (GAME && GAME.xpPicnic) || 15, XP_REVIEW = (GAME && GAME.xpReview) || 10;
+  const XP_TRIP = (GAME && GAME.xpTrip) || 60, XP_PICNIC = (GAME && GAME.xpPicnic) || 15, XP_DAY = (GAME && GAME.xpDay) || 30,
+    KIND = { camp: { n: "캠핑 (1박)", w: "캠핑", ico: "camping" }, daycamp: { n: "당일 캠핑", w: "당일 캠핑", ico: "tent" }, picnic: { n: "피크닉", w: "피크닉", ico: "umbrella-on-ground" } },
+    kindOf = (k) => KIND[k] || KIND.camp, xpOfKind = (k) => (k === "picnic" ? XP_PICNIC : k === "daycamp" ? XP_DAY : XP_TRIP),
+    kindChips = (attr, cur) => Object.entries(KIND).map(([k, v]) => `<button class="chip" type="button" ${attr}="${k}" aria-pressed="${(cur || "camp") === k}">${v.n}</button>`).join(""), XP_REVIEW = (GAME && GAME.xpReview) || 10;
 
   /* ---------- 다음 캠핑 ---------- */
   const today = () => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; };
@@ -569,7 +572,7 @@
       <section class="sec">
         <div class="sec-head"><h2>캠핑 계획</h2>${upcomingPlans().length ? `<span class="more">${upcomingPlans().length}개</span>` : ""}</div>
         ${upcomingPlans().length ? `<div class="card list" style="padding:0">${upcomingPlans().map((q) => `<button class="link-row" type="button" data-pack="${esc(q.id)}" style="min-height:72px">
-          ${icoImg(q.kind === "picnic" ? "umbrella-on-ground" : "calendar")}<b>${esc(q.place || (q.kind === "picnic" ? "피크닉" : "캠핑장 미정"))}<br><span class="muted" style="font-size:13px;font-weight:400">${fmtDate(q.date)}${q.kind === "picnic" ? " · 피크닉" : ""}${q.dog ? " · 강아지 동반" : ""} · 짐 ${(() => { const d = packData(q); return `${d.done}/${d.total}`; })()}</span></b>
+          ${icoImg(q.kind === "picnic" || q.kind === "daycamp" ? kindOf(q.kind).ico : "calendar")}<b>${esc(q.place || (q.kind === "picnic" ? "피크닉" : "캠핑장 미정"))}<br><span class="muted" style="font-size:13px;font-weight:400">${fmtDate(q.date)}${q.kind === "picnic" || q.kind === "daycamp" ? ` · ${kindOf(q.kind).w}` : ""}${q.dog ? " · 강아지 동반" : ""} · 짐 ${(() => { const d = packData(q); return `${d.done}/${d.total}`; })()}</span></b>
           <small style="color:var(--brand-ink);font-weight:600">${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : daysTo(q.date) === 0 ? "오늘" : "다녀왔어요?"}</small>
         </button>`).join("")}</div>` : `<button class="card link-row" type="button" data-plan style="border-top:0;min-height:72px">${icoImg("calendar")}<b>아직 정하지 않았어요</b><small style="color:var(--brand-ink);font-weight:600">정하기</small></button>`}
         ${upcomingPlans().length ? `<button class="btn btn-soft btn-block" type="button" data-plan style="margin-top:8px">+ 캠핑·피크닉 계획 추가</button>` : ""}
@@ -580,12 +583,12 @@
         <div><span>쓴 돈</span><strong class="num">${won(s.spent) || "0원"}</strong></div>
       </section>
       <section class="sec">
-        <div class="sec-head"><h2>다녀온 캠핑·피크닉</h2><span class="more">캠핑 ${(state.trips || []).filter((t) => t.kind !== "picnic").length + 1}번${(state.trips || []).some((t) => t.kind === "picnic") ? ` · 피크닉 ${(state.trips || []).filter((t) => t.kind === "picnic").length}번` : ""}</span></div>
+        <div class="sec-head"><h2>다녀온 캠핑·피크닉</h2><span class="more">${(() => { const T = state.trips || [], n = (k) => T.filter((t) => (t.kind || "camp") === k).length; return [`캠핑 ${n("camp") + 1}번`, n("daycamp") ? `당일 ${n("daycamp")}번` : "", n("picnic") ? `피크닉 ${n("picnic")}번` : ""].filter(Boolean).join(" · "); })()}</span></div>
         <div class="list">
-          ${(state.trips || []).slice().reverse().map((t) => `<button class="link-row" type="button" data-review="${esc(t.id)}"><span class="ico sm"><img src="v2/icons/${t.kind === "picnic" ? "umbrella-on-ground" : "camping"}.png" alt=""></span><b>${esc(t.place || (t.kind === "picnic" ? "피크닉" : "캠핑"))}<br><span class="muted" style="font-size:13px;font-weight:400">${esc(t.date)}${t.dog ? " · 강아지 동반" : ""}</span></b><small>${String(t.notes || "").trim() ? "후기 있음" : `후기 쓰기 +${XP_REVIEW}`}</small></button>`).join("")}
+          ${(state.trips || []).slice().reverse().map((t) => `<button class="link-row" type="button" data-review="${esc(t.id)}"><span class="ico sm"><img src="v2/icons/${kindOf(t.kind).ico}.png" alt=""></span><b>${esc(t.place || kindOf(t.kind).w)}<br><span class="muted" style="font-size:13px;font-weight:400">${esc(t.date)}${t.kind === "daycamp" || t.kind === "picnic" ? ` · ${kindOf(t.kind).w}` : ""}${t.dog ? " · 강아지 동반" : ""}</span></b><small>${String(t.notes || "").trim() ? "후기 있음" : `후기 쓰기 +${XP_REVIEW}`}</small></button>`).join("")}
           <div class="link-row"><span class="ico sm"><img src="v2/icons/tent.png" alt=""></span><b>${esc(TRIP.place || "첫 캠핑")}<br><span class="muted" style="font-size:13px;font-weight:400">${esc(TRIP.date || "")}</span></b><small>첫 캠핑</small></div>
         </div>
-        <div class="grid2"><button class="btn btn-primary" type="button" data-trip>캠핑 다녀왔어요 · +${XP_TRIP}</button><button class="btn btn-soft" type="button" data-picnic>피크닉 다녀왔어요 · +${XP_PICNIC}</button></div>
+        <button class="btn btn-primary btn-block" type="button" data-trip>다녀왔어요 기록하기 · 캠핑 +${XP_TRIP} · 당일 +${XP_DAY} · 피크닉 +${XP_PICNIC}</button>
       </section>
       <section class="sec">
         <div class="sec-head"><h2>첫 캠핑에서 배운 점</h2><span class="more">해결 ${solved} / ${L.length}</span></div>
@@ -801,7 +804,8 @@
       <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(dv("date", p ? p.date : ""))}" min="${new Date().toISOString().slice(0, 10)}"></label>
       <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(dv("place", p ? p.place : ""))}"></label>
       <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>조건에 맞는 캠핑장 찾기</span></button>
-      <div class="pills"><button class="chip" type="button" data-pkind="camp" aria-pressed="${dv("kind", p ? p.kind || "camp" : "camp") !== "picnic"}">캠핑 (1박)</button><button class="chip" type="button" data-pkind="picnic" aria-pressed="${dv("kind", p ? p.kind || "camp" : "camp") === "picnic"}">피크닉 (당일)</button></div>
+      <div class="pills pills-wrap">${kindChips("data-pkind", dv("kind", p ? p.kind || "camp" : "camp"))}</div>
+      <p class="faint" style="font-size:12.5px;margin-top:-4px">텐트만 치고 밤엔 집에서 자면 '당일 캠핑'이에요. 잠자리 짐이 빠져요. 가서 바뀌면 나중에 고쳐도 돼요.</p>
       <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${dv("dog", p ? !!p.dog : true)}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${dv("elec", p ? !!p.elec : true)}">전기 있음</button></div>
       <div class="sheet-foot">${p ? '<button class="btn" type="button" id="pDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="pSave">저장</button></div>`, {
       after: () => {
@@ -924,7 +928,8 @@
     const picnic = p.kind === "picnic";
     const fire = !picnic && (site ? (site.ours ? site.fire !== false : !site.fire || site.fire === "개별" || site.fire === "공용") : true);
     const deck = !!site && (site.ours ? (site.floor || []).includes("데크") : !!(site.floor || {})["데크"]);
-    return { picnic, season, fire, deck, elec: !picnic && !!p.elec, dog: !!p.dog, nights2: (p.nights || 1) >= 2, cook: picnic && !!p.cook, site };
+    const day = p.kind === "daycamp";
+    return { picnic, day, season, fire, deck, elec: !picnic && !!p.elec, dog: !!p.dog, nights2: !day && (p.nights || 1) >= 2, cook: picnic && !!p.cook, site };
   }
   function packIds(c) {
     const S = c.picnic ? PICNIC_RULES : CAMP_RULES;
@@ -932,8 +937,9 @@
     if (c.picnic) { if (c.cook) keys.push("cook"); }
     else { if (c.fire) keys.push("fire"); if (c.elec) keys.push("elec"); if (c.elec && c.season === "winter") keys.push("winterElec"); if (c.nights2) keys.push("nights2"); if (c.deck) keys.push("deck"); }
     if (c.dog) { keys.push("dog"); if (c.season === "winter") keys.push("dogWinter"); }
+    const SLEEP = ["bedding", "pillow", "cot", "eblanket", "hotwater", "condtowel", "toiletry"]; // 당일 캠핑은 잠자리 짐을 빼요
     const out = [];
-    keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id)) out.push(id); }));
+    keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id) && !(c.day && SLEEP.includes(id))) out.push(id); }));
     return out;
   }
   /* 항상 챙기는 장비: state.packAlways. 아직 정한 적 없으면 멀티바스켓·육각스툴을 기본으로 넣어요 */
@@ -973,7 +979,7 @@
       const q = planById(pid) || p;
       const d = packData(q);
       const c = d.c;
-      const chips = [c.picnic ? "🧺 피크닉 (당일)" : `⛺ 캠핑 ${q.nights >= 2 ? `${q.nights}박` : "1박"}`, `${c.season === "winter" ? "❄️" : c.season === "summer" ? "☀️" : "🍂"} ${SEASON_NAME[c.season]}`,
+      const chips = [c.picnic ? "🧺 피크닉 (당일)" : c.day ? "⛺ 당일 캠핑 (밤엔 집)" : `⛺ 캠핑 ${q.nights >= 2 ? `${q.nights}박` : "1박"}`, `${c.season === "winter" ? "❄️" : c.season === "summer" ? "☀️" : "🍂"} ${SEASON_NAME[c.season]}`,
         c.fire ? "🔥 장작" : "", c.elec ? "⚡ 전기" : "", c.dog ? "🐶 강아지 동반" : "", c.deck ? "데크" : ""].filter(Boolean);
       const pct = d.total ? Math.round((d.done / d.total) * 100) : 0;
       return `<div class="sheet-head"><span class="ico"><img src="v2/icons/backpack.png" alt=""></span><div><h2 id="sheetTitle">짐 챙기기</h2><span class="muted" style="font-size:14px">${esc(q.place || (c.picnic ? "피크닉" : "캠핑"))} · ${fmtDate(q.date)} · ${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : "오늘"}</span></div>${xBtn()}</div>
@@ -1009,17 +1015,17 @@
   /* ---------- 다녀온 캠핑 기록 ---------- */
   function openTrip(tripId, startKind) {
     const existing = tripId ? (state.trips || []).find((t) => t.id === tripId) : null;
-    let kind = existing ? existing.kind || "camp" : startKind || "camp";
-    const plan = existing || kind === "picnic" ? null : nextPlan();
+    let kind = existing ? existing.kind || "camp" : startKind || ((nextPlan() || {}).kind) || "camp";
+    const plan = existing ? null : (upcomingPlans().find((q) => (q.kind || "camp") === kind) || (kind === "picnic" ? null : nextPlan()));
     const t = existing || { date: plan ? plan.date : new Date().toISOString().slice(0, 10), place: plan ? plan.place : "", dog: plan ? !!plan.dog : kind !== "picnic", temp: "", notes: "" };
-    const word = () => (kind === "picnic" ? "피크닉" : "캠핑");
-    openSheet(() => `<div class="sheet-head"><span class="ico"><img src="v2/icons/${kind === "picnic" ? "umbrella-on-ground" : "camping"}.png" alt=""></span><div><h2 id="sheetTitle">${existing ? `${word()} 후기` : `${word()} 다녀왔어요`}</h2><span class="muted" style="font-size:14px">${existing ? `후기를 남기면 +${XP_REVIEW} XP` : `기록하면 +${kind === "picnic" ? XP_PICNIC : XP_TRIP} XP, 후기까지 쓰면 +${XP_REVIEW} XP 더`}</span></div>${xBtn()}</div>
+    const word = () => kindOf(kind).w;
+    openSheet(() => `<div class="sheet-head"><span class="ico"><img src="v2/icons/${kindOf(kind).ico}.png" alt=""></span><div><h2 id="sheetTitle">${existing ? `${word()} 후기` : `${word()} 다녀왔어요`}</h2><span class="muted" style="font-size:14px">${existing ? `후기를 남기면 +${XP_REVIEW} XP` : `기록하면 +${xpOfKind(kind)} XP, 후기까지 쓰면 +${XP_REVIEW} XP 더`}</span></div>${xBtn()}</div>
       <div class="grid2">
         <label class="field"><span>언제</span><input id="tDate" type="date" value="${esc(t.date)}"></label>
-        <div class="field"><span>${kind === "picnic" ? "기온" : "밤 최저기온"} (℃)</span><div class="temp-in"><div class="temp-sign" role="group" aria-label="영상 영하"><button type="button" data-sign="+" class="plus" aria-pressed="${!String(t.temp || "").startsWith("-")}">영상</button><button type="button" data-sign="-" class="minus" aria-pressed="${String(t.temp || "").startsWith("-")}">영하</button></div><input id="tTemp" inputmode="numeric" pattern="[0-9]*" placeholder="예: 2" aria-label="기온 숫자" value="${esc(String(t.temp || "").replace("-", ""))}"></div></div>
+        <div class="field"><span>${kind === "camp" ? "밤 최저기온" : "기온"} (℃)</span><div class="temp-in"><div class="temp-sign" role="group" aria-label="영상 영하"><button type="button" data-sign="+" class="plus" aria-pressed="${!String(t.temp || "").startsWith("-")}">영상</button><button type="button" data-sign="-" class="minus" aria-pressed="${String(t.temp || "").startsWith("-")}">영하</button></div><input id="tTemp" inputmode="numeric" pattern="[0-9]*" placeholder="예: 2" aria-label="기온 숫자" value="${esc(String(t.temp || "").replace("-", ""))}"></div></div>
       </div>
       <label class="field"><span>어디로</span><input id="tPlace" placeholder="${kind === "picnic" ? "예: 평촌중앙공원, 한강 반포" : "예: 가평 자라섬"}" value="${esc(t.place)}"></label>
-      <div class="pills"><button class="chip" type="button" data-kind="camp" aria-pressed="${kind !== "picnic"}">캠핑 (1박)</button><button class="chip" type="button" data-kind="picnic" aria-pressed="${kind === "picnic"}">피크닉 (당일)</button><span class="pills-gap" aria-hidden="true"></span><button class="chip" type="button" id="tDog" aria-pressed="${!!t.dog}">강아지 동반</button></div>
+      <div class="pills pills-wrap">${kindChips("data-kind", kind)}<span class="pills-gap" aria-hidden="true"></span><button class="chip" type="button" id="tDog" aria-pressed="${!!t.dog}">강아지 동반</button></div>
       <label class="field"><span>후기 · 배운 점</span><textarea id="tNotes" placeholder="예: 새벽에 결로가 심했어요. 다음엔 문을 조금 열어둘래요.">${esc(t.notes)}</textarea></label>
       <div class="sheet-foot">${existing ? '<button class="btn btn-danger" type="button" id="tDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="tSave">${existing ? "저장" : "기록하기"}</button></div>`, {
       after: () => {
@@ -1046,12 +1052,12 @@
           if (existing) Object.assign(existing, d);
           else {
             state.trips.push(Object.assign({ id: "t" + Date.now(), cost: "", weather: "", needs: [], photos: [], gear: items().filter(have).map((i) => i.id) }, d));
-            if (plan && kind !== "picnic") state.plans = (state.plans || []).filter((x) => x !== plan);
+            if (plan && daysTo(plan.date) <= 0) state.plans = (state.plans || []).filter((x) => x !== plan);
           }
           save(); closeSheet(); rerender();
           const after = game();
           if (after.lv > before.lv) showLevelUp(after);
-          else toast(existing ? `후기를 남겼어요 · +${d.notes ? XP_REVIEW : 0} XP` : `${word()}을 기록했어요 · +${(kind === "picnic" ? XP_PICNIC : XP_TRIP) + (d.notes ? XP_REVIEW : 0)} XP`);
+          else toast(existing ? `후기를 남겼어요 · +${d.notes ? XP_REVIEW : 0} XP` : `${word()} 기록 완료 · +${xpOfKind(kind) + (d.notes ? XP_REVIEW : 0)} XP`);
         };
       },
     });

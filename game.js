@@ -14,7 +14,7 @@
   /* 단계별 장면: 그림은 5가지 모습이라 7단계를 이렇게 이어 붙여요. 6·7단계는 장식이 더해져요 */
   const SCENE_LV = [0, 1, 1, 2, 3, 4, 4];
   const XP_BY_PRI = { 1: 15, 2: 10, 3: 5 };
-  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 60, XP_PICNIC = 15, XP_REVIEW = 10; /* 장비보다 '다녀오기'로 크게 성장해요 */
+  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 60, XP_DAY = 30, XP_PICNIC = 15, XP_REVIEW = 10; /* 장비보다 '다녀오기'로 크게 성장해요 */
   const BADGES = [
     { id: "first", name: "첫 구매", test: (h, its) => its.some((i) => i.status === "bought") },
     { id: "warm", name: "따뜻한 밤", need: ["reel", "eblanket"] },
@@ -40,11 +40,12 @@
   function compute(items) {
     const h = new Set(items.filter(have).map((i) => i.id));
     const all = window.SoshaTrips ? window.SoshaTrips.list() : [];
-    const trips = all.filter((t) => t.kind !== "picnic");
-    const picnics = all.length - trips.length;
+    const trips = all.filter((t) => t.kind !== "picnic" && t.kind !== "daycamp");
+    const days = all.filter((t) => t.kind === "daycamp").length;
+    const picnics = all.filter((t) => t.kind === "picnic").length;
     const tripCount = trips.length + 1; // 첫 캠핑 포함
     const reviews = all.filter((t) => String(t.notes || "").trim()).length;
-    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP + picnics * XP_PICNIC + reviews * XP_REVIEW;
+    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP + days * XP_DAY + picnics * XP_PICNIC + reviews * XP_REVIEW;
     let lv = 0;
     LEVELS.forEach((l, i) => { if (xp >= l.xp) lv = i; });
     const cur = LEVELS[lv], next = LEVELS[lv + 1];
@@ -52,7 +53,7 @@
       { id: "trip1", name: "첫 캠핑 완주", on: true },
       { id: "winter", name: "영하의 밤", on: trips.some((t) => t.temp !== "" && t.temp != null && +t.temp <= 0) },
       { id: "dogtrip", name: "댕댕이와 1박", on: trips.some((t) => t.dog) },
-      { id: "regular", name: "단골 캠퍼", on: tripCount >= 3 },
+      { id: "regular", name: "단골 캠퍼", on: tripCount + days >= 3 },
     ];
     const badges = BADGES.map((b) => ({ ...b, on: b.test ? b.test(h, items) : b.need.every((id) => h.has(id)) })).concat(tripBadges);
     const quest = items.filter((i) => !have(i) && i.pri === 1).sort((a, b) => a.pri - b.pri)[0];
@@ -320,6 +321,7 @@
     levelFx: LEVEL_FX,
     xpTrip: XP_TRIP,
     xpPicnic: XP_PICNIC,
+    xpDay: XP_DAY,
     xpReview: XP_REVIEW,
     compute: (items) => compute(items),
     sceneSVG: (items) => scene(compute(items)),
