@@ -166,7 +166,7 @@
 
   /* ---------- 아이콘 (틸 단색 3D) ---------- */
   const ICON_BY_ID = {
-    tent: "tent", peg: "hammer", rope: "knot", groundsheet: "camping", mat: "bed", rug: "scarf", bedding: "bed", pillow: "bed",
+    tent: "tent", livingshell: "camping", woodstove: "fire", peg: "hammer", rope: "knot", groundsheet: "camping", mat: "bed", rug: "scarf", bedding: "bed", pillow: "bed",
     tarp: "umbrella-on-ground", shelter: "tent", cot: "bed", reel: "electric-plug", eblanket: "thermometer", heater: "fire",
     co: "bell", hotpack: "socks", circulator: "wind-face", burner: "fire", isoburner: "fire", gas: "fuel-pump", windscreen: "wind-face",
     torch: "fire", cookset: "cooking", griddle: "cooking", tongs: "chopsticks", scissors: "scissors", board: "kitchen-knife", spice: "salt",
@@ -378,10 +378,11 @@
       { ids: ["dogpad", "dogwear"], t: "강아지 방한", d: "시츄는 추위에 약해요. 저전력 펫 온열매트와 패딩을 챙겨요." },
       { ids: ["mainlamp", "headlamp"], t: "조명", d: "첫 캠핑 교훈이에요. 메인 랜턴 하나와 1인 1 헤드랜턴이면 조리·철수가 편해요." },
       { ids: ["heater"], t: "600W 이하 온풍기", d: "전기장판으로 부족한 날 텐트 공기를 데워요. 전도 시 자동 차단되는 것으로 골라요." },
-      { ids: ["shelter"], t: "영하 -5℃ 아래라면 쉘터", d: "텐트를 바꾸지 말고 쉘터를 거실로 쓰고 원터치 텐트를 그 안에 넣어 침실로 써요. 바람과 냉기를 한 겹 더 막아줘요." },
+      ...(hv("livingshell") ? [{ ids: ["livingshell"], t: "리빙쉘 미리 쳐 보기", d: "겨울 1박은 리빙쉘로 가요. 처음엔 1시간 넘게 걸릴 수 있으니 당일 캠핑이나 낮 시간에 한 번 연습해요. 쳐 봤으면 아래 버튼을 눌러요.", practice: true }] : []),
+      { ids: ["shelter"], t: "영하 -5℃ 아래라면 쉘터", skip: hv("livingshell"), d: "텐트를 바꾸지 말고 쉘터를 거실로 쓰고 원터치 텐트를 그 안에 넣어 침실로 써요. 바람과 냉기를 한 겹 더 막아줘요." },
       { ids: ["igt"], t: "IGT로 주방 정리", d: "쉘터까지 갖췄다면 다음은 IGT예요. 조리 공간이 정리돼서 만족도가 높아요." },
     ];
-    return steps.map((s) => Object.assign({}, s, { missing: miss(s.ids) })).filter((s) => s.ids.some((id) => get(id)));
+    return steps.filter((s) => !s.skip).map((s) => Object.assign({}, s, { missing: s.practice ? (state.pitched ? [] : ["practice"]) : miss(s.ids) })).filter((s) => s.ids.some((id) => get(id)));
   }
   function diagHTML() {
     const adv = gearAdvice();
@@ -389,10 +390,11 @@
     const tent = get("tent");
     const sh = ((window.SOSHA_PICKS || {}).shelter || []).filter((p) => p.price).slice(0, 4);
     const chip = (id) => { const i = get(id); return i ? `<button class="diag-chip ${have(i) ? "ok" : ""}" type="button" data-open="${esc(id)}">${have(i) ? "✓ " : ""}${esc(i.name)}</button>` : ""; };
-    return `<p style="font-size:15px;line-height:1.7">${tent && have(tent) ? "지금 원터치 텐트는 얇은 천(190T)과 파이버글라스 폴, 스커트가 없는 구조라 <b>봄·가을과 영상권 겨울(밤 0℃ 안팎)</b>까지가 편하게 쓸 수 있는 한계예요. 영하로 내려가면 바닥 냉기, 결로, 바람이 문제예요." : "텐트를 먼저 정해요."}</p>
+    const ls = get("livingshell");
+    return `<p style="font-size:15px;line-height:1.7">${ls && have(ls) ? "텐트가 두 개예요. <b>원터치 텐트</b>는 얇은 천과 파이버글라스 폴이라 봄·가을, 당일 캠핑, 영상권 1박에 가볍게 쓰고, <b>미니멀웍스 리빙쉘</b>은 이너텐트가 있는 4계절 텐트라 겨울 1박에 써요. 쉘터는 따로 안 사도 돼요." : tent && have(tent) ? "지금 원터치 텐트는 얇은 천(190T)과 파이버글라스 폴, 스커트가 없는 구조라 <b>봄·가을과 영상권 겨울(밤 0℃ 안팎)</b>까지가 편하게 쓸 수 있는 한계예요. 영하로 내려가면 바닥 냉기, 결로, 바람이 문제예요." : "텐트를 먼저 정해요."}</p>
       <h3 class="camp-h">순서대로 보강하기 <span class="faint">${todo.length ? `${todo.length}단계 남았어요` : "다 갖췄어요!"}</span></h3>
-      <ol class="diag-steps">${adv.map((s) => `<li class="${s.missing.length ? "" : "done"}"><b>${s.missing.length ? "" : "✓ "}${esc(s.t)}</b><p>${esc(s.d)}</p><div class="diag-chips">${s.ids.map(chip).join("")}</div></li>`).join("")}</ol>
-      ${sh.length ? `<h3 class="camp-h">쉘터 후보 <span class="faint">원터치 텐트를 안에 넣는 방식</span></h3>
+      <ol class="diag-steps">${adv.map((s) => `<li class="${s.missing.length ? "" : "done"}"><b>${s.missing.length ? "" : "✓ "}${esc(s.t)}</b><p>${esc(s.d)}</p><div class="diag-chips">${s.ids.map(chip).join("")}${s.practice ? `<button class="diag-chip ${state.pitched ? "ok" : ""}" type="button" data-pitched>${state.pitched ? "✓ 쳐 봤어요" : "쳐 봤어요"}</button>` : ""}</div></li>`).join("")}</ol>
+      ${sh.length && !(ls && have(ls)) ? `<h3 class="camp-h">쉘터 후보 <span class="faint">원터치 텐트를 안에 넣는 방식</span></h3>
       <div class="list">${sh.map((p) => `<div class="link-row" style="align-items:flex-start"><span class="ico sm"><img src="v2/icons/tent.png" alt=""></span><b>${esc(p.brand)} ${esc(p.model)}<br><span class="muted" style="font-size:13px;font-weight:400">${p.weightKg ? `${p.weightKg}kg · ` : ""}${esc(p.why || "")}</span></b><small>${won(p.price)}</small></div>`).join("")}</div>
       <p class="faint" style="font-size:12.5px">원터치 텐트(223×203cm)가 쉘터 안에 들어가는지는 실측해서 확인해요. 텐트를 리빙쉘·터널형으로 바꾸는 건 10~15kg이라 미니 트렁크엔 부담이 커요.</p>` : ""}
       <h3 class="camp-h">계절 따라 나중에</h3>
@@ -539,13 +541,14 @@
     q.oninput = () => { freeQ = q.value; $("#freeLinks").innerHTML = freeQ.trim() ? sitesHTML(freeQ.trim()) : ""; };
   }
   function openGuide(key) {
-    let title, body;
+    let title, body, after;
     if (key === "@shelter") {
       title = "겨울 쉘터 고르는 법";
       body = `<ul class="bullets">${window.SOSHA_SHELTER_TIPS.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>`;
     } else if (key === "@diag") {
       title = "우리 장비 진단";
       body = diagHTML();
+      after = () => { const b = $("#sheet [data-pitched]"); if (b) b.onclick = () => { state.pitched = !state.pitched; save(); sheetState.refresh(); rerender(); }; };
     } else if (key === "@tips") {
       title = "고수 한마디";
       const topics = [...new Set(TIPS.map((t) => t.topic))];
@@ -558,7 +561,7 @@
       title = ts.length > 1 ? (ts[0].includes("일산화탄소") ? "겨울 안전" : "캠핑장 전기") : ts[0];
       body = `<ul class="bullets">${TIPS.filter((t) => ts.includes(t.topic)).map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>`;
     }
-    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${esc(title)}</h2></div>${xBtn()}</div>${body}`);
+    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${esc(title)}</h2></div>${xBtn()}</div>${key === "@diag" ? diagHTML() : body}`, { after });
   }
 
   /* ---------- 기록 ---------- */
@@ -929,17 +932,20 @@
     const fire = !picnic && (site ? (site.ours ? site.fire !== false : !site.fire || site.fire === "개별" || site.fire === "공용") : true);
     const deck = !!site && (site.ours ? (site.floor || []).includes("데크") : !!(site.floor || {})["데크"]);
     const day = p.kind === "daycamp";
-    return { picnic, day, season, fire, deck, elec: !picnic && !!p.elec, dog: !!p.dog, nights2: !day && (p.nights || 1) >= 2, cook: picnic && !!p.cook, site };
+    const lsOwned = (() => { const i = get("livingshell"); return !!(i && have(i)); })();
+    const tent = p.tent && (p.tent !== "livingshell" || lsOwned) ? p.tent : lsOwned && season === "winter" && !day ? "livingshell" : "tent";
+    return { picnic, day, tent, lsOwned, season, fire, deck, elec: !picnic && !!p.elec, dog: !!p.dog, nights2: !day && (p.nights || 1) >= 2, cook: picnic && !!p.cook, site };
   }
   function packIds(c) {
-    const S = c.picnic ? PICNIC_RULES : CAMP_RULES;
-    const keys = ["base", c.season];
+    const S = Object.assign({}, c.picnic ? PICNIC_RULES : CAMP_RULES, { tentpick: c.picnic ? [] : [c.tent] });
+    const keys = ["base", c.season, "tentpick"];
     if (c.picnic) { if (c.cook) keys.push("cook"); }
     else { if (c.fire) keys.push("fire"); if (c.elec) keys.push("elec"); if (c.elec && c.season === "winter") keys.push("winterElec"); if (c.nights2) keys.push("nights2"); if (c.deck) keys.push("deck"); }
     if (c.dog) { keys.push("dog"); if (c.season === "winter") keys.push("dogWinter"); }
+    const TENTS = ["tent", "livingshell"];
     const SLEEP = ["bedding", "pillow", "cot", "eblanket", "hotwater", "condtowel", "toiletry"]; // 당일 캠핑은 잠자리 짐을 빼요
     const out = [];
-    keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id) && !(c.day && SLEEP.includes(id))) out.push(id); }));
+    keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id) && !(c.day && SLEEP.includes(id)) && !(TENTS.includes(id) && id !== c.tent)) out.push(id); }));
     return out;
   }
   /* 항상 챙기는 장비: state.packAlways. 아직 정한 적 없으면 멀티바스켓·육각스툴을 기본으로 넣어요 */
@@ -984,6 +990,7 @@
       const pct = d.total ? Math.round((d.done / d.total) * 100) : 0;
       return `<div class="sheet-head"><span class="ico"><img src="v2/icons/backpack.png" alt=""></span><div><h2 id="sheetTitle">짐 챙기기</h2><span class="muted" style="font-size:14px">${esc(q.place || (c.picnic ? "피크닉" : "캠핑"))} · ${fmtDate(q.date)} · ${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : "오늘"}</span></div>${xBtn()}</div>
       <div class="camp-tags pack-conds">${chips.map((t) => `<span>${esc(t)}</span>`).join("")}<button class="linkbtn" type="button" data-editplan>일정 고치기</button></div>
+      ${!c.picnic && c.lsOwned ? `<div class="pills"><span class="faint" style="font-size:13px;align-self:center">텐트</span><button class="chip" type="button" data-tent="tent" aria-pressed="${c.tent === "tent"}">원터치</button><button class="chip" type="button" data-tent="livingshell" aria-pressed="${c.tent === "livingshell"}">리빙쉘</button></div>` : ""}
       ${c.picnic ? `<div class="pills"><button class="chip" type="button" data-cook aria-pressed="${!!q.cook}">🍳 요리해 먹기</button></div>` : ""}
       <div class="pack-prog"><span>챙긴 짐 <b class="num">${d.done} / ${d.total}</b></span><i><b style="width:${pct}%"></b></i></div>
       <h3 class="camp-h">가진 장비 중 챙길 것 <span class="faint">${d.take.length}개</span></h3>
@@ -1006,6 +1013,7 @@
         $$("#sheet [data-prem]").forEach((b) => (b.onclick = () => edit((q) => { const id = b.dataset.prem; q.remove = [...new Set((q.remove || []).concat(id))]; q.add = (q.add || []).filter((x) => x !== id); q.packed = (q.packed || []).filter((x) => x !== id);
           toast("이번 짐에서 뺐어요", [{ label: "되돌리기", run: () => { const r = planById(pid); r.remove = (r.remove || []).filter((x) => x !== id); save(); sheetState.refresh(); } }]); })));
         $$("#sheet [data-ppin]").forEach((b) => (b.onclick = () => edit(() => { const id = b.dataset.ppin; const cur = new Set(alwaysIds()); if (cur.has(id)) cur.delete(id); else cur.add(id); state.packAlways = [...cur]; toast(cur.has(id) ? "캠핑·피크닉 때마다 챙길게요" : "매번 챙기기에서 뺐어요"); })));
+        $$("#sheet [data-tent]").forEach((b) => (b.onclick = () => { const q = planById(pid); q.tent = b.dataset.tent; save(); sheetState.refresh(); }));
         const ck = $("#sheet [data-cook]"); if (ck) ck.onclick = () => { const q = planById(pid); q.cook = !q.cook; save(); sheetState.refresh(); };
         $("#sheet [data-editplan]").onclick = () => openPlan(null, pid);
       },
