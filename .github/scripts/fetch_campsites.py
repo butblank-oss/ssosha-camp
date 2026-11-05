@@ -73,16 +73,20 @@ while True:
         break
     no += 1
 
-out = []
+out, no_xy = [], 0
 for it in raw:
     try:
         lat, lng = float(it.get("mapY") or 0), float(it.get("mapX") or 0)
     except ValueError:
-        continue
-    if not lat or not lng:
-        continue
-    d = km(lat, lng)
-    if d > MAX_KM:
+        lat = lng = 0
+    if lat and lng:
+        d = km(lat, lng)
+        if d > MAX_KM:
+            continue
+    elif any(x in (it.get("doNm") or "") + (it.get("addr1") or "") for x in ("서울", "경기", "인천")):
+        d = None  # 좌표가 없는 수도권 캠핑장도 남겨요 (거리는 모름)
+        no_xy += 1
+    else:
         continue
     sbrs = [s.strip() for s in (it.get("sbrsCl") or "").split(",") if s.strip()]
     floor = {"잔디": num(it.get("siteBottomCl1")), "파쇄석": num(it.get("siteBottomCl2")), "데크": num(it.get("siteBottomCl3")),
@@ -94,7 +98,7 @@ for it in raw:
         "type": it.get("induty") or "",
         "area": " ".join(x for x in [it.get("doNm"), it.get("sigunguNm")] if x),
         "addr": it.get("addr1") or "",
-        "km": round(d, 1),
+        "km": round(d, 1) if d is not None else None,
         "fire": it.get("brazierCl") or "",  # 개별 / 공용 / 불가
         "wood": "장작판매" in sbrs,
         "elec": "전기" in sbrs,
@@ -109,7 +113,7 @@ for it in raw:
         "img": it.get("firstImageUrl") or "",
     })
 
-out.sort(key=lambda x: x["km"])
+out.sort(key=lambda x: (x["km"] is None, x["km"] or 0))
 with open("campsites.json", "w", encoding="utf-8") as f:
     json.dump({"updated": time.strftime("%Y-%m-%d"), "home": "안양 범계역", "items": out}, f, ensure_ascii=False, separators=(",", ":"))
-print(f"전체 {len(raw)}곳 중 {len(out)}곳 저장")
+print(f"전체 {len(raw)}곳 중 {len(out)}곳 저장 (좌표 없는 수도권 {no_xy}곳 포함)")

@@ -787,15 +787,15 @@
   const CAMP_FILTERS = [["fire", "🔥 장작 가능"], ["elec", "⚡ 전기"], ["pet", "🐶 반려견"], ["winter", "❄️ 겨울 운영"], ["near", "🚗 2시간 이내"]];
   function campList() {
     const cur = (window.SOSHA_CAMPSITES || []).map((c) => Object.assign({ ours: true }, c));
-    const pub = ((CAMPS && CAMPS.items) || []).map((c) => Object.assign({}, c, { min: driveMin(c.km) }));
+    const pub = ((CAMPS && CAMPS.items) || []).map((c) => Object.assign({}, c, { min: c.km == null ? null : driveMin(c.km) }));
     const ok = (c) => (!campF.fire || (c.ours ? c.fire === true || c.fire === null : c.fire === "개별" || c.fire === "공용"))
       && (!campF.elec || (c.ours ? c.elec !== false : c.elec))
       && (!campF.pet || (c.ours ? c.pet !== false : /^가능/.test(c.pet)))
       && (!campF.winter || (c.ours ? c.winter !== false : /겨울/.test(c.season)))
-      && (!campF.near || (c.min || 999) <= 120)
+      && (!campF.near || (c.min == null ? /서울|경기|인천/.test(c.area || "") : c.min <= 120))
       && (!campF.floor || (c.ours ? (c.floor || []).includes(campF.floor) : !!(c.floor || {})[campF.floor]));
     const seen = new Set(cur.map((c) => c.name.replace(/\s/g, "")));
-    return { ours: cur.filter(ok).sort((x, y) => (x.fire === false) - (y.fire === false) || x.min - y.min), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => x.km - y.km) };
+    return { ours: cur.filter(ok).sort((x, y) => (x.fire === false) - (y.fire === false) || x.min - y.min), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => (x.km == null) - (y.km == null) || (x.km || 0) - (y.km || 0)) };
   }
   function campCard(c) {
     const floor = c.ours ? (c.floor || []).join("·") : Object.keys(c.floor || {}).join("·");
