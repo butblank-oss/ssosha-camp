@@ -361,7 +361,53 @@ window.SOSHA_ITEMS = [
     spec: "소형견용 보온 하우스·텐트",
     why: "작고 아늑한 공간이 체온을 지켜 줘요. 시츄에게 맞는 작은 사이즈를 아직 찾는 중이에요.",
     newPrice: "3만~6만 원", usedPrice: "-", q: "소형견 방한 하우스" },
+  /* ---------- 2026-11-04 다이소 영수증으로 산 것 (목록에 없던 것) ---------- */
+  { id: "basket", cat: "furniture", name: "멀티바스켓 (접이식)", status: "bought", pri: 3,
+    why: "캠핑용품을 한 번에 담아 옮겨요.",
+    newPrice: "5,000원 (다이소)", usedPrice: "-", q: "다이소 손잡이 접이식 멀티바스켓",
+    purchase: { where: "다이소", price: 5000, date: "2026-11", cond: "신품", how: "매장", model: "손잡이 접이식 멀티바스켓 (약 46×38×27cm)" } },
+  { id: "igtnet", cat: "kitchen", name: "IGT 네트 바구니", status: "bought", pri: 3,
+    why: "IGT에 걸어 조리도구나 채소를 담아 둬요.",
+    newPrice: "2,000원 (다이소)", usedPrice: "-", q: "다이소 네트바구니",
+    purchase: { where: "다이소", price: 2000, date: "2026-11", cond: "신품", how: "매장", model: "네트바구니 (대)" } },
+  { id: "stool", cat: "furniture", name: "접이식 육각스툴 2개", status: "bought", pri: 3,
+    why: "보조 의자나 발받침, 작은 협탁으로 써요.",
+    newPrice: "10,000원 (다이소)", usedPrice: "-", q: "다이소 접이식 육각스툴",
+    purchase: { where: "다이소", price: 10000, date: "2026-11", cond: "신품", how: "매장", model: "접이식 육각스툴 (약 28.5×20×23cm) ×2" } },
+  { id: "chaircover", cat: "furniture", name: "경량체어 커버 2개", status: "bought", pri: 3,
+    why: "겨울에 의자에 씌워서 덜 차갑게 앉아요.",
+    newPrice: "6,000원 (다이소)", usedPrice: "-", q: "다이소 캠핑 경량체어 커버 ×2",
+    purchase: { where: "다이소", price: 6000, date: "2026-11", cond: "신품", how: "매장", model: "캠핑 경량체어 커버 ×2" } },
+  { id: "gasbag", cat: "kitchen", name: "이소가스 가방 2개", status: "bought", pri: 3,
+    why: "가스를 넣어 보관해요. 겨울엔 차가워지지 않게 품에 두기도 좋아요.",
+    newPrice: "6,000원 (다이소)", usedPrice: "-", q: "다이소 이소가스 사각가방",
+    purchase: { where: "다이소", price: 6000, date: "2026-11", cond: "신품", how: "매장", model: "이소가스 사각가방 (다용도) ×2" } },
+  { id: "santoku", cat: "kitchen", name: "캠핑용 칼 (산도쿠)", status: "bought", pri: 3,
+    why: "첫 캠핑에서 고기를 못 썰었던 교훈을 채워요.",
+    newPrice: "5,000원 (다이소)", usedPrice: "-", q: "다이소 네오플램 올스텐 산도쿠",
+    purchase: { where: "다이소", price: 5000, date: "2026-11", cond: "신품", how: "매장", model: "네오플램 올스텐 산도쿠" } },
+  { id: "pouch", cat: "life", name: "수납파우치 (소)", status: "bought", pri: 3,
+    why: "자잘한 소품을 나눠 담아요.",
+    newPrice: "1,000원 (다이소)", usedPrice: "-", q: "다이소 여행용 내부분리 수납파우치",
+    purchase: { where: "다이소", price: 1000, date: "2026-11", cond: "신품", how: "매장", model: "여행용 내부분리 수납파우치 (소)" } },
 ];
+
+/* 영수증으로 한 번에 반영하는 구매 기록. 앱이 처음 열릴 때 한 번만 적용돼요 (state.receipts에 id 기록).
+ * 이미 가격까지 적어 둔 품목은 건드리지 않아요. 전동 그라인더(후추용)·스니커즈는 캠핑 목록에서 뺐어요. */
+window.SOSHA_RECEIPTS = [
+  { id: "daiso-2026-11-04", where: "다이소", date: "2026-11", cond: "신품", how: "매장", items: {
+    gas: { price: 10000, model: "캠핑 이소가스 420g ×2 + 썬 캠핑 이소가스 230g ×2" },
+    tongs: { price: 5000, model: "스테인리스 다용도집게 33cm + 바비큐 숯 집게 55cm" },
+    scissors: { price: 2000, model: "굽은형 삼겹살가위" },
+    spicecase: { price: 5000, model: "캠핑 양념통파우치 (8개입)" },
+    kitchentool: { price: 6000, model: "실리콘 뒤집개 + 요리스푼(대) + 국자" },
+    cups: { price: 10000, model: "캠핑 시에라컵 300ml ×4 + 미넥스 스텐머그컵 250ml ×2" },
+    dishes: { price: 8000, model: "스텐접시 14cm ×4 + 올스텐 파스타접시 24cm + 스텐 3칸종지" },
+    cookset: { price: 10000, model: "IH 스테인리스 전골냄비 20cm + 알루미늄 사각 반합(메스틴)" },
+    lanternpole: { price: 5000, model: "알루미늄 램프스탠드 (접이식)" },
+  } },
+];
+
 
 /* 다나와 인기순 카테고리 (sort=saveDESC = 인기상품순). 추천 필터는 다나와 화면에서 직접 체크하세요. */
 window.SOSHA_DANAWA = [

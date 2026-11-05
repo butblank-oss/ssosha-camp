@@ -37,6 +37,23 @@
   /* ---------- 저장 ---------- */
   function load() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch { return {}; } }
   const state = Object.assign({ items: {}, custom: [], order: {}, trips: [], plans: [] }, load());
+  /* 영수증 반영: data.js의 SOSHA_RECEIPTS를 한 번만 적용해요 */
+  function applyReceipts() {
+    const done = new Set(state.receipts || []);
+    let changed = false;
+    (window.SOSHA_RECEIPTS || []).forEach((r) => {
+      if (done.has(r.id)) return;
+      Object.entries(r.items).forEach(([id, p]) => {
+        const cur = state.items[id] || {};
+        const pur = cur.purchase || {};
+        if (cur.status === "bought" && pur.price !== undefined && pur.price !== "") return;
+        state.items[id] = Object.assign({}, cur, { status: "bought", purchase: Object.assign({}, pur, { where: r.where, date: r.date, cond: r.cond, how: r.how, price: p.price, model: p.model }) });
+      });
+      done.add(r.id); changed = true;
+    });
+    if (changed) state.receipts = [...done];
+    return changed;
+  }
   function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* 저장이 막힌 브라우저에서도 화면은 동작해요 */ } shared.push(); }
 
   /* ---------- 공유: 지쏘·시아가 같은 기록을 봐요 ----------
@@ -67,6 +84,7 @@
     Object.keys(state).forEach((k) => delete state[k]);
     Object.assign(state, { items: {}, custom: [], order: {}, trips: [], plans: [] }, next);
     try { localStorage.setItem(KEY, JSON.stringify(state)); } catch {}
+    if (applyReceipts()) save();
   }
   function paintSync() {
     let el = document.getElementById("syncBanner");
@@ -137,6 +155,7 @@
     deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
     spicecase: "salt", kitchentool: "cooking", foldbasin: "droplet", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
     dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
+    basket: "shopping-bags", igtnet: "shopping-bags", stool: "chair", chaircover: "chair", gasbag: "fuel-pump", santoku: "kitchen-knife", pouch: "package",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
   const iconSrc = (i) => `v2/icons/${ICON_BY_ID[i.id] || ICON_BY_CAT[i.cat] || "package"}.png`;
@@ -837,6 +856,7 @@
 
   window.addEventListener("hashchange", () => { if (sheetState.open) closeSheet(); go(); });
   window.addEventListener("storage", (e) => { if (e.key === KEY) { Object.assign(state, load()); rerender(); } });
+  if (applyReceipts()) save();
   go();
   startShared();
 })();
