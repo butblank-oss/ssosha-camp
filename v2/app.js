@@ -262,8 +262,10 @@
     const must = items().filter((i) => i.pri === 1 && !have(i));
     const cheap = must.reduce((s, i) => s + ((cheapPick(i.id) || {}).price || 0), 0);
     const unknown = must.filter((i) => !cheapPick(i.id)).length;
-    const spent = items().reduce((s, i) => s + ((i.purchase && +i.purchase.price) || 0), 0);
-    return { must, cheap, unknown, spent };
+    const paid = items().filter((i) => i.status === "bought" && i.purchase && i.purchase.price !== "" && i.purchase.price != null);
+    const spent = paid.reduce((s, i) => s + (+i.purchase.price || 0), 0);
+    const boughtN = items().filter((i) => i.status === "bought").length;
+    return { must, cheap, unknown, spent, paidN: paid.length, boughtN };
   }
   /* 단계 미션: 첫 캠핑 숙제 → 필수 장비 → 캠핑 다녀오기·후기 → 권장 장비 순으로 계속 이어져요 */
   function missions() {
@@ -313,6 +315,8 @@
             <div><span>다 사면 (가성비)</span><strong class="num">${won(s.cheap) || "0원"}</strong></div>
           </div>
           ${s.unknown ? `<p class="faint" style="font-size:12.5px;text-align:center">가격 조사 전인 ${s.unknown}개는 빼고 계산했어요</p>` : ""}
+          <a class="spent-row" href="#gear" data-quick="bought"><span>지금까지 산 것 <b class="num">${s.boughtN}개</b></span><strong class="num">${won(s.spent) || "0원"}</strong></a>
+          ${s.boughtN > s.paidN ? `<p class="faint" style="font-size:12.5px;text-align:center;margin-top:-6px">가격을 안 적은 ${s.boughtN - s.paidN}개는 빼고 더했어요</p>` : ""}
           <a class="btn btn-primary btn-block" href="#gear">살 것 목록 보기</a>
         </section>
       </div>
