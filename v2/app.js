@@ -806,14 +806,14 @@
     openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${p ? "캠핑 계획 고치기" : "캠핑 계획 추가"}</h2></div>${xBtn()}</div>
       <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(dv("date", p ? p.date : ""))}" min="${new Date().toISOString().slice(0, 10)}"></label>
       <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(dv("place", p ? p.place : ""))}"></label>
-      <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>${dv("kind", p ? p.kind || "camp" : "camp") === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"}</span></button>
+      <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span class="pfind-label">${dv("kind", p ? p.kind || "camp" : "camp") === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"}</span></button>
       <div class="pills pills-wrap">${kindChips("data-pkind", dv("kind", p ? p.kind || "camp" : "camp"))}</div>
       <p class="faint" style="font-size:12.5px;margin-top:-4px">텐트만 치고 밤엔 집에서 자면 '당일 캠핑'이에요. 잠자리 짐이 빠져요. 가서 바뀌면 나중에 고쳐도 돼요.</p>
       <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${dv("dog", p ? !!p.dog : true)}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${dv("elec", p ? !!p.elec : true)}">전기 있음</button></div>
       <div class="sheet-foot">${p ? '<button class="btn" type="button" id="pDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="pSave">저장</button></div>`, {
       after: () => {
         const curKind = () => (($("#sheet [data-pkind][aria-pressed=true]") || {}).dataset || {}).pkind || "camp";
-        $$("#sheet [data-pkind]").forEach((b) => (b.onclick = () => { $$("#sheet [data-pkind]").forEach((x) => x.setAttribute("aria-pressed", x === b)); $("#pFind span").textContent = b.dataset.pkind === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"; }));
+        $$("#sheet [data-pkind]").forEach((b) => (b.onclick = () => { $$("#sheet [data-pkind]").forEach((x) => x.setAttribute("aria-pressed", x === b)); $("#pFind .pfind-label").textContent = b.dataset.pkind === "picnic" ? "피크닉 장소 고르기" : "조건에 맞는 캠핑장 찾기"; }));
         $("#pFind").onclick = () => (curKind() === "picnic" ? openPicnicFinder : openCampFinder)({ planId: p ? p.id : null, date: $("#pDate").value, place: $("#pPlace").value, kind: curKind(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" });
         ["pDog", "pElec"].forEach((k) => ($("#" + k).onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true")));
         $("#pSave").onclick = () => {
