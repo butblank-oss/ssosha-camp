@@ -329,7 +329,7 @@
   }
   function rowHTML(i) {
     const p = bestPick(i.id);
-    const paid = i.purchase && i.purchase.price;
+    const paid = i.purchase && i.purchase.price !== "" && i.purchase.price != null;
     const done = have(i);
     const sub = paid ? esc([i.purchase.model, i.purchase.where ? `${i.purchase.where} 구매` : ""].filter(Boolean).join(" · ") || "구매") : p ? `${esc(p.brand)} ${esc(p.model)}` : "추천 제품 조사 전";
     const price = paid ? won(i.purchase.price) : p ? won(p.price) : esc((i.newPrice || "").replace(/\s*\(.*\)/, "")) || "가격 미정";
@@ -593,7 +593,7 @@
           ${i.status === "bought" ? `<label class="field"><span>어떤 제품</span><input id="fModel" placeholder="예: 버티탭 슬림릴 1.5SQ 10m" value="${esc(pur.model || "")}"></label>
           ${ps.length ? `<div class="pills pills-wrap" role="group" aria-label="추천 제품에서 고르기">${ps.slice(0, 4).map((q, n) => { const nm = `${q.brand} ${q.model}`.trim(); return `<button class="chip chip-pick" type="button" data-pickfill="${n}" aria-pressed="${pur.model === nm}">${esc(nm)}</button>`; }).join("")}</div>` : ""}
           <div class="grid2">
-            <label class="field"><span>얼마에</span><input id="fPrice" inputmode="numeric" pattern="[0-9]*" placeholder="예: 18900" value="${esc(pur.price || "")}"></label>
+            <label class="field"><span>얼마에</span><input id="fPrice" inputmode="numeric" pattern="[0-9]*" placeholder="예: 18900" value="${esc(pur.price === 0 ? "0" : pur.price || "")}"></label>
             <label class="field"><span>어디서</span><input id="fWhere" placeholder="예: 쿠팡, 당근" value="${esc(pur.where || "")}"></label>
           </div>
           <div class="pills" role="group" aria-label="상태">${["신품", "중고"].map((c) => `<button class="chip" type="button" data-cond="${c}" aria-pressed="${(pur.cond || "신품") === c}">${c}</button>`).join("")}<span class="pills-gap" aria-hidden="true"></span>${["매장", "기타"].map((c) => `<button class="chip" type="button" data-how="${c}" aria-pressed="${pur.how === c}">${c}</button>`).join("")}</div>` : ""}

@@ -32,7 +32,7 @@
   function itemXP(it) {
     if (!have(it)) return 0;
     let x = it.status === "owned" ? XP_OWNED : XP_BY_PRI[it.pri] || 5;
-    if (it.purchase && it.purchase.price) x += XP_RECORD;
+    if (it.purchase && it.purchase.price !== "" && it.purchase.price != null) x += XP_RECORD;
     if (it.rating) x += XP_RECORD;
     if (it.memo) x += XP_RECORD;
     return x;
