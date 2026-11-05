@@ -150,18 +150,7 @@ window.SOSHA_PICKS = {
  ],
  "mainlamp": [
   {
-   "brand": "루맥스",
-   "model": "LED 아웃도어 캠핑 랜턴 LC-100K (최대 약 800lm, 보조배터리 기능)",
-   "price": 35000,
-   "weightKg": 0.23,
-   "packedCm": null,
-   "est": true,
-   "why": "3.5만 원대에 800루멘이라 가성비가 제일 좋아요. 230g으로 가볍고 국내 손전등 브랜드라 AS도 편해요. 다이소 램프스탠드에 높이 걸면 사이트가 넓게 밝아요.",
-   "url": "https://topten-blog.com/articles/%EC%9D%B8%EA%B8%B0-%EC%BA%A0%ED%95%91-%EB%9E%9C%ED%84%B4-%EC%B6%94%EC%B2%9C",
-   "pick": true
-  },
-  {
-   "brand": "프리즘(크레모아)",
+   "brand": "크레모아",
    "model": "울트라 3.0 M (13,400mAh, 40~1,100lm 터보 2,200lm)",
    "price": 99000,
    "weightKg": 0.405,
@@ -171,12 +160,34 @@ window.SOSHA_PICKS = {
     3.4
    ],
    "est": false,
-   "why": "1,100루멘에 보조배터리 기능까지 있고 405g이라 작아서 좁은 트렁크에 딱이에요.",
+   "why": "캠퍼들이 메인 랜턴의 기준으로 꼽는 국민템이에요. 1,100루멘에 보조배터리 기능, 405g이라 좁은 트렁크에도 좋아요. 당근에 중고 매물이 많아요.",
    "url": "https://docs.channel.io/prismlight/ko/articles/울트라-30-e06571fc",
+   "pick": true
+  },
+  {
+   "brand": "루메나",
+   "model": "5.1CH PRO 2 (5면 발광, 최대 4,600lm, 최대 110시간)",
+   "price": 149000,
+   "weightKg": null,
+   "packedCm": null,
+   "est": false,
+   "why": "크레모아와 함께 국민 메인 랜턴으로 꼽혀요. 5면으로 밝혀서 사이트 전체가 환해요. 무겁고 비싼 편이라 당근 중고도 같이 보세요.",
+   "url": "https://www.kolonmall.com/Product/K1758611718195005BE01",
    "pick": false
   },
   {
-   "brand": "프리즘(크레모아)",
+   "brand": "루맥스",
+   "model": "LED 아웃도어 캠핑 랜턴 LC-100K (최대 약 800lm, 보조배터리 기능)",
+   "price": 35000,
+   "weightKg": 0.23,
+   "packedCm": null,
+   "est": true,
+   "why": "3.5만 원대에 800루멘이라 가성비가 제일 좋아요. 230g으로 가볍고 국내 손전등 브랜드라 AS도 편해요. 다이소 램프스탠드에 높이 걸면 사이트가 넓게 밝아요.",
+   "url": "https://topten-blog.com/articles/%EC%9D%B8%EA%B8%B0-%EC%BA%A0%ED%95%91-%EB%9E%9C%ED%84%B4-%EC%B6%94%EC%B2%9C",
+   "pick": false
+  },
+  {
+   "brand": "크레모아",
    "model": "울트라 3.0 S (7,000mAh, 30~600lm 터보 1,200lm)",
    "price": 79000,
    "weightKg": 0.27,
