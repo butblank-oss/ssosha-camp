@@ -490,7 +490,7 @@ window.SOSHA_DAISO = [
  * { id, name, area, min(집에서 차로 분), fire, wood, elec, elecW, pet, petNote, winter, floor:[], tarp, price, url, note } */
 /* fire/elec/pet/winter: true 확인됨, false 안 됨, null 확인 필요 (2026-11-05 조사, 예약 전 전화 확인) */
 window.SOSHA_CAMPSITES = [
-{"id": "gwanggyo", "name": "광교호수공원 가족캠핑장", "area": "경기 수원 영통구", "min": 25, "fire": false, "wood": false, "elec": true, "elecW": "전기 3천 원", "pet": true, "petNote": "소형견 가능", "winter": true, "floor": ["데크", "잔디"], "price": "", "url": "https://www.suwonudc.co.kr/ggcamping/mainPage.do", "note": "직접 가 본 곳. 장작·숯 불가, 버너만 가능. 데크 20·잔디 6면, 호수공원 산책하기 좋아요. 수원도시공사 추첨 예약. 031-548-0075."},
+{"id": "gwanggyo", "name": "광교호수공원 가족캠핑장", "area": "경기 수원 영통구", "min": 25, "fire": false, "wood": false, "elec": true, "elecW": "전기 3천 원", "pet": null, "petNote": "", "winter": true, "floor": ["데크", "잔디"], "price": "", "url": "https://www.suwonudc.co.kr/ggcamping/mainPage.do", "note": "반려견은 출처마다 달라요(고캠핑은 소형견 가능, 다른 곳은 불가) — 예약 전 확인. 장작·숯 불가, 버너만 가능. 데크 20·잔디 6면, 호수공원 산책하기 좋아요. 수원도시공사 추첨 예약. 031-548-0075."},
 {"id": "sanmaeul", "name": "안양 산마을캠핑장", "area": "경기 안양 동안구", "min": 10, "fire": true, "wood": false, "elec": null, "pet": true, "petNote": "반려견 가능 (가 봄)", "winter": true, "floor": ["파쇄석", "데크"], "price": "5만~6만", "url": "https://naver.me/xdpFqiYi", "note": "직접 가 본 곳. 장작 가능, 반려견 동반 가능. 파쇄석 15면·데크 18면, 화로대·릴선·난방기구 대여. 0507-1379-7772."},
 {"id": "solip", "name": "시흥 솔잎향캠핑파크", "area": "경기 시흥 조남동", "min": 20, "fire": true, "wood": false, "elec": null, "pet": false, "winter": true, "floor": ["데크", "파쇄석"], "price": "5만~6만", "url": "https://naver.me/GrmaE3Xv", "note": "직접 가 봤는데 매우 좋았어요. 장작 가능, 반려견 불가라 둘이 갈 때. 수리산 자락, 고속도로 옆. 031-402-7732.", "fav": true},
  {
