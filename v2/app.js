@@ -378,7 +378,7 @@
       { ids: ["dogpad", "dogwear"], t: "강아지 방한", d: "시츄는 추위에 약해요. 저전력 펫 온열매트와 패딩을 챙겨요." },
       { ids: ["mainlamp", "headlamp"], t: "조명", d: "첫 캠핑 교훈이에요. 메인 랜턴 하나와 1인 1 헤드랜턴이면 조리·철수가 편해요." },
       { ids: ["heater"], t: "600W 이하 온풍기", d: "전기장판으로 부족한 날 텐트 공기를 데워요. 전도 시 자동 차단되는 것으로 골라요." },
-      ...(hv("livingshell") ? [{ ids: ["livingshell"], t: "리빙쉘 미리 쳐 보기", d: "겨울 1박은 리빙쉘로 가요. 처음엔 1시간 넘게 걸릴 수 있으니 당일 캠핑이나 낮 시간에 한 번 연습해요. 쳐 봤으면 아래 버튼을 눌러요.", practice: true }] : []),
+      ...(hv("livingshell") ? [{ ids: ["livingshell"], t: "알베르게 미리 쳐 보기", d: "겨울 1박은 알베르게로 가요. 16kg이라 둘이 같이 들어요. 처음엔 1시간 넘게 걸릴 수 있으니 당일 캠핑이나 낮 시간에 한 번 연습해요. 쳐 봤으면 아래 버튼을 눌러요.", practice: true }] : []),
       { ids: ["shelter"], t: "영하 -5℃ 아래라면 쉘터", skip: hv("livingshell"), d: "텐트를 바꾸지 말고 쉘터를 거실로 쓰고 원터치 텐트를 그 안에 넣어 침실로 써요. 바람과 냉기를 한 겹 더 막아줘요." },
       { ids: ["igt"], t: "IGT로 주방 정리", d: "쉘터까지 갖췄다면 다음은 IGT예요. 조리 공간이 정리돼서 만족도가 높아요." },
     ];
@@ -391,7 +391,7 @@
     const sh = ((window.SOSHA_PICKS || {}).shelter || []).filter((p) => p.price).slice(0, 4);
     const chip = (id) => { const i = get(id); return i ? `<button class="diag-chip ${have(i) ? "ok" : ""}" type="button" data-open="${esc(id)}">${have(i) ? "✓ " : ""}${esc(i.name)}</button>` : ""; };
     const ls = get("livingshell");
-    return `<p style="font-size:15px;line-height:1.7">${ls && have(ls) ? "텐트가 두 개예요. <b>원터치 텐트</b>는 얇은 천과 파이버글라스 폴이라 봄·가을, 당일 캠핑, 영상권 1박에 가볍게 쓰고, <b>미니멀웍스 리빙쉘</b>은 이너텐트가 있는 4계절 텐트라 겨울 1박에 써요. 쉘터는 따로 안 사도 돼요." : tent && have(tent) ? "지금 원터치 텐트는 얇은 천(190T)과 파이버글라스 폴, 스커트가 없는 구조라 <b>봄·가을과 영상권 겨울(밤 0℃ 안팎)</b>까지가 편하게 쓸 수 있는 한계예요. 영하로 내려가면 바닥 냉기, 결로, 바람이 문제예요." : "텐트를 먼저 정해요."}</p>
+    return `<p style="font-size:15px;line-height:1.7">${ls && have(ls) ? "텐트가 두 개예요. <b>원터치 텐트</b>는 얇은 천과 파이버글라스 폴이라 봄·가을, 당일 캠핑, 영상권 1박에 가볍게 쓰고, <b>미니멀웍스 알베르게</b>는 이너텐트와 루프플라이가 있는 터널형이라 겨울 1박에 써요. 길이 6.5m라 데크보다 파쇄석·잔디 사이트가 맞아요. 쉘터는 따로 안 사도 돼요." : tent && have(tent) ? "지금 원터치 텐트는 얇은 천(190T)과 파이버글라스 폴, 스커트가 없는 구조라 <b>봄·가을과 영상권 겨울(밤 0℃ 안팎)</b>까지가 편하게 쓸 수 있는 한계예요. 영하로 내려가면 바닥 냉기, 결로, 바람이 문제예요." : "텐트를 먼저 정해요."}</p>
       <h3 class="camp-h">순서대로 보강하기 <span class="faint">${todo.length ? `${todo.length}단계 남았어요` : "다 갖췄어요!"}</span></h3>
       <ol class="diag-steps">${adv.map((s) => `<li class="${s.missing.length ? "" : "done"}"><b>${s.missing.length ? "" : "✓ "}${esc(s.t)}</b><p>${esc(s.d)}</p><div class="diag-chips">${s.ids.map(chip).join("")}${s.practice ? `<button class="diag-chip ${state.pitched ? "ok" : ""}" type="button" data-pitched>${state.pitched ? "✓ 쳐 봤어요" : "쳐 봤어요"}</button>` : ""}</div></li>`).join("")}</ol>
       ${sh.length && !(ls && have(ls)) ? `<h3 class="camp-h">쉘터 후보 <span class="faint">원터치 텐트를 안에 넣는 방식</span></h3>
@@ -990,7 +990,8 @@
       const pct = d.total ? Math.round((d.done / d.total) * 100) : 0;
       return `<div class="sheet-head"><span class="ico"><img src="v2/icons/backpack.png" alt=""></span><div><h2 id="sheetTitle">짐 챙기기</h2><span class="muted" style="font-size:14px">${esc(q.place || (c.picnic ? "피크닉" : "캠핑"))} · ${fmtDate(q.date)} · ${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : "오늘"}</span></div>${xBtn()}</div>
       <div class="camp-tags pack-conds">${chips.map((t) => `<span>${esc(t)}</span>`).join("")}<button class="linkbtn" type="button" data-editplan>일정 고치기</button></div>
-      ${!c.picnic && c.lsOwned ? `<div class="pills"><span class="faint" style="font-size:13px;align-self:center">텐트</span><button class="chip" type="button" data-tent="tent" aria-pressed="${c.tent === "tent"}">원터치</button><button class="chip" type="button" data-tent="livingshell" aria-pressed="${c.tent === "livingshell"}">리빙쉘</button></div>` : ""}
+      ${!c.picnic && c.lsOwned ? `<div class="pills"><span class="faint" style="font-size:13px;align-self:center">텐트</span><button class="chip" type="button" data-tent="tent" aria-pressed="${c.tent === "tent"}">원터치</button><button class="chip" type="button" data-tent="livingshell" aria-pressed="${c.tent === "livingshell"}">알베르게</button></div>` : ""}
+      ${!c.picnic && c.tent === "livingshell" && c.deck ? `<p class="pack-warn">⚠️ 알베르게는 길이 6.5m예요. 이 캠핑장 데크에 들어가는지 미리 확인해요.</p>` : ""}
       ${c.picnic ? `<div class="pills"><button class="chip" type="button" data-cook aria-pressed="${!!q.cook}">🍳 요리해 먹기</button></div>` : ""}
       <div class="pack-prog"><span>챙긴 짐 <b class="num">${d.done} / ${d.total}</b></span><i><b style="width:${pct}%"></b></i></div>
       <h3 class="camp-h">가진 장비 중 챙길 것 <span class="faint">${d.take.length}개</span></h3>
