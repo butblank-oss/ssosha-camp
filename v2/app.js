@@ -174,7 +174,7 @@
     cups: "hot-beverage", foodmenu: "pot-of-food", firepit: "fire", gloves: "gloves", wood: "wood", extinguisher: "fire-extinguisher",
     firemat: "fire", table1: "package", chairs: "chair", storage: "package", igt: "cooking", shelf: "package", trash: "wastebasket",
     carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
-    clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face",
+    clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face", picnicmat: "umbrella-on-ground",
     deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
     kitchentool: "cooking", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
     dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
@@ -868,9 +868,9 @@
     deck: (R.deck || []).concat(["deckpeg"]),
   };
   const PICNIC_RULES = {
-    base: ["rug", "mat", "table1", "chairs", "cups", "cutlery", "trash", "tissue", "coffee", "flask", "storage", "toiletry"],
+    base: ["picnicmat", "table1", "chairs", "cups", "cutlery", "trash", "tissue", "coffee", "flask", "storage", "toiletry"],
     cook: ["isoburner", "gas", "windscreen", "cookset", "tongs", "scissors", "kitchentool", "spice", "dishes", "board"],
-    winter: ["hotpack", "clothes", "hotwater"], summer: ["cooler", "jug"], mild: ["cooler"],
+    winter: ["rug", "hotpack", "clothes", "hotwater"], summer: ["cooler", "jug"], mild: ["cooler"],
     dog: ["dogleash", "dogharness", "dogbowl", "dogpoop"], dogWinter: ["dogwear", "pawwax"],
   };
   const SEASON_NAME = { winter: "겨울", summer: "여름", mild: "봄·가을" };
