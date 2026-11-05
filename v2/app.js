@@ -174,7 +174,7 @@
     cups: "hot-beverage", foodmenu: "pot-of-food", firepit: "fire", gloves: "gloves", wood: "wood", extinguisher: "fire-extinguisher",
     firemat: "fire", table1: "package", chairs: "chair", storage: "package", igt: "cooking", shelf: "package", trash: "wastebasket",
     carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
-    clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face", picnicmat: "umbrella-on-ground",
+    clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face", foammat: "bed", picnicmat: "umbrella-on-ground",
     deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
     kitchentool: "cooking", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
     dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
@@ -363,6 +363,38 @@
       </div>`;
     bindCommon();
   }
+  /* ---------- 우리 장비 진단: 가진 장비를 보고 다음에 보강할 것을 순서대로 골라요 ---------- */
+  function gearAdvice() {
+    const hv = (id) => { const i = get(id); return !!(i && have(i)); };
+    const miss = (ids) => ids.filter((id) => get(id) && !hv(id));
+    const steps = [
+      { ids: ["bedding"], t: "겨울엔 침낭·이불부터", d: "동계 침낭(컴포트 -5℃ 이하) 2개, 아니면 두꺼운 집 이불 + 극세사 담요라도 꼭 챙겨요. 추위는 장비보다 잠자리에서 갈려요." },
+      { ids: ["groundsheet", "foammat"], t: "바닥 3중 단열", d: "그라운드시트 → 발포매트 → 자충매트 → 전기장판 순서로 깔아요. 원터치 텐트는 바닥 냉기가 제일 큰 약점이에요." },
+      { ids: ["co"], t: "일산화탄소 경보기", d: "텐트 안에서 난방을 하면 꼭 있어야 하는 생명 장비예요. 머리 높이에 걸어요." },
+      { ids: ["reel", "eblanket"], t: "전기 사이트 준비", d: "누전차단 릴선 + 200W 이하 전기장판이면 영상권 겨울은 편하게 나요. 600W를 넘지 않게 써요." },
+      { ids: ["dogpad", "dogwear"], t: "강아지 방한", d: "시츄는 추위에 약해요. 저전력 펫 온열매트와 패딩을 챙겨요." },
+      { ids: ["mainlamp", "headlamp"], t: "조명", d: "첫 캠핑 교훈이에요. 메인 랜턴 하나와 1인 1 헤드랜턴이면 조리·철수가 편해요." },
+      { ids: ["heater"], t: "600W 이하 온풍기", d: "전기장판으로 부족한 날 텐트 공기를 데워요. 전도 시 자동 차단되는 것으로 골라요." },
+      { ids: ["shelter"], t: "영하 -5℃ 아래라면 쉘터", d: "텐트를 바꾸지 말고 쉘터를 거실로 쓰고 원터치 텐트를 그 안에 넣어 침실로 써요. 바람과 냉기를 한 겹 더 막아줘요." },
+      { ids: ["igt"], t: "IGT로 주방 정리", d: "쉘터까지 갖췄다면 다음은 IGT예요. 조리 공간이 정리돼서 만족도가 높아요." },
+    ];
+    return steps.map((s) => Object.assign({}, s, { missing: miss(s.ids) })).filter((s) => s.ids.some((id) => get(id)));
+  }
+  function diagHTML() {
+    const adv = gearAdvice();
+    const todo = adv.filter((s) => s.missing.length);
+    const tent = get("tent");
+    const sh = ((window.SOSHA_PICKS || {}).shelter || []).filter((p) => p.price).slice(0, 4);
+    const chip = (id) => { const i = get(id); return i ? `<button class="diag-chip ${have(i) ? "ok" : ""}" type="button" data-open="${esc(id)}">${have(i) ? "✓ " : ""}${esc(i.name)}</button>` : ""; };
+    return `<p style="font-size:15px;line-height:1.7">${tent && have(tent) ? "지금 원터치 텐트는 얇은 천(190T)과 파이버글라스 폴, 스커트가 없는 구조라 <b>봄·가을과 영상권 겨울(밤 0℃ 안팎)</b>까지가 편하게 쓸 수 있는 한계예요. 영하로 내려가면 바닥 냉기, 결로, 바람이 문제예요." : "텐트를 먼저 정해요."}</p>
+      <h3 class="camp-h">순서대로 보강하기 <span class="faint">${todo.length ? `${todo.length}단계 남았어요` : "다 갖췄어요!"}</span></h3>
+      <ol class="diag-steps">${adv.map((s) => `<li class="${s.missing.length ? "" : "done"}"><b>${s.missing.length ? "" : "✓ "}${esc(s.t)}</b><p>${esc(s.d)}</p><div class="diag-chips">${s.ids.map(chip).join("")}</div></li>`).join("")}</ol>
+      ${sh.length ? `<h3 class="camp-h">쉘터 후보 <span class="faint">원터치 텐트를 안에 넣는 방식</span></h3>
+      <div class="list">${sh.map((p) => `<div class="link-row" style="align-items:flex-start"><span class="ico sm"><img src="v2/icons/tent.png" alt=""></span><b>${esc(p.brand)} ${esc(p.model)}<br><span class="muted" style="font-size:13px;font-weight:400">${p.weightKg ? `${p.weightKg}kg · ` : ""}${esc(p.why || "")}</span></b><small>${won(p.price)}</small></div>`).join("")}</div>
+      <p class="faint" style="font-size:12.5px">원터치 텐트(223×203cm)가 쉘터 안에 들어가는지는 실측해서 확인해요. 텐트를 리빙쉘·터널형으로 바꾸는 건 10~15kg이라 미니 트렁크엔 부담이 커요.</p>` : ""}
+      <h3 class="camp-h">계절 따라 나중에</h3>
+      <ul class="bullets"><li>타프: 쉘터가 있으면 겨울엔 필요 없어요. 봄·여름 비·햇빛 대비로.</li><li>아이스박스: 겨울엔 안 사도 돼요. 봄에 사요.</li><li>야전침대: 겨울엔 바닥보다 추워서 나중에.</li></ul>`;
+  }
   const icoImg = (name) => `<span class="ico"><img src="v2/icons/${name}.png" alt=""></span>`;
 
   /* 홈 '지금 읽으면 좋아요': 레벨과 산 것에 따라 알아보기 글 3개를 골라요 */
@@ -423,7 +455,9 @@
     const groups = [1, 2, 3].map((p) => ({ p, rows: list.filter((i) => i.pri === p) })).filter((g) => g.rows.length);
     const showSum = !ui.q && (ui.status === "todo" || ui.status === "research");
     const s = summary();
-    const body = () => `${ui.q ? "" : `<div class="seg" role="tablist" aria-label="상태">${STATUS.map(([k, n]) => `<button role="tab" type="button" data-status="${k}" aria-selected="${ui.status === k}">${n}<b>${counts[k]}</b></button>`).join("")}</div>
+    const adv = gearAdvice().filter((s) => s.missing.length);
+    const advCard = !ui.q && adv.length ? `<button class="card adv-card" type="button" data-guide="@diag"><small>다음 단계 · 우리 장비 진단</small><b>${esc(adv[0].t)}</b><p>${esc(adv[0].d)}</p>${adv[1] ? `<span class="faint">그다음: ${esc(adv[1].t)}</span>` : ""}<span class="adv-more">자세히 보기 ›</span></button>` : "";
+    const body = () => `${advCard}${ui.q ? "" : `<div class="seg" role="tablist" aria-label="상태">${STATUS.map(([k, n]) => `<button role="tab" type="button" data-status="${k}" aria-selected="${ui.status === k}">${n}<b>${counts[k]}</b></button>`).join("")}</div>
       <div class="chips" role="group" aria-label="분류">${[["all", "전체"], ["lesson", "교훈만"]].concat(CATS.map((c) => [c.id, c.name])).map(([k, n]) => `<button class="chip" type="button" data-cat="${k}" aria-pressed="${ui.cat === k}">${n}</button>`).join("")}</div>`}
       <div class="list" aria-live="polite">
         ${groups.length ? groups.map((g) => `<div class="group-head"><span><span class="tag ${PRI[g.p][1]}">${PRI[g.p][0]}</span> ${g.rows.length}개</span>${g.p === 1 && ui.status !== "owned" ? "<small>교훈 품목이 위에 와요</small>" : ""}</div>${g.rows.map(rowHTML).join("")}`).join("")
@@ -485,6 +519,7 @@
       <section class="sec">
         <div class="sec-head"><h2>고수들이 말하는 고르는 법</h2></div>
         <div class="list">
+          <button class="link-row" type="button" data-guide="@diag">${icoImg("clipboard")}<b>우리 장비 진단</b><small>다음에 뭘 보강할까</small></button>
           ${(window.SOSHA_SHELTER_TIPS || []).length ? `<button class="link-row" type="button" data-guide="@shelter">${icoImg("tent")}<b>겨울 쉘터 고르는 법</b><small>경량 · 우레탄창</small></button>` : ""}
           ${(window.SOSHA_DAISO || []).length ? `<button class="link-row" type="button" data-guide="@daiso">${icoImg("shopping-bags")}<b>다이소 찐템</b><small>캠퍼들이 꼽은 것</small></button>` : ""}
           ${topics.filter((t) => !/일산화탄소|열원|캠핑장 전기|전기장판/.test(t)).map((t) => `<button class="link-row" type="button" data-guide="${esc(t)}">${icoImg(TOPIC_ICON[t] || "open-book")}<b>${esc(t)}</b><small>${TIPS.filter((x) => x.topic === t).length}개 의견</small></button>`).join("")}
@@ -505,6 +540,9 @@
     if (key === "@shelter") {
       title = "겨울 쉘터 고르는 법";
       body = `<ul class="bullets">${window.SOSHA_SHELTER_TIPS.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>`;
+    } else if (key === "@diag") {
+      title = "우리 장비 진단";
+      body = diagHTML();
     } else if (key === "@tips") {
       title = "고수 한마디";
       const topics = [...new Set(TIPS.map((t) => t.topic))];
@@ -863,7 +901,7 @@
   const R = window.SOSHA_RULES || {};
   const CAMP_RULES = {
     base: (R.base || []).concat(["thorbox", "thortop", "lanternpole", "lanternhook", "kitchentool", "dishbag", "toiletry", "tissue", "clothes"]),
-    fire: R.fire || [], winter: (R.winter || []).concat(["thermo", "hotwater", "flask", "condtowel"]), winterElec: R.winterElec || [], elec: R.elec || [],
+    fire: R.fire || [], winter: (R.winter || []).concat(["foammat", "thermo", "hotwater", "flask", "condtowel"]), winterElec: R.winterElec || [], elec: R.elec || [],
     summer: R.summer || [], mild: R.mild || [], nights2: R.nights2 || [], dog: (R.dog || []).concat(["dogharness"]), dogWinter: (R.dogWinter || []).concat(["dogpad", "pawwax"]),
     deck: (R.deck || []).concat(["deckpeg"]),
   };

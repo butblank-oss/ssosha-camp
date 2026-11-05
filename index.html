@@ -51,6 +51,22 @@
 .temp-sign .plus[aria-pressed="true"] { background: #FFE4D6; color: #C2410C; }
 .temp-sign .minus[aria-pressed="true"] { background: #DBEAFE; color: #1D4ED8; }
 @media (prefers-color-scheme: dark) { .temp-sign .plus[aria-pressed="true"] { background: #3A2213; color: #FDBA74; } .temp-sign .minus[aria-pressed="true"] { background: #172554; color: #93C5FD; } }
+
+/* 우리 장비 진단 */
+.adv-card { display: grid; gap: 4px; width: 100%; margin-bottom: 12px; padding: 16px; border: 0; border-radius: var(--r); background: var(--soft); color: inherit; text-align: left; }
+.adv-card small { font-size: 12px; font-weight: 700; color: var(--brand-ink); }
+.adv-card b { font-size: 16px; }
+.adv-card p { font-size: 14px; line-height: 1.55; color: var(--sub); }
+.adv-card .faint { font-size: 13px; }
+.adv-more { font-size: 13px; font-weight: 600; color: var(--brand-ink); }
+.diag-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: s; }
+.diag-steps li { counter-increment: s; display: grid; gap: 4px; padding: 12px 14px; border-radius: 12px; box-shadow: inset 0 0 0 1px var(--line-2); }
+.diag-steps li b::before { content: counter(s) ". "; color: var(--brand-ink); }
+.diag-steps li.done { opacity: .6; }
+.diag-steps li p { font-size: 14px; line-height: 1.55; color: var(--sub); }
+.diag-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.diag-chip { min-height: 32px; padding: 0 10px; border: 0; border-radius: 999px; background: var(--tile); color: var(--ink, inherit); font-size: 13px; }
+.diag-chip.ok { background: var(--soft); color: var(--brand-ink); font-weight: 600; }
 </style><title>Sosha Camp</title><meta name="description" content="지쏘·시아와 강아지 두 마리의 캠핑 준비"><link rel="icon" type="image/png" sizes="32x32" href="v2/icons/favicon-32.png"><link rel="icon" type="image/png" sizes="128x128" href="v2/icons/tent.png"><link rel="apple-touch-icon" href="v2/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Sosha Camp"><meta name="theme-color" content="#0F172A"></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
