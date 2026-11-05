@@ -176,6 +176,17 @@ window.SOSHA_PICKS = {
    "pick": false
   },
   {
+   "brand": "루메나",
+   "model": "5.1CH MINI (50~1,000lm, 6,200mAh, 최대 밝기 8시간)",
+   "price": 79000,
+   "weightKg": 0.206,
+   "packedCm": [9, 9, 3.4],
+   "est": false,
+   "why": "1,000루멘이라 둘이 쓰는 사이트엔 충분하고, 최대 밝기로도 8시간 가요. 206g으로 울트라의 절반 무게예요. 배터리는 울트라의 절반이고, 공식몰 재고를 확인해야 해요.",
+   "url": "https://lumena.co.kr/product/%EB%A3%A8%EB%A9%94%EB%82%98-led-%EC%BA%A0%ED%95%91%EB%9E%9C%ED%84%B4-51ch-mini/217/category/1/display/33/",
+   "pick": false
+  },
+  {
    "brand": "루맥스",
    "model": "LED 아웃도어 캠핑 랜턴 LC-100K (최대 약 800lm, 보조배터리 기능)",
    "price": 35000,
