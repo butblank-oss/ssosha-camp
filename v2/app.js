@@ -134,6 +134,9 @@
     firemat: "fire", table1: "package", chairs: "chair", storage: "package", igt: "cooking", shelf: "package", trash: "wastebasket",
     carabiner: "link", mainlamp: "lantern", headlamp: "flashlight", moodlamp: "candle", toiletry: "toothbrush", tissue: "roll-of-paper",
     clothes: "coat", battery: "battery", dogleash: "link", dogbowl: "bone", dogbed: "dog-face", dogwear: "coat", dogpoop: "roll-of-paper", dogfence: "dog-face",
+    deckpeg: "hammer", screwpeg: "hammer", thorbox: "package", thortop: "package", thorstand: "package", lanternhook: "lantern", lanternpole: "lantern",
+    spicecase: "salt", kitchentool: "cooking", foldbasin: "droplet", thermo: "thermometer", condtowel: "roll-of-paper", hotwater: "droplet", flask: "hot-beverage",
+    dogharness: "link", dogpad: "dog-face", pawwax: "bone", doghouse: "dog-face",
   };
   const ICON_BY_CAT = { shelter: "tent", warm: "thermometer", kitchen: "cooking", table: "fork-and-knife", fire: "fire", furniture: "chair", light: "light-bulb", life: "toothbrush", dog: "dog-face" };
   const iconSrc = (i) => `v2/icons/${ICON_BY_ID[i.id] || ICON_BY_CAT[i.cat] || "package"}.png`;
@@ -761,21 +764,25 @@
     if (!el) { el = document.createElement("div"); el.id = "lvup"; el.className = "lvup"; el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-labelledby", "lvupTitle"); document.body.appendChild(el); }
     const prevFocus = document.activeElement;
     el.innerHTML = `<div class="lvup-card">
+        <button class="lvup-x" type="button" id="lvupX" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
         <div class="lvup-scene" aria-hidden="true">${sceneImg(g.lv)}</div>
         <div class="lvup-text">
           <span class="lvup-eyebrow">레벨 업!</span>
           <h2 id="lvupTitle">Lv.${g.lv + 1} ${esc(g.cur.name)}${iga(g.cur.name)} 됐어요</h2>
           ${LEVEL_FX[g.lv] ? `<p>${esc(LEVEL_FX[g.lv])}</p>` : ""}
           ${g.next ? `<small>다음 단계 ${esc(g.next.name)}까지 ${g.next.xp - g.xp} XP · 캠핑을 다녀오면 +${XP_TRIP} XP</small>` : "<small>최고 단계에 올랐어요. 이제 캠핑 고수예요!</small>"}
-          <button class="btn btn-primary btn-block" type="button" id="lvupOk">우리 캠프 보러 가기</button>
+          <div class="lvup-acts"><button class="btn" type="button" id="lvupClose">닫기</button><button class="btn btn-primary" type="button" id="lvupOk">우리 캠프 보러 가기</button></div>
         </div>
       </div>`;
     el.hidden = false;
     document.body.style.overflow = "hidden";
-    const close = () => { el.hidden = true; document.body.style.overflow = ""; document.removeEventListener("keydown", onKey); if (route !== "home") location.hash = "#home"; else window.scrollTo({ top: 0, behavior: "smooth" }); if (prevFocus && document.contains(prevFocus)) prevFocus.focus({ preventScroll: true }); };
-    const onKey = (e) => { if (e.key === "Escape" || e.key === "Enter") { e.preventDefault(); close(); } };
+    const hide = () => { el.hidden = true; document.body.style.overflow = ""; document.removeEventListener("keydown", onKey); if (prevFocus && document.contains(prevFocus)) prevFocus.focus({ preventScroll: true }); };
+    const close = () => { hide(); if (route !== "home") location.hash = "#home"; else window.scrollTo({ top: 0, behavior: "smooth" }); };
+    const onKey = (e) => { if (e.key === "Escape") { e.preventDefault(); hide(); } };
     document.addEventListener("keydown", onKey);
     $("#lvupOk").onclick = close;
+    $("#lvupClose").onclick = hide; $("#lvupX").onclick = hide;
+    el.onclick = (e) => { if (e.target === el) hide(); };
     setTimeout(() => $("#lvupOk").focus(), 50);
   }
 
