@@ -301,19 +301,36 @@
                 </div>`).join("")}
             </div>
           </section>
-          ${tip ? `<section class="sec">
-            <div class="sec-head"><h2>고수 한마디</h2><a class="more" href="#explore">더 보기</a></div>
-            <div class="card tip">
-              <span class="ico"><img src="v2/icons/sparkles.png" alt=""></span>
-              <div><small>${esc(tip.topic)}</small><p>${esc(tip.tip)}</p>${tip.url ? `<a href="${esc(tip.url)}" target="_blank" rel="noopener">출처 보기</a>` : ""}</div>
-            </div>
-          </section>` : ""}
+          ${(() => { const rc = readCards(g, tip); return rc.length ? `<section class="sec">
+            <div class="sec-head"><h2>지금 읽으면 좋아요</h2><a class="more" href="#explore">더 보기</a></div>
+            <div class="list">${rc.map((c) => `<button class="link-row" type="button" data-guide="${esc(c.key)}">${icoImg(c.ico)}<b>${esc(c.t)}</b><small>${esc(c.sub)}</small></button>`).join("")}</div>
+          </section>` : ""; })()}
         </div>
         ${footNote()}
       </div>`;
     bindCommon();
   }
   const icoImg = (name) => `<span class="ico"><img src="v2/icons/${name}.png" alt=""></span>`;
+
+  /* 홈 '지금 읽으면 좋아요': 레벨과 산 것에 따라 알아보기 글 3개를 골라요 */
+  function readCards(g, tip) {
+    const hv = (id) => { const i = get(id); return !!(i && have(i)); };
+    const st = (id) => (get(id) || {}).status;
+    const bought = items().filter((i) => i.status === "bought").length;
+    const hasTopic = (key) => key.startsWith("@") || key.split("|").some((t) => TIPS.some((x) => x.topic === t));
+    const warm = hv("heater") || hv("eblanket") || hv("hotpack");
+    const cards = [
+      { key: "동계 첫 장비 순서", ico: "clipboard", t: "처음 살 것 순서", sub: "필수부터 차근차근", score: g.lv === 0 && bought < 3 ? 9 : 1 },
+      { key: "@daiso", ico: "shopping-bags", t: "다이소 찐템", sub: "싸게 채우기", score: (window.SOSHA_DAISO || []).length ? (bought < 6 ? 8 : 3) : -1 },
+      { key: "안전(일산화탄소)|동계 열원·단열", ico: "snowflake", t: "겨울 안전", sub: warm ? "난방용품 샀다면 꼭 읽기" : "추워지기 전에 읽기", score: warm ? 10 : 6 },
+      { key: "캠핑장 전기|전기장판 사용", ico: "high-voltage", t: "캠핑장 전기 계산법", sub: hv("reel") ? "릴선 샀다면 600W 확인" : "릴선 고르기 전에", score: hv("reel") || hv("eblanket") ? 9 : 5 },
+      { key: "@shelter", ico: "tent", t: "겨울 쉘터 고르는 법", sub: "다음 단계 텐트", score: (window.SOSHA_SHELTER_TIPS || []).length ? (g.lv >= 2 ? 8 : st("shelter") === "research" ? 4 : 1) : -1 },
+      { key: "강아지 동반", ico: "dog-face", t: "강아지와 캠핑", sub: "추위 타는 시츄 챙기기", score: hv("dogwear") && hv("dogbed") ? 2 : 4 },
+      { key: "작은 차 적재", ico: "package", t: "작은 차에 싣기", sub: "짐이 늘었다면", score: bought >= 8 ? 7 : 1 },
+      { key: "@tips", ico: "sparkles", t: "고수 한마디", sub: tip ? tip.topic : "캠퍼들이 남긴 팁", score: TIPS.length ? 3 : -1 },
+    ];
+    return cards.filter((c) => c.score >= 0 && hasTopic(c.key)).sort((a, b) => b.score - a.score).slice(0, 3);
+  }
 
   /* ---------- 장비 ---------- */
   const ui = { status: "todo", cat: "all", q: "" };
@@ -394,6 +411,13 @@
           <button class="tile-card" type="button" data-guide="캠핑장 전기|전기장판 사용"><img src="v2/icons/high-voltage.png" alt=""><span>캠핑장 전기<br>계산법</span></button>
         </div>
       </section>
+      ${(() => { const tip = tipOfDay(); return tip ? `<section class="sec">
+        <div class="sec-head"><h2>고수 한마디</h2><button class="more" type="button" data-guide="@tips">전체 보기</button></div>
+        <div class="card tip">
+          <span class="ico"><img src="v2/icons/sparkles.png" alt=""></span>
+          <div><small>${esc(tip.topic)}</small><p>${esc(tip.tip)}</p>${tip.url ? `<a href="${esc(tip.url)}" target="_blank" rel="noopener">출처 보기</a>` : ""}</div>
+        </div>
+      </section>` : ""; })()}
       <section class="sec">
         <div class="sec-head"><h2>고수들이 말하는 고르는 법</h2></div>
         <div class="list">
@@ -417,6 +441,10 @@
     if (key === "@shelter") {
       title = "겨울 쉘터 고르는 법";
       body = `<ul class="bullets">${window.SOSHA_SHELTER_TIPS.map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>`;
+    } else if (key === "@tips") {
+      title = "고수 한마디";
+      const topics = [...new Set(TIPS.map((t) => t.topic))];
+      body = topics.map((tp) => `<h3 style="font-size:15px;margin:16px 0 6px">${esc(tp)}</h3><ul class="bullets">${TIPS.filter((t) => t.topic === tp).map((t) => `<li>${esc(t.tip)}${t.url ? ` <a class="src" href="${esc(t.url)}" target="_blank" rel="noopener">출처</a>` : ""}</li>`).join("")}</ul>`).join("");
     } else if (key === "@daiso") {
       title = "다이소 찐템";
       body = `<div class="list">${window.SOSHA_DAISO.slice().sort((a, b) => b.votes - a.votes).map((d) => `<div class="link-row" style="align-items:flex-start;padding-top:12px;padding-bottom:12px"><span class="ico sm"><img src="v2/icons/shopping-bags.png" alt=""></span><b>${esc(d.name)} <span class="faint" style="font-size:13px">${esc(d.price || "")}</span><br><span class="muted" style="font-size:13px;font-weight:400">${esc(d.tip || d.use || "")}</span></b></div>`).join("")}</div>`;
