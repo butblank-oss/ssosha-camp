@@ -354,6 +354,37 @@
       </div>`;
     bindCommon();
   }
+  /* ---------- Claude에게 물어보기: 우리 상황을 담은 질문을 Claude 앱으로 넘겨요 ---------- */
+  function claudePrompt(question, item) {
+    const all = items();
+    const names = (f) => all.filter(f).map((i) => i.name).slice(0, 40).join(", ") || "없음";
+    const lessons = (TRIP.lessons || []).map((l) => l.t).join(" / ");
+    const lines = [
+      "우리는 캠핑 초보 여자 2명(지쏘·시아)과 시츄 2마리(8kg, 4kg)예요. 차는 미니 컨트리맨 F60(트렁크 작음), 이번 겨울부터 전기 600W 사이트 위주로 다녀요. 가성비를 중요하게 봐요.",
+      `가진 것·산 것: ${names(have)}`,
+      `아직 살 것(필수): ${names((i) => !have(i) && i.pri === 1)}`,
+      lessons ? `첫 캠핑에서 배운 점: ${lessons}` : null,
+      item ? `지금 보는 장비: ${item.name}${item.spec ? ` (${item.spec})` : ""}${item.status ? ` · 상태: ${(STATUS.find((s) => s[0] === item.status) || [, ""])[1]}` : ""}` : null,
+      "",
+      `질문: ${question}`,
+      "",
+      "답하기 전에 먼저 되물어 주세요: 어떤 용도인지(메인/보조, 텐트 안/밖), 예산, 새것·중고(당근 가격), 어디서 쓸지(동계·데크·전기 유무), 구체적으로 궁금한 점. 제 답을 들은 뒤 추천과 이유, 대안을 짧게 알려 주세요.",
+    ];
+    return lines.filter((l) => l !== null).join("\n");
+  }
+  function askClaude(question, item) {
+    const q = (question || "").trim();
+    if (!q) { toast("궁금한 걸 먼저 적어 주세요"); return; }
+    const text = claudePrompt(q, item);
+    try { if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {}); } catch {}
+    window.open(`https://claude.ai/new?q=${enc(text)}`, "_blank", "noopener");
+    toast("Claude를 열었어요. 질문이 안 채워져 있으면 붙여넣기 하세요");
+  }
+  const askBox = (id, ph, val, itemId) => `<div class="ask">
+      <label class="field"><span class="sr">Claude에게 물어보기</span><textarea id="${id}" placeholder="${esc(ph)}">${esc(val || "")}</textarea></label>
+      <button class="btn btn-primary btn-block" type="button" data-ask="${id}"${itemId ? ` data-ask-item="${esc(itemId)}"` : ""}>Claude에게 물어보기</button>
+      <p class="faint" style="font-size:12.5px">우리 장비·교훈을 붙여서 Claude 앱으로 넘겨요. Claude가 용도·예산 같은 걸 먼저 되물어 봐요.</p>
+    </div>`;
   const icoImg = (name) => `<span class="ico"><img src="v2/icons/${name}.png" alt=""></span>`;
 
   /* 홈 '지금 읽으면 좋아요': 레벨과 산 것에 따라 알아보기 글 3개를 골라요 */
@@ -447,6 +478,10 @@
         <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="sr">중고와 새 제품 검색</span>
           <input id="freeQ" type="search" placeholder="무엇이든 검색하면 4곳을 한 번에 열어요" value="${esc(freeQ)}" autocomplete="off"></label>
         <div id="freeLinks">${freeQ.trim() ? sitesHTML(freeQ.trim()) : '<p class="faint" style="font-size:13px;padding:0 4px">당근·네이버·초캠장터는 자동 수집을 막고 있어서, 검색어로 각 사이트를 바로 열어요.</p>'}</div>
+      </section>
+      <section class="sec">
+        <div class="sec-head"><h2>Claude에게 물어보기</h2></div>
+        ${askBox("askQ", "예: 당근에 루메나 M4가 있는데 메인 조명으로 사도 될까?", "")}
       </section>
       <section class="sec">
         <div class="sec-head"><h2>이번 캠핑 전에 읽기</h2></div>
@@ -660,6 +695,7 @@
           <div class="sec-head" style="padding:0"><h2 style="font-size:15px">중고로 찾기</h2><span class="more">${i.usedPrice && i.usedPrice !== "-" ? `중고 ${esc(i.usedPrice)}` : esc(i.newPrice || "")}</span></div>
           ${sitesHTML(i.q || i.name)}
         </div>
+        <details class="sec ask-fold"><summary>이 장비 Claude에게 물어보기</summary>${askBox("askItem", `예: ${i.name} 이걸로 충분할까?`, "", i.id)}</details>
         ${done ? `<form class="form" id="purForm" novalidate>
           <h3>${i.status === "owned" ? "메모" : "구매 기록"} <span class="faint" style="font-size:12px;font-weight:500">적으면 +2 XP</span></h3>
           ${i.status === "bought" ? `<label class="field"><span>어떤 제품</span><input id="fModel" placeholder="예: 버티탭 슬림릴 1.5SQ 10m" value="${esc(pur.model || "")}"></label>
@@ -872,6 +908,7 @@
     $$("[data-levels]", root).forEach((b) => (b.onclick = openLevels));
     $$("[data-add]", root).forEach((b) => (b.onclick = openAdd));
     $$("[data-guide]", root).forEach((b) => (b.onclick = () => openGuide(b.dataset.guide)));
+    $$("[data-ask]", root).forEach((b) => (b.onclick = () => { const t = document.getElementById(b.dataset.ask); askClaude(t && t.value, b.dataset.askItem ? get(b.dataset.askItem) : null); }));
     $$("[data-search]", root).forEach((b) => (b.onclick = () => { ui.q = ""; location.hash = "#gear"; setTimeout(() => { const q = $("#gearQ"); if (q) q.focus(); }, 30); }));
     $$("[data-quick]", root).forEach((a) => (a.onclick = () => { if (a.dataset.quick === "bought") { ui.status = "bought"; ui.cat = "all"; ui.q = ""; } }));
   }
