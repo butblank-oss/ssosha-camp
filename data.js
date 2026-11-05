@@ -243,7 +243,7 @@ window.SOSHA_ITEMS = [
 
   /* ---------- 조명 ---------- */
   { id: "mainlamp", cat: "light", name: "메인 랜턴 (밝은 것)", status: "todo", pri: 1,
-    spec: "충전식 LED 1000루멘 이상, 밝기 조절, 보조배터리 기능",
+    spec: "충전식 LED 800루멘 이상(둘이 쓰는 사이트 기준), 밝기 조절, 보조배터리 기능",
     why: "조리하고 철수할 때 주변 전체를 밝혀요. 이번 캠핑에서 가장 부족했던 것이에요.",
     newPrice: "3~7만 원", usedPrice: "1.5~3만 원", q: "캠핑 LED 랜턴 1000루멘" },
   { id: "headlamp", cat: "light", name: "헤드랜턴 2개", status: "todo", pri: 1,
