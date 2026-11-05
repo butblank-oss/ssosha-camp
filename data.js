@@ -479,3 +479,7 @@ window.SOSHA_DAISO = [
   { name: "손잡이 메쉬 세탁망", use: "빨랫거리, 젖은 수건 담기", votes: 1, item: "", tip: "" },
   { name: "충전식 무드등 (밝은 것)", use: "입구등, 텐트 안 보조등", votes: 1, item: "moodlamp", tip: "충전하면서도 쓸 수 있어 보조등으로 오래 쓴대요. 지금도 파는지는 확인이 필요해요." },
 ];
+
+/* 우리 추천 캠핑장 (직접 조사). 캠핑장 찾기에서 맨 위에 '우리 추천'으로 떠요.
+ * { id, name, area, min(집에서 차로 분), fire, wood, elec, elecW, pet, petNote, winter, floor:[], tarp, price, url, note } */
+window.SOSHA_CAMPSITES = [];

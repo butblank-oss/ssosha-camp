@@ -735,24 +735,98 @@
   }
 
   /* ---------- 다음 캠핑 계획 ---------- */
-  function openPlan() {
+  function openPlan(draft) {
     const p = nextPlan();
+    const dv = (k, fb) => (draft && draft[k] !== undefined ? draft[k] : fb);
     openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${p ? "다음 캠핑 고치기" : "다음 캠핑 정하기"}</h2></div>${xBtn()}</div>
-      <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(p ? p.date : "")}" min="${new Date().toISOString().slice(0, 10)}"></label>
-      <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(p ? p.place : "")}"></label>
+      <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(dv("date", p ? p.date : ""))}" min="${new Date().toISOString().slice(0, 10)}"></label>
+      <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(dv("place", p ? p.place : ""))}"></label>
+      <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>조건에 맞는 캠핑장 찾기</span></button>
       <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${p ? !!p.dog : true}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${p ? !!p.elec : true}">전기 있음</button></div>
       <div class="sheet-foot">${p ? '<button class="btn" type="button" id="pDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="pSave">저장</button></div>`, {
       after: () => {
+        $("#pFind").onclick = () => openCampFinder({ date: $("#pDate").value, place: $("#pPlace").value });
         ["pDog", "pElec"].forEach((k) => ($("#" + k).onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true")));
         $("#pSave").onclick = () => {
           const date = $("#pDate").value;
           if (!date) { toast("날짜를 골라 주세요"); $("#pDate").focus(); return; }
-          const d = { date, place: $("#pPlace").value.trim(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" };
+          const place = $("#pPlace").value.trim();
+          const camp = draft && draft.camp && draft.place === place ? draft.camp : (p && p.place === place ? p.camp : null);
+          const d = { date, place, camp: camp || null, dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" };
           state.plans = state.plans || [];
           if (p) Object.assign(p, d); else state.plans.push(Object.assign({ id: "p" + Date.now(), gear: [], packed: [], season: "", nights: 1 }, d));
           save(); closeSheet(); rerender(); toast(daysTo(date) === 0 ? "오늘 출발이에요. 즐거운 캠핑 해요!" : `D-${daysTo(date)}, 준비를 시작해요`);
         };
         const del = $("#pDel"); if (del) del.onclick = () => { state.plans = state.plans.filter((x) => x !== p); save(); closeSheet(); rerender(); toast("캠핑 일정을 지웠어요"); };
+      },
+    });
+  }
+
+  /* ---------- 캠핑장 찾기 ----------
+   * 우리 추천(data.js SOSHA_CAMPSITES, 직접 조사)과 고캠핑 공공데이터(campsites.json, 매주 자동 갱신)를 함께 보여줘요.
+   * 거리는 집(안양 범계역) 기준 직선거리로 운전 시간을 어림해요. */
+  let CAMPS = null, campsLoad = null;
+  const loadCamps = () => campsLoad || (campsLoad = fetch("campsites.json", { cache: "no-cache" }).then((r) => (r.ok ? r.json() : null)).catch(() => null).then((d) => (CAMPS = d)));
+  const driveMin = (km) => Math.round((km * 1.3) / 70 * 60 + 10);
+  const campF = { fire: true, elec: true, pet: true, winter: true, near: true, floor: "", more: false };
+  const CAMP_FILTERS = [["fire", "🔥 장작 가능"], ["elec", "⚡ 전기"], ["pet", "🐶 반려견"], ["winter", "❄️ 겨울 운영"], ["near", "🚗 2시간 이내"]];
+  function campList() {
+    const cur = (window.SOSHA_CAMPSITES || []).map((c) => Object.assign({ ours: true }, c));
+    const pub = ((CAMPS && CAMPS.items) || []).map((c) => Object.assign({}, c, { min: driveMin(c.km) }));
+    const ok = (c) => (!campF.fire || (c.ours ? c.fire !== false : c.fire === "개별" || c.fire === "공용"))
+      && (!campF.elec || (c.ours ? c.elec !== false : c.elec))
+      && (!campF.pet || (c.ours ? c.pet !== false : /^가능/.test(c.pet)))
+      && (!campF.winter || (c.ours ? c.winter !== false : /겨울/.test(c.season)))
+      && (!campF.near || (c.min || 999) <= 120)
+      && (!campF.floor || (c.ours ? (c.floor || []).includes(campF.floor) : !!(c.floor || {})[campF.floor]));
+    const seen = new Set(cur.map((c) => c.name.replace(/\s/g, "")));
+    return { ours: cur.filter(ok), pub: pub.filter((c) => !seen.has(c.name.replace(/\s/g, ""))).filter(ok).sort((x, y) => x.km - y.km) };
+  }
+  function campCard(c) {
+    const floor = c.ours ? (c.floor || []).join("·") : Object.keys(c.floor || {}).join("·");
+    const tags = [
+      c.ours ? (c.fire === false ? "" : `🔥 ${c.wood ? "장작 판매" : "장작 가능"}`) : c.fire && c.fire !== "불가" ? `🔥 화로 ${c.fire}${c.wood ? " · 장작 판매" : ""}` : "",
+      (c.ours ? c.elec !== false : c.elec) ? `⚡ ${c.ours && c.elecW ? c.elecW : "전기"}` : "",
+      c.ours ? (c.petNote ? `🐶 ${c.petNote}` : "") : c.pet ? `🐶 ${c.pet}` : "",
+      floor ? `바닥 ${floor}` : "",
+      c.ours && c.tarp ? `타프 ${c.tarp}` : "",
+    ].filter(Boolean);
+    const where = [c.area, c.min ? `차로 약 ${c.min >= 60 ? `${Math.floor(c.min / 60)}시간 ${c.min % 60 ? `${c.min % 60}분` : ""}` : `${c.min}분`}` : ""].filter(Boolean).join(" · ");
+    return `<div class="camp-card">
+      <div class="camp-top"><b>${esc(c.name)}</b>${c.ours ? '<span class="tag tag-pick">우리 추천</span>' : ""}${c.price ? `<span class="camp-price">${esc(c.price)}</span>` : ""}</div>
+      <small class="muted">${esc(where)}</small>
+      <div class="camp-tags">${tags.map((t) => `<span>${esc(t)}</span>`).join("")}</div>
+      ${c.note ? `<p class="camp-note">${esc(c.note)}</p>` : ""}
+      <div class="camp-acts">${c.url ? `<a class="btn btn-sm" href="${esc(c.url)}" target="_blank" rel="noopener">예약·정보</a>` : ""}<button class="btn btn-sm btn-primary" type="button" data-pickcamp="${esc(c.ours ? "o:" + c.id : "g:" + c.id)}">여기로 정하기</button></div>
+    </div>`;
+  }
+  function openCampFinder(draft) {
+    loadCamps().then(() => sheetState.refresh && sheetState.refresh());
+    openSheet(() => {
+      const L = campList();
+      const pubShown = campF.more ? L.pub.slice(0, 120) : L.pub.slice(0, 20);
+      const hasPub = !!(CAMPS && CAMPS.items && CAMPS.items.length);
+      return `<div class="sheet-head"><div><h2 id="sheetTitle">캠핑장 찾기</h2><span class="muted" style="font-size:13px">집(범계역)에서 가까운 순이에요</span></div>${xBtn()}</div>
+      <div class="pills pills-wrap" role="group" aria-label="조건">${CAMP_FILTERS.map(([k, n]) => `<button class="chip" type="button" data-cf="${k}" aria-pressed="${campF[k]}">${n}</button>`).join("")}</div>
+      <div class="pills pills-wrap" role="group" aria-label="바닥">${["데크", "파쇄석", "잔디"].map((f) => `<button class="chip" type="button" data-cfloor="${f}" aria-pressed="${campF.floor === f}">${f}</button>`).join("")}</div>
+      ${L.ours.length ? `<h3 class="camp-h">우리 추천 <span class="faint">${L.ours.length}곳 · 가격·타프는 직접 조사</span></h3>${L.ours.map(campCard).join("")}` : ""}
+      <h3 class="camp-h">전국 캠핑장 <span class="faint">${hasPub ? `${L.pub.length}곳 · 고캠핑 공공데이터 ${esc(CAMPS.updated || "")}` : CAMPS === null && campsLoad ? "불러오는 중…" : "아직 연결 전"}</span></h3>
+      ${hasPub ? (pubShown.length ? pubShown.map(campCard).join("") : '<p class="muted" style="font-size:14px">조건에 맞는 곳이 없어요. 조건을 하나 꺼 보세요.</p>') : '<p class="muted" style="font-size:14px">공공데이터 연결 키를 넣으면 전국 캠핑장이 여기 떠요.</p>'}
+      ${hasPub && L.pub.length > pubShown.length ? `<button class="btn btn-block" type="button" data-cmore>${L.pub.length - pubShown.length}곳 더 보기</button>` : ""}
+      <p class="faint" style="font-size:12.5px">운전 시간은 직선거리로 어림한 값이에요. 공공데이터에는 가격과 전기 용량이 없어서 예약 페이지에서 확인해요.</p>
+      <div class="sheet-foot"><button class="btn btn-block" type="button" data-cback>일정으로 돌아가기</button></div>`;
+    }, {
+      after: () => {
+        $$("#sheet [data-cf]").forEach((b) => (b.onclick = () => { campF[b.dataset.cf] = !campF[b.dataset.cf]; campF.more = false; sheetState.refresh(); }));
+        $$("#sheet [data-cfloor]").forEach((b) => (b.onclick = () => { campF.floor = campF.floor === b.dataset.cfloor ? "" : b.dataset.cfloor; sheetState.refresh(); }));
+        const m = $("#sheet [data-cmore]"); if (m) m.onclick = () => { campF.more = true; sheetState.refresh(); };
+        $("#sheet [data-cback]").onclick = () => openPlan(draft);
+        $$("#sheet [data-pickcamp]").forEach((b) => (b.onclick = () => {
+          const [src, id] = [b.dataset.pickcamp.slice(0, 1), b.dataset.pickcamp.slice(2)];
+          const c = src === "o" ? (window.SOSHA_CAMPSITES || []).find((x) => x.id === id) : ((CAMPS && CAMPS.items) || []).find((x) => x.id === id);
+          if (!c) return;
+          openPlan(Object.assign({}, draft, { place: c.name, camp: { src, id, name: c.name, url: c.url || "" } }));
+        }));
       },
     });
   }
@@ -866,7 +940,7 @@
       b.classList.add("pop");
       if (have(i)) setStatus(i.id, "todo"); else setStatus(i.id, "bought");
     }));
-    $$("[data-plan]", root).forEach((b) => (b.onclick = openPlan));
+    $$("[data-plan]", root).forEach((b) => (b.onclick = () => openPlan()));
     $$("[data-trip]", root).forEach((b) => (b.onclick = () => openTrip()));
     $$("[data-review]", root).forEach((b) => (b.onclick = () => openTrip(b.dataset.review)));
     $$("[data-levels]", root).forEach((b) => (b.onclick = openLevels));
