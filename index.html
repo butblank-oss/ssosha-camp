@@ -28,6 +28,29 @@
 .spent-row span { color: var(--sub); }
 .spent-row b { color: var(--ink, inherit); font-weight: 700; margin-left: 4px; }
 .spent-row strong { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; white-space: nowrap; }
+
+/* 짐 챙기기 */
+.pack-conds { align-items: center; margin-bottom: 4px; }
+.pack-conds .linkbtn { margin-left: auto; min-height: 32px; }
+.pack-prog { display: grid; gap: 6px; margin: 10px 0 4px; font-size: 14px; color: var(--sub); }
+.pack-prog i { display: block; height: 8px; border-radius: 999px; background: var(--tile); overflow: hidden; }
+.pack-prog i b { display: block; height: 100%; background: var(--brand); border-radius: inherit; transition: width .3s ease; }
+.pack-cat { margin: 12px 0 4px; font-size: 12.5px; font-weight: 700; color: var(--faint); }
+.pack-row { display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 4px 2px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.pack-row input { width: 22px; height: 22px; accent-color: var(--brand); flex: none; }
+.pack-row b { font-size: 15px; font-weight: 500; }
+.pack-row input:checked ~ b { color: var(--faint); text-decoration: line-through; }
+.pack-extra { margin-top: 16px; }
+.pack-extra summary { min-height: 44px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--brand-ink); cursor: pointer; }
+
+/* 기온: 영상/영하 버튼 */
+.temp-in { display: flex; gap: 6px; }
+.temp-in input { flex: 1; min-width: 0; }
+.temp-sign { display: flex; flex: none; padding: 3px; border-radius: 12px; background: var(--tile); }
+.temp-sign button { min-width: 48px; min-height: 42px; padding: 0 10px; border: 0; border-radius: 9px; background: transparent; color: var(--sub); font-size: 14px; font-weight: 600; }
+.temp-sign .plus[aria-pressed="true"] { background: #FFE4D6; color: #C2410C; }
+.temp-sign .minus[aria-pressed="true"] { background: #DBEAFE; color: #1D4ED8; }
+@media (prefers-color-scheme: dark) { .temp-sign .plus[aria-pressed="true"] { background: #3A2213; color: #FDBA74; } .temp-sign .minus[aria-pressed="true"] { background: #172554; color: #93C5FD; } }
 </style><title>Sosha Camp</title><meta name="description" content="지쏘·시아와 강아지 두 마리의 캠핑 준비"><link rel="icon" type="image/png" sizes="32x32" href="v2/icons/favicon-32.png"><link rel="icon" type="image/png" sizes="128x128" href="v2/icons/tent.png"><link rel="apple-touch-icon" href="v2/icons/apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Sosha Camp"><meta name="theme-color" content="#0F172A"></head><body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>

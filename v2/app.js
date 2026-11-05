@@ -203,6 +203,11 @@
 
   /* ---------- 다음 캠핑 ---------- */
   const today = () => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; };
+  const planById = (id) => (state.plans || []).find((x) => x.id === id) || null;
+  function upcomingPlans() {
+    const since = new Date(); since.setHours(0, 0, 0, 0); since.setDate(since.getDate() - 3);
+    return (state.plans || []).filter((p) => p.date && new Date(p.date + "T00:00:00") >= since).sort((a, b) => a.date.localeCompare(b.date));
+  }
   function nextPlan() {
     const t = today();
     const since = new Date(t); since.setDate(since.getDate() - 7); // 다녀온 뒤 일주일 동안은 '다녀왔어요'를 띄워요
@@ -294,7 +299,7 @@
     const steps = LEVELS.length || 5;
     const scene = sceneImg(g.lv);
     const copy = p
-      ? daysTo(p.date) < 0 ? `<h1>${esc(p.place || "캠핑")},<br><em>잘 다녀왔어요?</em></h1><button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : `<h1>${esc(p.place || "다음 캠핑")}까지<br>${daysTo(p.date) === 0 ? "<em>오늘</em> 떠나요" : `<em>${daysTo(p.date)}일</em> 남았어요`}</h1>${daysTo(p.date) <= 0 ? `<button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : ""}`
+      ? daysTo(p.date) < 0 ? `<h1>${esc(p.place || "캠핑")},<br><em>잘 다녀왔어요?</em></h1><button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : `<h1>${esc(p.place || "다음 캠핑")}까지<br>${daysTo(p.date) === 0 ? "<em>오늘</em> 떠나요" : `<em>${daysTo(p.date)}일</em> 남았어요`}</h1>${daysTo(p.date) > 0 ? `<button class="hero-set" type="button" data-pack="${esc(p.id)}">짐 챙기기 · ${(() => { const d = packData(p); return `${d.done}/${d.total}`; })()}</button>` : ""}${daysTo(p.date) <= 0 ? `<button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : ""}`
       : `<h1>다음 캠핑,<br>언제 떠날까요?</h1><button class="hero-set" type="button" data-plan>날짜 정하기</button>`;
     $("#view").innerHTML = `
       <div class="home-top">
@@ -324,7 +329,7 @@
         <nav class="quick" aria-label="바로가기">
           <a href="#gear" data-quick="bought">${icoImg("shopping-bags")}산 것 보기</a>
           <a href="#explore" data-quick="used">${icoImg("label")}중고 찾기</a>
-          <button type="button" data-plan>${icoImg("backpack")}${p ? "캠핑 일정" : "일정 정하기"}</button>
+          <button type="button" ${p ? `data-pack="${esc(p.id)}"` : "data-plan"}>${icoImg("backpack")}${p ? "짐 챙기기" : "일정 정하기"}</button>
           <a href="#explore">${icoImg("open-book")}고르는 법</a>
         </nav>
         <div class="home-grid">
@@ -524,11 +529,12 @@
     $("#view").innerHTML = `<div class="page">
       <header class="page-head"><h1>기록</h1></header>
       <section class="sec">
-        <div class="sec-head"><h2>다음 캠핑</h2></div>
-        <button class="card link-row" type="button" data-plan style="border-top:0;min-height:72px">
-          ${icoImg("calendar")}<b>${p ? `${esc(p.place || "캠핑장 미정")}<br><span class="muted" style="font-size:13px;font-weight:400">${fmtDate(p.date)}${p.dog ? " · 강아지 동반" : ""}</span>` : "아직 정하지 않았어요"}</b>
-          <small style="color:var(--brand-ink);font-weight:600">${p ? `D-${daysTo(p.date)}` : "정하기"}</small>
-        </button>
+        <div class="sec-head"><h2>캠핑 계획</h2>${upcomingPlans().length ? `<span class="more">${upcomingPlans().length}개</span>` : ""}</div>
+        ${upcomingPlans().length ? `<div class="card list" style="padding:0">${upcomingPlans().map((q) => `<button class="link-row" type="button" data-pack="${esc(q.id)}" style="min-height:72px">
+          ${icoImg(q.kind === "picnic" ? "umbrella-on-ground" : "calendar")}<b>${esc(q.place || (q.kind === "picnic" ? "피크닉" : "캠핑장 미정"))}<br><span class="muted" style="font-size:13px;font-weight:400">${fmtDate(q.date)}${q.kind === "picnic" ? " · 피크닉" : ""}${q.dog ? " · 강아지 동반" : ""} · 짐 ${(() => { const d = packData(q); return `${d.done}/${d.total}`; })()}</span></b>
+          <small style="color:var(--brand-ink);font-weight:600">${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : daysTo(q.date) === 0 ? "오늘" : "다녀왔어요?"}</small>
+        </button>`).join("")}</div>` : `<button class="card link-row" type="button" data-plan style="border-top:0;min-height:72px">${icoImg("calendar")}<b>아직 정하지 않았어요</b><small style="color:var(--brand-ink);font-weight:600">정하기</small></button>`}
+        ${upcomingPlans().length ? `<button class="btn btn-soft btn-block" type="button" data-plan style="margin-top:8px">+ 캠핑·피크닉 계획 추가</button>` : ""}
       </section>
       <section class="card stat3" aria-label="우리 기록">
         <div><span>캠퍼 단계</span><strong>Lv.${g.lv + 1}</strong></div>
@@ -750,27 +756,31 @@
   }
 
   /* ---------- 다음 캠핑 계획 ---------- */
-  function openPlan(draft) {
-    const p = nextPlan();
+  function openPlan(draft, planId) {
+    const p = planById(planId || (draft && draft.planId)) || null;
     const dv = (k, fb) => (draft && draft[k] !== undefined ? draft[k] : fb);
-    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${p ? "다음 캠핑 고치기" : "다음 캠핑 정하기"}</h2></div>${xBtn()}</div>
+    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">${p ? "캠핑 계획 고치기" : "캠핑 계획 추가"}</h2></div>${xBtn()}</div>
       <label class="field"><span>언제 가요?</span><input id="pDate" type="date" value="${esc(dv("date", p ? p.date : ""))}" min="${new Date().toISOString().slice(0, 10)}"></label>
       <label class="field"><span>어디로 가요?</span><input id="pPlace" placeholder="예: 가평 자라섬" value="${esc(dv("place", p ? p.place : ""))}"></label>
       <button class="btn btn-soft btn-block" type="button" id="pFind">${icoImg("camping")}<span>조건에 맞는 캠핑장 찾기</span></button>
-      <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${p ? !!p.dog : true}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${p ? !!p.elec : true}">전기 있음</button></div>
+      <div class="pills"><button class="chip" type="button" data-pkind="camp" aria-pressed="${dv("kind", p ? p.kind || "camp" : "camp") !== "picnic"}">캠핑 (1박)</button><button class="chip" type="button" data-pkind="picnic" aria-pressed="${dv("kind", p ? p.kind || "camp" : "camp") === "picnic"}">피크닉 (당일)</button></div>
+      <div class="pills"><button class="chip" type="button" id="pDog" aria-pressed="${dv("dog", p ? !!p.dog : true)}">강아지 동반</button><button class="chip" type="button" id="pElec" aria-pressed="${dv("elec", p ? !!p.elec : true)}">전기 있음</button></div>
       <div class="sheet-foot">${p ? '<button class="btn" type="button" id="pDel">삭제</button>' : '<button class="btn" type="button" data-close>취소</button>'}<button class="btn btn-primary" style="flex:1" type="button" id="pSave">저장</button></div>`, {
       after: () => {
-        $("#pFind").onclick = () => openCampFinder({ date: $("#pDate").value, place: $("#pPlace").value });
+        const curKind = () => (($("#sheet [data-pkind][aria-pressed=true]") || {}).dataset || {}).pkind || "camp";
+        $$("#sheet [data-pkind]").forEach((b) => (b.onclick = () => $$("#sheet [data-pkind]").forEach((x) => x.setAttribute("aria-pressed", x === b))));
+        $("#pFind").onclick = () => openCampFinder({ planId: p ? p.id : null, date: $("#pDate").value, place: $("#pPlace").value, kind: curKind(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" });
         ["pDog", "pElec"].forEach((k) => ($("#" + k).onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true")));
         $("#pSave").onclick = () => {
           const date = $("#pDate").value;
           if (!date) { toast("날짜를 골라 주세요"); $("#pDate").focus(); return; }
           const place = $("#pPlace").value.trim();
           const camp = draft && draft.camp && draft.place === place ? draft.camp : (p && p.place === place ? p.camp : null);
-          const d = { date, place, camp: camp || null, dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" };
+          const d = { date, place, camp: camp || null, kind: curKind(), dog: $("#pDog").getAttribute("aria-pressed") === "true", elec: $("#pElec").getAttribute("aria-pressed") === "true" };
           state.plans = state.plans || [];
-          if (p) Object.assign(p, d); else state.plans.push(Object.assign({ id: "p" + Date.now(), gear: [], packed: [], season: "", nights: 1 }, d));
-          save(); closeSheet(); rerender(); toast(daysTo(date) === 0 ? "오늘 출발이에요. 즐거운 캠핑 해요!" : `D-${daysTo(date)}, 준비를 시작해요`);
+          let id = p && p.id;
+          if (p) Object.assign(p, d); else { id = "p" + Date.now(); state.plans.push(Object.assign({ id, gear: [], packed: [], season: "", nights: 1 }, d)); }
+          save(); rerender(); openPack(id); toast(daysTo(date) === 0 ? "오늘 출발이에요. 즐거운 캠핑 해요!" : `D-${daysTo(date)}, 짐을 챙겨 볼까요?`);
         };
         const del = $("#pDel"); if (del) del.onclick = () => { state.plans = state.plans.filter((x) => x !== p); save(); closeSheet(); rerender(); toast("캠핑 일정을 지웠어요"); };
       },
@@ -847,6 +857,100 @@
     });
   }
 
+  /* ---------- 짐 챙기기 ----------
+   * 가진 장비(산 것·원래 있던 것)를 기준으로, 일정 성격(캠핑/피크닉, 계절, 장작, 전기, 강아지, 데크)에 맞는 짐을 골라요.
+   * 아직 없는 건 '있으면 좋은 것'으로 따로 보여줘요. 체크 상태는 일정(plan.packed)에 저장돼 둘이 같이 봐요. */
+  const R = window.SOSHA_RULES || {};
+  const CAMP_RULES = {
+    base: (R.base || []).concat(["thorbox", "thortop", "lanternpole", "lanternhook", "spicecase", "kitchentool", "foldbasin", "toiletry", "tissue", "clothes"]),
+    fire: R.fire || [], winter: (R.winter || []).concat(["thermo", "hotwater", "flask", "condtowel"]), winterElec: R.winterElec || [], elec: R.elec || [],
+    summer: R.summer || [], mild: R.mild || [], nights2: R.nights2 || [], dog: (R.dog || []).concat(["dogharness"]), dogWinter: (R.dogWinter || []).concat(["dogpad", "pawwax"]),
+    deck: (R.deck || []).concat(["deckpeg"]),
+  };
+  const PICNIC_RULES = {
+    base: ["rug", "mat", "table1", "chairs", "cups", "cutlery", "trash", "tissue", "coffee", "flask", "storage", "toiletry"],
+    cook: ["isoburner", "gas", "windscreen", "cookset", "tongs", "scissors", "kitchentool", "spicecase", "dishes", "board"],
+    winter: ["hotpack", "clothes", "hotwater"], summer: ["cooler", "jug"], mild: ["cooler"],
+    dog: ["dogleash", "dogharness", "dogbowl", "dogpoop"], dogWinter: ["dogwear", "pawwax"],
+  };
+  const SEASON_NAME = { winter: "겨울", summer: "여름", mild: "봄·가을" };
+  function planSite(p) {
+    if (!p || !p.camp) return null;
+    if (p.camp.src === "o") return Object.assign({ ours: true }, (window.SOSHA_CAMPSITES || []).find((c) => c.id === p.camp.id) || {});
+    return ((CAMPS && CAMPS.items) || []).find((c) => c.id === p.camp.id) || null;
+  }
+  function packConds(p) {
+    const m = new Date(p.date + "T00:00:00").getMonth() + 1;
+    const season = m >= 11 || m <= 3 ? "winter" : m >= 6 && m <= 8 ? "summer" : "mild";
+    const site = planSite(p);
+    const picnic = p.kind === "picnic";
+    const fire = !picnic && (site ? (site.ours ? site.fire !== false : !site.fire || site.fire === "개별" || site.fire === "공용") : true);
+    const deck = !!site && (site.ours ? (site.floor || []).includes("데크") : !!(site.floor || {})["데크"]);
+    return { picnic, season, fire, deck, elec: !picnic && !!p.elec, dog: !!p.dog, nights2: (p.nights || 1) >= 2, cook: picnic && !!p.cook, site };
+  }
+  function packIds(c) {
+    const S = c.picnic ? PICNIC_RULES : CAMP_RULES;
+    const keys = ["base", c.season];
+    if (c.picnic) { if (c.cook) keys.push("cook"); }
+    else { if (c.fire) keys.push("fire"); if (c.elec) keys.push("elec"); if (c.elec && c.season === "winter") keys.push("winterElec"); if (c.nights2) keys.push("nights2"); if (c.deck) keys.push("deck"); }
+    if (c.dog) { keys.push("dog"); if (c.season === "winter") keys.push("dogWinter"); }
+    const out = [];
+    keys.forEach((k) => (S[k] || []).forEach((id) => { if (!out.includes(id)) out.push(id); }));
+    return out;
+  }
+  function packData(p) {
+    const c = packConds(p);
+    const ids = packIds(c);
+    const all = items();
+    const want = ids.map((id) => all.find((i) => i.id === id)).filter(Boolean);
+    const take = want.filter(have);
+    const need = want.filter((i) => !have(i)).sort((x, y) => x.pri - y.pri);
+    const extra = all.filter((i) => have(i) && !ids.includes(i.id) && (i.custom || !i.dog || c.dog) && !(c.picnic && ["tent", "peg", "bedding", "pillow", "cot", "shelter"].includes(i.id)));
+    const packed = new Set(p.packed || []);
+    const total = take.length + extra.filter((i) => packed.has(i.id)).length;
+    const done = take.filter((i) => packed.has(i.id)).length + extra.filter((i) => packed.has(i.id)).length;
+    return { c, take, need, extra, packed, total, done };
+  }
+  function openPack(planId) {
+    const p = planById(planId) || nextPlan();
+    if (!p) { openPlan(); return; }
+    const pid = p.id;
+    if (p.camp && p.camp.src === "g" && !CAMPS) loadCamps().then(() => sheetState.refresh && sheetState.refresh());
+    const catName = (id) => (CATS.find((x) => x.id === id) || {}).name || "기타";
+    const row = (i, packed) => `<label class="pack-row"><input type="checkbox" data-packid="${esc(i.id)}"${packed.has(i.id) ? " checked" : ""}><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><b>${esc(i.name)}</b></label>`;
+    const byCat = (list, packed) => CATS.map((ct) => ({ ct, rows: list.filter((i) => i.cat === ct.id) })).concat([{ ct: { name: "기타" }, rows: list.filter((i) => !CATS.some((ct) => ct.id === i.cat)) }])
+      .filter((g) => g.rows.length).map((g) => `<div class="pack-cat">${esc(g.ct.name)}</div>${g.rows.map((i) => row(i, packed)).join("")}`).join("");
+    openSheet(() => {
+      const q = planById(pid) || p;
+      const d = packData(q);
+      const c = d.c;
+      const chips = [c.picnic ? "🧺 피크닉 (당일)" : `⛺ 캠핑 ${q.nights >= 2 ? `${q.nights}박` : "1박"}`, `${c.season === "winter" ? "❄️" : c.season === "summer" ? "☀️" : "🍂"} ${SEASON_NAME[c.season]}`,
+        c.fire ? "🔥 장작" : "", c.elec ? "⚡ 전기" : "", c.dog ? "🐶 강아지 동반" : "", c.deck ? "데크" : ""].filter(Boolean);
+      const pct = d.total ? Math.round((d.done / d.total) * 100) : 0;
+      return `<div class="sheet-head"><span class="ico"><img src="v2/icons/backpack.png" alt=""></span><div><h2 id="sheetTitle">짐 챙기기</h2><span class="muted" style="font-size:14px">${esc(q.place || (c.picnic ? "피크닉" : "캠핑"))} · ${fmtDate(q.date)} · ${daysTo(q.date) > 0 ? `D-${daysTo(q.date)}` : "오늘"}</span></div>${xBtn()}</div>
+      <div class="camp-tags pack-conds">${chips.map((t) => `<span>${esc(t)}</span>`).join("")}<button class="linkbtn" type="button" data-editplan>일정 고치기</button></div>
+      ${c.picnic ? `<div class="pills"><button class="chip" type="button" data-cook aria-pressed="${!!q.cook}">🍳 요리해 먹기</button></div>` : ""}
+      <div class="pack-prog"><span>챙긴 짐 <b class="num">${d.done} / ${d.total}</b></span><i><b style="width:${pct}%"></b></i></div>
+      <h3 class="camp-h">가진 장비 중 챙길 것 <span class="faint">${d.take.length}개</span></h3>
+      ${d.take.length ? byCat(d.take, d.packed) : '<p class="muted" style="font-size:14px">이번 일정에 맞는 가진 장비가 아직 없어요.</p>'}
+      ${d.need.length ? `<h3 class="camp-h">있으면 좋은 것 <span class="faint">아직 없어요 · ${d.need.length}개</span></h3>
+        <div class="list">${d.need.map((i) => `<button class="link-row" type="button" data-open="${esc(i.id)}"><span class="ico sm"><img src="${iconSrc(i)}" alt=""></span><b>${esc(i.name)}</b><small><span class="tag ${PRI[i.pri][1]}">${PRI[i.pri][0]}</span></small></button>`).join("")}</div>` : ""}
+      ${d.extra.length ? `<details class="pack-extra"><summary>그 외 가진 장비 ${d.extra.length}개 · 필요하면 체크</summary>${byCat(d.extra, d.packed)}</details>` : ""}
+      <div class="sheet-foot"><button class="btn btn-block" type="button" data-close>닫기</button></div>`;
+    }, {
+      after: () => {
+        $$("#sheet [data-packid]").forEach((b) => (b.onchange = () => {
+          const q = planById(pid); if (!q) return;
+          const s = new Set(q.packed || []);
+          if (b.checked) s.add(b.dataset.packid); else s.delete(b.dataset.packid);
+          q.packed = [...s]; save(); sheetState.refresh();
+        }));
+        const ck = $("#sheet [data-cook]"); if (ck) ck.onclick = () => { const q = planById(pid); q.cook = !q.cook; save(); sheetState.refresh(); };
+        $("#sheet [data-editplan]").onclick = () => openPlan(null, pid);
+      },
+    });
+  }
+
   /* ---------- 다녀온 캠핑 기록 ---------- */
   function openTrip(tripId, startKind) {
     const existing = tripId ? (state.trips || []).find((t) => t.id === tripId) : null;
@@ -857,7 +961,7 @@
     openSheet(() => `<div class="sheet-head"><span class="ico"><img src="v2/icons/${kind === "picnic" ? "umbrella-on-ground" : "camping"}.png" alt=""></span><div><h2 id="sheetTitle">${existing ? `${word()} 후기` : `${word()} 다녀왔어요`}</h2><span class="muted" style="font-size:14px">${existing ? `후기를 남기면 +${XP_REVIEW} XP` : `기록하면 +${kind === "picnic" ? XP_PICNIC : XP_TRIP} XP, 후기까지 쓰면 +${XP_REVIEW} XP 더`}</span></div>${xBtn()}</div>
       <div class="grid2">
         <label class="field"><span>언제</span><input id="tDate" type="date" value="${esc(t.date)}"></label>
-        <label class="field"><span>${kind === "picnic" ? "기온" : "밤 최저기온"} (℃)</span><input id="tTemp" inputmode="numeric" placeholder="예: 2" value="${esc(t.temp)}"></label>
+        <div class="field"><span>${kind === "picnic" ? "기온" : "밤 최저기온"} (℃)</span><div class="temp-in"><div class="temp-sign" role="group" aria-label="영상 영하"><button type="button" data-sign="+" class="plus" aria-pressed="${!String(t.temp || "").startsWith("-")}">영상</button><button type="button" data-sign="-" class="minus" aria-pressed="${String(t.temp || "").startsWith("-")}">영하</button></div><input id="tTemp" inputmode="numeric" pattern="[0-9]*" placeholder="예: 2" aria-label="기온 숫자" value="${esc(String(t.temp || "").replace("-", ""))}"></div></div>
       </div>
       <label class="field"><span>어디로</span><input id="tPlace" placeholder="${kind === "picnic" ? "예: 평촌중앙공원, 한강 반포" : "예: 가평 자라섬"}" value="${esc(t.place)}"></label>
       <div class="pills"><button class="chip" type="button" data-kind="camp" aria-pressed="${kind !== "picnic"}">캠핑 (1박)</button><button class="chip" type="button" data-kind="picnic" aria-pressed="${kind === "picnic"}">피크닉 (당일)</button><span class="pills-gap" aria-hidden="true"></span><button class="chip" type="button" id="tDog" aria-pressed="${!!t.dog}">강아지 동반</button></div>
@@ -872,14 +976,16 @@
           toast("캠핑 기록을 지웠어요", [{ label: "되돌리기", run: () => { state.trips.splice(Math.max(0, at), 0, existing); save(); rerender(); } }]);
         };
         $("#tDog").onclick = (e) => e.currentTarget.setAttribute("aria-pressed", e.currentTarget.getAttribute("aria-pressed") !== "true");
+        $$("#sheet [data-sign]").forEach((b) => (b.onclick = () => $$("#sheet [data-sign]").forEach((x) => x.setAttribute("aria-pressed", x === b))));
+        const tempVal = () => { const n = $("#tTemp").value.replace(/[^0-9]/g, ""); return n === "" ? "" : ($("#sheet [data-sign=\"-\"]").getAttribute("aria-pressed") === "true" && n !== "0" ? "-" : "") + n; };
         $$("#sheet [data-kind]").forEach((b) => (b.onclick = () => {
           // 입력해 둔 값은 그대로 두고 종류만 바꿔요
-          Object.assign(t, { date: $("#tDate").value, place: $("#tPlace").value, temp: $("#tTemp").value, notes: $("#tNotes").value, dog: $("#tDog").getAttribute("aria-pressed") === "true" });
+          Object.assign(t, { date: $("#tDate").value, place: $("#tPlace").value, temp: tempVal(), notes: $("#tNotes").value, dog: $("#tDog").getAttribute("aria-pressed") === "true" });
           kind = b.dataset.kind; sheetState.refresh();
         }));
         $("#tSave").onclick = () => {
           const before = game();
-          const d = { date: $("#tDate").value || new Date().toISOString().slice(0, 10), place: $("#tPlace").value.trim(), dog: $("#tDog").getAttribute("aria-pressed") === "true", temp: $("#tTemp").value.replace(/[^0-9-]/g, ""), notes: $("#tNotes").value.trim(), kind };
+          const d = { date: $("#tDate").value || new Date().toISOString().slice(0, 10), place: $("#tPlace").value.trim(), dog: $("#tDog").getAttribute("aria-pressed") === "true", temp: tempVal(), notes: $("#tNotes").value.trim(), kind };
           d.dateLabel = d.date;
           state.trips = state.trips || [];
           if (existing) Object.assign(existing, d);
@@ -964,6 +1070,7 @@
       if (have(i)) setStatus(i.id, "todo"); else setStatus(i.id, "bought");
     }));
     $$("[data-plan]", root).forEach((b) => (b.onclick = () => openPlan()));
+    $$("[data-pack]", root).forEach((b) => (b.onclick = () => openPack(b.dataset.pack || undefined)));
     $$("[data-trip]", root).forEach((b) => (b.onclick = () => openTrip()));
     $$("[data-picnic]", root).forEach((b) => (b.onclick = () => openTrip(null, "picnic")));
     $$("[data-review]", root).forEach((b) => (b.onclick = () => openTrip(b.dataset.review)));
