@@ -14,7 +14,7 @@
   /* 단계별 장면: 그림은 5가지 모습이라 7단계를 이렇게 이어 붙여요. 6·7단계는 장식이 더해져요 */
   const SCENE_LV = [0, 1, 1, 2, 3, 4, 4];
   const XP_BY_PRI = { 1: 15, 2: 10, 3: 5 };
-  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 60, XP_REVIEW = 10; /* 장비보다 '다녀오기'로 크게 성장해요 */
+  const XP_OWNED = 3, XP_RECORD = 2, XP_TRIP = 60, XP_PICNIC = 15, XP_REVIEW = 10; /* 장비보다 '다녀오기'로 크게 성장해요 */
   const BADGES = [
     { id: "first", name: "첫 구매", test: (h, its) => its.some((i) => i.status === "bought") },
     { id: "warm", name: "따뜻한 밤", need: ["reel", "eblanket"] },
@@ -39,10 +39,12 @@
   }
   function compute(items) {
     const h = new Set(items.filter(have).map((i) => i.id));
-    const trips = window.SoshaTrips ? window.SoshaTrips.list() : [];
+    const all = window.SoshaTrips ? window.SoshaTrips.list() : [];
+    const trips = all.filter((t) => t.kind !== "picnic");
+    const picnics = all.length - trips.length;
     const tripCount = trips.length + 1; // 첫 캠핑 포함
-    const reviews = trips.filter((t) => String(t.notes || "").trim()).length;
-    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP + reviews * XP_REVIEW;
+    const reviews = all.filter((t) => String(t.notes || "").trim()).length;
+    const xp = items.reduce((s, i) => s + itemXP(i), 0) + tripCount * XP_TRIP + picnics * XP_PICNIC + reviews * XP_REVIEW;
     let lv = 0;
     LEVELS.forEach((l, i) => { if (xp >= l.xp) lv = i; });
     const cur = LEVELS[lv], next = LEVELS[lv + 1];
@@ -317,6 +319,7 @@
     levels: LEVELS,
     levelFx: LEVEL_FX,
     xpTrip: XP_TRIP,
+    xpPicnic: XP_PICNIC,
     xpReview: XP_REVIEW,
     compute: (items) => compute(items),
     sceneSVG: (items) => scene(compute(items)),
