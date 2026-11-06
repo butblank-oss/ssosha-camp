@@ -99,7 +99,7 @@
       this.writing = true;
       const body = this.queued; this.queued = null;
       try { await this.ref.set({ state: JSON.parse(body), at: Date.now() }); this.lastSent = body; }
-      catch (e) { this.mode = e && /not_granted|permission|denied|invalid_argument/i.test((e.code || "") + (e.message || "")) ? "readonly" : "error"; paintSync(); }
+      catch (e) { this.mode = e && /not_granted|permission|denied|invalid_argument/i.test((e.code || "") + (e.message || "")) ? "readonly" : "error"; if (this.mode === "readonly") this.canWrite = false; paintSync(); }
       finally { this.writing = false; if (this.queued != null) this.flush(); }
     },
   };
@@ -111,36 +111,104 @@
   }
   function paintSync() {
     let el = document.getElementById("syncBanner");
-    const msg = { loading: "공유 기록을 불러오는 중이에요…", readonly: "보기 전용이에요. 지쏘와 시아만 고칠 수 있어요.", error: "공유 저장에 잠시 실패했어요. 바뀐 내용은 이 기기에 남아 있어요." }[shared.mode];
+    const fb = shared.backend === "firebase";
+    const msg = {
+      loading: "공유 기록을 불러오는 중이에요…",
+      readonly: fb ? (shared.user ? "이 계정은 보기만 할 수 있어요. 지쏘·시아 계정으로 로그인해요." : "보기 전용이에요. 지쏘·시아는 기록 탭에서 구글로 로그인하면 고칠 수 있어요.") : "보기 전용이에요. 지쏘와 시아만 고칠 수 있어요.",
+      error: "공유 저장에 잠시 실패했어요. 바뀐 내용은 이 기기에 남아 있어요.",
+    }[shared.mode];
     if (!msg) { if (el) el.remove(); return; }
     if (!el) { el = document.createElement("div"); el.id = "syncBanner"; el.setAttribute("role", "status"); document.body.appendChild(el); }
     el.className = "sync-banner " + shared.mode;
     el.textContent = msg;
   }
-  async function startShared() {
-    if (!window.claude || typeof window.claude.use !== "function") return;
-    const db = await window.claude.use("db").catch(() => null);
-    if (!db) return;
-    const user = await window.claude.use("user").catch(() => null);
-    const may = user ? await user.can("data.write").catch(() => null) : null;
-    shared.canWrite = may !== false; // null(모름)이면 써 보고, 거절되면 읽기 전용으로 바꿔요
-    shared.ref = db.doc("shared/board");
+  /* 공유 기록 구독: 아티팩트 db와 Firebase Firestore가 같은 모양(ref.set / ref.onSnapshot)이라 함께 써요 */
+  const hasData = (s) => !!(s && (Object.keys(s.items || {}).length || (s.custom || []).length || (s.trips || []).length || (s.plans || []).length));
+  function subscribeShared() {
+    if (shared.unsub) shared.unsub();
     shared.mode = "loading"; paintSync();
     const t = setTimeout(() => { if (shared.mode === "loading") { shared.mode = "error"; paintSync(); } }, 10000);
     let first = true;
-    shared.ref.onSnapshot((snap) => {
+    shared.unsub = shared.ref.onSnapshot((snap) => {
       if (snap.metadata && !snap.metadata.fromCache) clearTimeout(t);
       if (snap.metadata && snap.metadata.hasPendingWrites) return;
-      if (snap.exists && snap.data() && snap.data().state) {
-        const body = JSON.stringify(snap.data().state);
-        shared.lastSent = body;
-        if (body !== JSON.stringify(state)) { replaceState(snap.data().state); rerender(); }
+      const remote = snap.exists && snap.data() && snap.data().state;
+      if (remote) {
+        const body = JSON.stringify(remote);
+        if (shared.backend === "firebase" && !shared.canWrite && hasData(state) && body !== JSON.stringify(state) && !mineSaved()) {
+          // 로그인 전에는 공유 기록을 보여주되, 이 기기 기록은 따로 보관해 둬요 (로그인하면 어느 쪽을 쓸지 물어봐요)
+          try { localStorage.setItem(KEY + "-mine", JSON.stringify(state)); } catch {}
+        }
+        const mine = shared.backend === "firebase" && shared.canWrite && first ? (mineSaved() || (hasData(state) ? state : null)) : null;
+        if (mine && body !== JSON.stringify(mine)) {
+          // 처음 로그인한 기기: 이 기기 기록과 공유 기록이 다르면 어느 쪽을 쓸지 물어봐요
+          askWhichRecord(remote, mine);
+        } else {
+          shared.lastSent = body;
+          if (body !== JSON.stringify(state)) { replaceState(remote); rerender(); }
+        }
       }
       shared.mode = shared.canWrite ? "live" : "readonly";
       paintSync();
       if (first && !snap.exists && shared.canWrite) shared.push(); // 처음 한 번: 이 기기 기록을 공유 기록으로 올려요
       first = false;
     }, () => { clearTimeout(t); shared.mode = "error"; paintSync(); });
+  }
+  const mineSaved = () => { try { return JSON.parse(localStorage.getItem(KEY + "-mine")) || null; } catch { return null; } };
+  const clearMine = () => { try { localStorage.removeItem(KEY + "-mine"); } catch {} };
+  function askWhichRecord(remote, mine) {
+    const n = (s) => `산 것 ${Object.values(s.items || {}).filter((v) => v.status === "bought").length + (s.custom || []).filter((c) => c.status === "bought").length}개 · 일정 ${(s.plans || []).length}개 · 기록 ${(s.trips || []).length}개`;
+    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">어느 기록을 쓸까요?</h2><span class="muted" style="font-size:14px">이 기기에 저장된 기록과 공유 기록이 달라요</span></div></div>
+      <div class="list">
+        <button class="link-row" type="button" data-pick="local"><span class="ico sm"><img src="v2/icons/backpack.png" alt=""></span><b>이 기기 기록을 공유 기록으로 올리기<br><span class="muted" style="font-size:13px;font-weight:400">${n(mine)}</span></b></button>
+        <button class="link-row" type="button" data-pick="remote"><span class="ico sm"><img src="v2/icons/link.png" alt=""></span><b>공유 기록 불러오기<br><span class="muted" style="font-size:13px;font-weight:400">${n(remote)}</span></b></button>
+      </div>
+      <p class="faint" style="font-size:12.5px">어느 쪽을 골라도 이 기기 기록은 브라우저에 따로 보관해 둬요. 최근에 장비를 업데이트한 기기라면 '올리기'를 골라요.</p>`, {
+      after: () => {
+        $("#sheet [data-pick=local]").onclick = () => { try { localStorage.setItem(KEY + "-before-sync-" + Date.now(), JSON.stringify(remote)); } catch {} replaceState(mine); clearMine(); shared.lastSent = ""; shared.mode = "live"; shared.push(); closeSheet(); rerender(); toast("이 기기 기록을 공유 기록으로 올렸어요"); };
+        $("#sheet [data-pick=remote]").onclick = () => { try { localStorage.setItem(KEY + "-before-sync-" + Date.now(), JSON.stringify(mine)); } catch {} clearMine(); shared.lastSent = JSON.stringify(remote); replaceState(remote); closeSheet(); rerender(); toast("공유 기록을 불러왔어요"); };
+      },
+    });
+  }
+  const loadScript = (src) => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
+  async function startFirebase(cfg) {
+    const V = "10.12.2", B = `https://www.gstatic.com/firebasejs/${V}/`;
+    try { await loadScript(B + "firebase-app-compat.js"); await loadScript(B + "firebase-auth-compat.js"); await loadScript(B + "firebase-firestore-compat.js"); }
+    catch { shared.mode = "error"; paintSync(); return; }
+    const fb = window.firebase;
+    fb.initializeApp(cfg);
+    shared.backend = "firebase";
+    shared.auth = fb.auth();
+    shared.ref = fb.firestore().collection("shared").doc("board");
+    shared.auth.getRedirectResult().catch(() => {});
+    shared.auth.onAuthStateChanged((u) => {
+      shared.user = u || null;
+      shared.canWrite = !!u;
+      subscribeShared();
+      if (route === "log") rerender();
+    });
+  }
+  async function signIn() {
+    if (!shared.auth) return;
+    const p = new window.firebase.auth.GoogleAuthProvider();
+    try { await shared.auth.signInWithPopup(p); }
+    catch (e) { if (/popup/i.test((e && e.code) || "")) shared.auth.signInWithRedirect(p); else toast("로그인하지 못했어요"); }
+  }
+  async function startShared() {
+    if (window.claude && typeof window.claude.use === "function") {
+      const db = await window.claude.use("db").catch(() => null);
+      if (db) {
+        const user = await window.claude.use("user").catch(() => null);
+        const may = user ? await user.can("data.write").catch(() => null) : null;
+        shared.canWrite = may !== false; // null(모름)이면 써 보고, 거절되면 읽기 전용으로 바꿔요
+        shared.backend = "artifact";
+        shared.ref = db.doc("shared/board");
+        subscribeShared();
+        return;
+      }
+    }
+    const cfg = window.SOSHA_FIREBASE;
+    if (cfg && cfg.apiKey && cfg.projectId) startFirebase(cfg);
   }
 
   /* game.js가 다녀온 캠핑 수로 경험치를 계산할 수 있게 연결해요 (첫 캠핑은 game.js가 따로 더해요) */
@@ -607,6 +675,7 @@
       <section class="sec">
         <div class="sec-head"><h2>백업</h2></div>
         <div class="card" style="padding:16px;display:grid;gap:10px">
+          ${shared.backend === "firebase" ? `<div class="sync-acct"><span>${shared.user ? `${esc(shared.user.email || "")}로 로그인됨 · ${shared.mode === "live" ? "실시간 공유 중" : "보기 전용"}` : "구글로 로그인하면 집·회사·폰 어디서든 같은 기록을 써요"}</span>${shared.user ? '<button class="btn btn-sm" type="button" data-signout>로그아웃</button>' : '<button class="btn btn-sm btn-primary" type="button" data-signin>구글로 로그인</button>'}</div>` : ""}
           <p class="muted" style="font-size:14px">${shared.mode === "live" ? "지금 시아와 실시간으로 같은 기록을 보고 있어요. 백업은 혹시 모를 때를 위한 거예요." : shared.mode === "readonly" ? "보기 전용으로 공유된 기록을 보고 있어요." : "기록은 이 브라우저에 저장돼요. 둘이 같이 보려면 공유 링크(Claude 아티팩트)로 열어요. 다른 폰으로 옮기려면 백업 글자를 복사해서 붙여넣어요."}</p>
           <div class="grid2"><button class="btn" type="button" data-backup>백업 복사</button><button class="btn" type="button" data-restore>붙여넣어 불러오기</button></div>
           <button class="btn btn-danger-ghost" type="button" data-reset>기록 초기화</button>
@@ -626,6 +695,8 @@
         save(); closeSheet(); rerender(); toast(b.dataset.wipe === "all" ? "처음 상태로 되돌렸어요" : "캠핑 기록을 지웠어요");
       })),
     });
+    const si = $("[data-signin]"); if (si) si.onclick = signIn;
+    const so = $("[data-signout]"); if (so) so.onclick = () => shared.auth && shared.auth.signOut().then(() => toast("로그아웃했어요"));
     $("[data-backup]").onclick = async () => {
       const text = JSON.stringify(state);
       try { await navigator.clipboard.writeText(text); toast("백업을 복사했어요. 메모나 카톡에 붙여 둬요"); }
