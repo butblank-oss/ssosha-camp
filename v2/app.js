@@ -201,7 +201,10 @@
     };
     const { data } = await sb.auth.getSession();
     onUser(data && data.session ? data.session.user : null);
-    sb.auth.onAuthStateChange((_e, session) => onUser(session ? session.user : null));
+    sb.auth.onAuthStateChange((e, session) => {
+      onUser(session ? session.user : null);
+      if (e === "SIGNED_IN" && /access_token|type=magiclink/.test(location.hash)) location.hash = "#log"; // 메일 링크로 들어오면 기록 탭으로
+    });
   }
   function signIn() {
     if (!shared.sb) return;
@@ -214,7 +217,7 @@
           const email = $("#liEmail").value.trim();
           if (!/.+@.+\..+/.test(email)) { toast("이메일을 확인해 주세요"); return; }
           $("#liSend").disabled = true;
-          const { error } = await shared.sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname + "#log", shouldCreateUser: true } });
+          const { error } = await shared.sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname, shouldCreateUser: true } });
           $("#liSend").disabled = false;
           if (error) { toast(/rate|seconds/i.test(error.message) ? "잠시 뒤 다시 시도해 주세요" : "링크를 보내지 못했어요"); return; }
           closeSheet(); toast("메일함에서 로그인 링크를 눌러 주세요");
