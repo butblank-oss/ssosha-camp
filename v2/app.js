@@ -111,10 +111,10 @@
   }
   function paintSync() {
     let el = document.getElementById("syncBanner");
-    const fb = shared.backend === "firebase";
+    const fb = shared.backend === "cloud";
     const msg = {
       loading: "공유 기록을 불러오는 중이에요…",
-      readonly: fb ? (shared.user ? "이 계정은 보기만 할 수 있어요. 지쏘·시아 계정으로 로그인해요." : "보기 전용이에요. 지쏘·시아는 기록 탭에서 구글로 로그인하면 고칠 수 있어요.") : "보기 전용이에요. 지쏘와 시아만 고칠 수 있어요.",
+      readonly: fb ? (shared.user ? "이 계정은 보기만 할 수 있어요. 지쏘·시아 이메일로 로그인해요." : "보기 전용이에요. 지쏘·시아는 기록 탭에서 이메일로 로그인하면 고칠 수 있어요.") : "보기 전용이에요. 지쏘와 시아만 고칠 수 있어요.",
       error: "공유 저장에 잠시 실패했어요. 바뀐 내용은 이 기기에 남아 있어요.",
     }[shared.mode];
     if (!msg) { if (el) el.remove(); return; }
@@ -135,11 +135,11 @@
       const remote = snap.exists && snap.data() && snap.data().state;
       if (remote) {
         const body = JSON.stringify(remote);
-        if (shared.backend === "firebase" && !shared.canWrite && hasData(state) && body !== JSON.stringify(state) && !mineSaved()) {
+        if (shared.backend === "cloud" && !shared.canWrite && hasData(state) && body !== JSON.stringify(state) && !mineSaved()) {
           // 로그인 전에는 공유 기록을 보여주되, 이 기기 기록은 따로 보관해 둬요 (로그인하면 어느 쪽을 쓸지 물어봐요)
           try { localStorage.setItem(KEY + "-mine", JSON.stringify(state)); } catch {}
         }
-        const mine = shared.backend === "firebase" && shared.canWrite && first ? (mineSaved() || (hasData(state) ? state : null)) : null;
+        const mine = shared.backend === "cloud" && shared.canWrite && first ? (mineSaved() || (hasData(state) ? state : null)) : null;
         if (mine && body !== JSON.stringify(mine)) {
           // 처음 로그인한 기기: 이 기기 기록과 공유 기록이 다르면 어느 쪽을 쓸지 물어봐요
           askWhichRecord(remote, mine);
@@ -171,28 +171,55 @@
     });
   }
   const loadScript = (src) => new Promise((ok, no) => { const s = document.createElement("script"); s.src = src; s.onload = ok; s.onerror = no; document.head.appendChild(s); });
-  async function startFirebase(cfg) {
-    const V = "10.12.2", B = `https://www.gstatic.com/firebasejs/${V}/`;
-    try { await loadScript(B + "firebase-app-compat.js"); await loadScript(B + "firebase-auth-compat.js"); await loadScript(B + "firebase-firestore-compat.js"); }
+  /* Supabase: boards 테이블의 'shared' 줄 하나에 기록 전체를 저장해요 (누구나 읽기, 지쏘·시아만 쓰기는 RLS 정책이 막아요) */
+  async function startSupabase(cfg) {
+    try { await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"); }
     catch { shared.mode = "error"; paintSync(); return; }
-    const fb = window.firebase;
-    fb.initializeApp(cfg);
-    shared.backend = "firebase";
-    shared.auth = fb.auth();
-    shared.ref = fb.firestore().collection("shared").doc("board");
-    shared.auth.getRedirectResult().catch(() => {});
-    shared.auth.onAuthStateChanged((u) => {
+    const sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+    shared.backend = "cloud";
+    shared.sb = sb;
+    const snapOf = (row) => ({ exists: !!row, data: () => (row ? { state: row.state, at: row.at } : null), metadata: { fromCache: false, hasPendingWrites: false } });
+    shared.ref = {
+      async set(d) {
+        const { error } = await sb.from("boards").upsert({ id: "shared", state: d.state, at: new Date(d.at || Date.now()).toISOString() });
+        if (error) throw { code: error.code === "42501" ? "permission-denied" : error.code, message: error.message };
+      },
+      onSnapshot(cb, onErr) {
+        let alive = true;
+        sb.from("boards").select("state, at").eq("id", "shared").maybeSingle().then(({ data, error }) => { if (!alive) return; if (error) onErr && onErr(error); else cb(snapOf(data)); });
+        const ch = sb.channel("board-shared").on("postgres_changes", { event: "*", schema: "public", table: "boards", filter: "id=eq.shared" }, (p) => { if (alive && p.new && p.new.state) cb(snapOf(p.new)); }).subscribe();
+        return () => { alive = false; sb.removeChannel(ch); };
+      },
+    };
+    const onUser = (u) => {
+      const was = shared.user && shared.user.id;
       shared.user = u || null;
       shared.canWrite = !!u;
-      subscribeShared();
+      if (was !== (u && u.id) || !shared.unsub) subscribeShared();
       if (route === "log") rerender();
-    });
+    };
+    const { data } = await sb.auth.getSession();
+    onUser(data && data.session ? data.session.user : null);
+    sb.auth.onAuthStateChange((_e, session) => onUser(session ? session.user : null));
   }
-  async function signIn() {
-    if (!shared.auth) return;
-    const p = new window.firebase.auth.GoogleAuthProvider();
-    try { await shared.auth.signInWithPopup(p); }
-    catch (e) { if (/popup/i.test((e && e.code) || "")) shared.auth.signInWithRedirect(p); else toast("로그인하지 못했어요"); }
+  function signIn() {
+    if (!shared.sb) return;
+    openSheet(() => `<div class="sheet-head"><div><h2 id="sheetTitle">이메일로 로그인</h2><span class="muted" style="font-size:14px">메일로 온 링크를 누르면 로그인돼요</span></div>${xBtn()}</div>
+      <label class="field"><span>이메일</span><input id="liEmail" type="email" inputmode="email" autocomplete="email" placeholder="예: jisso@gmail.com"></label>
+      <p class="faint" style="font-size:12.5px">지쏘·시아 이메일만 기록을 고칠 수 있어요. 링크는 이 기기에서 열어야 이 기기가 로그인돼요.</p>
+      <div class="sheet-foot"><button class="btn" type="button" data-close>취소</button><button class="btn btn-primary" style="flex:1" type="button" id="liSend">로그인 링크 받기</button></div>`, {
+      after: () => {
+        $("#liSend").onclick = async () => {
+          const email = $("#liEmail").value.trim();
+          if (!/.+@.+\..+/.test(email)) { toast("이메일을 확인해 주세요"); return; }
+          $("#liSend").disabled = true;
+          const { error } = await shared.sb.auth.signInWithOtp({ email, options: { emailRedirectTo: location.origin + location.pathname + "#log", shouldCreateUser: true } });
+          $("#liSend").disabled = false;
+          if (error) { toast(/rate|seconds/i.test(error.message) ? "잠시 뒤 다시 시도해 주세요" : "링크를 보내지 못했어요"); return; }
+          closeSheet(); toast("메일함에서 로그인 링크를 눌러 주세요");
+        };
+      },
+    });
   }
   async function startShared() {
     if (window.claude && typeof window.claude.use === "function") {
@@ -207,8 +234,8 @@
         return;
       }
     }
-    const cfg = window.SOSHA_FIREBASE;
-    if (cfg && cfg.apiKey && cfg.projectId) startFirebase(cfg);
+    const cfg = window.SOSHA_SUPABASE;
+    if (cfg && cfg.url && cfg.anonKey) startSupabase(cfg);
   }
 
   /* game.js가 다녀온 캠핑 수로 경험치를 계산할 수 있게 연결해요 (첫 캠핑은 game.js가 따로 더해요) */
@@ -675,7 +702,7 @@
       <section class="sec">
         <div class="sec-head"><h2>백업</h2></div>
         <div class="card" style="padding:16px;display:grid;gap:10px">
-          ${shared.backend === "firebase" ? `<div class="sync-acct"><span>${shared.user ? `${esc(shared.user.email || "")}로 로그인됨 · ${shared.mode === "live" ? "실시간 공유 중" : "보기 전용"}` : "구글로 로그인하면 집·회사·폰 어디서든 같은 기록을 써요"}</span>${shared.user ? '<button class="btn btn-sm" type="button" data-signout>로그아웃</button>' : '<button class="btn btn-sm btn-primary" type="button" data-signin>구글로 로그인</button>'}</div>` : ""}
+          ${shared.backend === "cloud" ? `<div class="sync-acct"><span>${shared.user ? `${esc(shared.user.email || "")}로 로그인됨 · ${shared.mode === "live" ? "실시간 공유 중" : "보기 전용"}` : "이메일로 로그인하면 집·회사·폰 어디서든 같은 기록을 써요"}</span>${shared.user ? '<button class="btn btn-sm" type="button" data-signout>로그아웃</button>' : '<button class="btn btn-sm btn-primary" type="button" data-signin>이메일로 로그인</button>'}</div>` : ""}
           <p class="muted" style="font-size:14px">${shared.mode === "live" ? "지금 시아와 실시간으로 같은 기록을 보고 있어요. 백업은 혹시 모를 때를 위한 거예요." : shared.mode === "readonly" ? "보기 전용으로 공유된 기록을 보고 있어요." : "기록은 이 브라우저에 저장돼요. 둘이 같이 보려면 공유 링크(Claude 아티팩트)로 열어요. 다른 폰으로 옮기려면 백업 글자를 복사해서 붙여넣어요."}</p>
           <div class="grid2"><button class="btn" type="button" data-backup>백업 복사</button><button class="btn" type="button" data-restore>붙여넣어 불러오기</button></div>
           <button class="btn btn-danger-ghost" type="button" data-reset>기록 초기화</button>
@@ -696,7 +723,7 @@
       })),
     });
     const si = $("[data-signin]"); if (si) si.onclick = signIn;
-    const so = $("[data-signout]"); if (so) so.onclick = () => shared.auth && shared.auth.signOut().then(() => toast("로그아웃했어요"));
+    const so = $("[data-signout]"); if (so) so.onclick = () => shared.sb && shared.sb.auth.signOut().then(() => toast("로그아웃했어요"));
     $("[data-backup]").onclick = async () => {
       const text = JSON.stringify(state);
       try { await navigator.clipboard.writeText(text); toast("백업을 복사했어요. 메모나 카톡에 붙여 둬요"); }
