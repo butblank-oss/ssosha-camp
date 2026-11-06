@@ -176,18 +176,19 @@
     try { await loadScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"); }
     catch { shared.mode = "error"; paintSync(); return; }
     const sb = window.supabase.createClient(cfg.url, cfg.anonKey);
+    const T = cfg.table || "sosha_boards"; // 이미 쓰는 프로젝트에 붙여도 겹치지 않게 이름을 따로 써요
     shared.backend = "cloud";
     shared.sb = sb;
     const snapOf = (row) => ({ exists: !!row, data: () => (row ? { state: row.state, at: row.at } : null), metadata: { fromCache: false, hasPendingWrites: false } });
     shared.ref = {
       async set(d) {
-        const { error } = await sb.from("boards").upsert({ id: "shared", state: d.state, at: new Date(d.at || Date.now()).toISOString() });
+        const { error } = await sb.from(T).upsert({ id: "shared", state: d.state, at: new Date(d.at || Date.now()).toISOString() });
         if (error) throw { code: error.code === "42501" ? "permission-denied" : error.code, message: error.message };
       },
       onSnapshot(cb, onErr) {
         let alive = true;
-        sb.from("boards").select("state, at").eq("id", "shared").maybeSingle().then(({ data, error }) => { if (!alive) return; if (error) onErr && onErr(error); else cb(snapOf(data)); });
-        const ch = sb.channel("board-shared").on("postgres_changes", { event: "*", schema: "public", table: "boards", filter: "id=eq.shared" }, (p) => { if (alive && p.new && p.new.state) cb(snapOf(p.new)); }).subscribe();
+        sb.from(T).select("state, at").eq("id", "shared").maybeSingle().then(({ data, error }) => { if (!alive) return; if (error) onErr && onErr(error); else cb(snapOf(data)); });
+        const ch = sb.channel("sosha-board-shared").on("postgres_changes", { event: "*", schema: "public", table: T, filter: "id=eq.shared" }, (p) => { if (alive && p.new && p.new.state) cb(snapOf(p.new)); }).subscribe();
         return () => { alive = false; sb.removeChannel(ch); };
       },
     };
