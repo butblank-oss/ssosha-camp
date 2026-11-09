@@ -1,0 +1,134 @@
+{
+ "updated": "2026-11-09",
+ "home": "안양 범계",
+ "note": "rv: 캠핏 캠핑로그 키워드 분석 (2026-11-09). lv: bad 주의 / warn 참고할 단점 / mild 사소 / ok 깨끗. id는 고정값이라 이름을 바꿔도 찜·메모가 유지돼요. 새 캠핑장은 겹치지 않는 영어 id를 새로 붙여요.",
+ "regions": [
+  {
+   "k": "all",
+   "name": "전체",
+   "icon": "🏕️"
+  },
+  {
+   "k": "city",
+   "name": "서울·안양 근처",
+   "icon": "🏙️"
+  },
+  {
+   "k": "near",
+   "name": "경기 남부·대부도",
+   "icon": "🌾"
+  },
+  {
+   "k": "west",
+   "name": "인천·강화·서해",
+   "icon": "🌊"
+  },
+  {
+   "k": "east",
+   "name": "경기 동·북부",
+   "icon": "⛰️"
+  },
+  {
+   "k": "cc",
+   "name": "충청",
+   "icon": "🏞️"
+  }
+ ],
+ "picks": [
+  {
+   "id": "ganghwa-mariwon",
+   "k": "가깝게 1박 · 후기 깨끗",
+   "t": "강화 마리원관광농원",
+   "s": "35,000원 + 반려견 5,000 · 약 1시간 10분 · 10kg 미만 2마리"
+  },
+  {
+   "id": "yeoju-camperdy",
+   "k": "때찌 짖음 걱정될 때",
+   "t": "여주 캠퍼디",
+   "s": "40,000원 · 사이트마다 울타리 · 후기에 불만 거의 없음"
+  },
+  {
+   "id": "jecheon-stayout",
+   "k": "멀리 여유롭게",
+   "t": "스테이아웃 제천 + 난로",
+   "s": "1박 40,000원 · 1100W 이상 · G1은 짐을 카트로 옮겨야 해요"
+  }
+ ],
+ "drop": [
+  {
+   "n": "강화 아르보리아 · 마니또오토",
+   "why": "5kg 미만만"
+  },
+  {
+   "n": "영종 왕산가족글램핑",
+   "why": "3kg 이하만"
+  },
+  {
+   "n": "가평 물멍캠프 · 제천 208덕동",
+   "why": "5kg 이하만"
+  },
+  {
+   "n": "시흥 판타스틱캠프닉",
+   "why": "개인 화로대·장작 금지"
+  },
+  {
+   "n": "안양 병목안 · 의왕 왕송호수",
+   "why": "반려동물 금지"
+  },
+  {
+   "n": "화성 반달곰이살던숲",
+   "why": "지정 주차장으로 이동"
+  },
+  {
+   "n": "제천 청풍호반",
+   "why": "전기 200W + 마을 고양이"
+  }
+ ],
+ "calls": [
+  "10kg 미만 두 마리 같이 가도 되나요? 추가 요금은 마리당인가요?",
+  "한 마리가 7.5kg인데 평일이면 괜찮을까요? (무게 제한 있는 곳)",
+  "한 마리가 다른 개를 보면 짖는데 괜찮은 사이트가 있을까요?",
+  "개인 화로대로 장작 불멍 돼요? 장작은 가져가도 되나요?",
+  "차를 텐트 바로 옆에 세울 수 있나요?",
+  "사이트 전기는 몇 W까지 써도 되나요? (전기장판 하나)"
+ ],
+ "camps": [
+  {"id":"jecheon-stayout","n":"스테이아웃 제천","r":"cc","a":"충북 제천시 금성면 청풍호로 1623","min":120,"p":20000,"ps":"G1 30,000 → 쿠폰 20,000","fit":"ok","dog2":"ok","dogT":"반려견 전용존","fire":"ok","w":"1100W 이상","w11":true,"fence":true,"auto":"check","autoT":"G1은 최상단이라 카트로 짐 이동 (후기)","plus":"난로 대여 1박 20,000","memo":"14시 퇴실 · 평일 12시 얼리체크인 · 1박은 이용 2주 전 잔여분 오픈","lg":213,"url":"https://camfit.co.kr/camp/669f445312cd86001ecf113d","sc":"lake","rv":{"lv":"warn","s":"G1 짐 옮기기 힘듦 · 고깃집 손님 소음","pts":["G1-1은 최상단이라 오르막이 꽤 있어 카트로 짐을 옮겨야 함","옆 고깃집 손님이 식사 시간에 지나다니고, 술 마시고 떠든다는 후기","관리동 근처는 보일러 기계음·분리수거 소리"]}},
+  {"id":"jecheon-baegun-sunvalley","n":"제천 백운썬밸리","r":"cc","a":"충북 제천시 백운면","min":115,"p":60000,"ps":"70,000 → 쿠폰 60,000","fit":"ok","dog2":"ok","dogT":"1~7번 사이트, 10kg 미만","fire":"ok","w":"1100W","w11":true,"auto":true,"plus":"전 사이트 개별화장실","lg":475,"url":"https://camfit.co.kr/camp/629edbe3692d55001e3ef9ba","sc":"mtn","rv":{"lv":"mild","s":"사이트가 붙어 있는 편","pts":["사이트 간격이 좁고 일부는 텐트 옆 주차가 안 된다는 후기"]}},
+  {"id":"jecheon-its-camping","n":"제천 잇츠캠핑","r":"cc","a":"충북 제천시 덕산면","min":120,"p":45000,"ps":"55,000 → 쿠폰 45,000","fit":"check","dog2":"check","dogT":"별도 지침","fire":"ok","w":"1100W","w11":true,"auto":true,"ask":"반려견 지침 (무게·마리 수)","lg":281,"url":"https://camfit.co.kr/camp/6476b77f9c2a3f001fc24964","sc":"mtn","rv":{"lv":"ok","s":"최근 후기에 큰 불만 없음","pts":[]}},
+  {"id":"taean-sinduri-orange","n":"태안 신두리오렌지","kw":"신두리오렌지캠핑장","r":"cc","a":"충남 태안군 원북면 두웅로 356-123","min":120,"p":50000,"ps":"주중 50,000 · 타프존 60,000","fit":"check","dog2":"check","dogT":"소형견","fire":"ok","fence":true,"auto":true,"ask":"두 마리 가능한지","memo":"해안사구 앞","url":"https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=101524","sc":"sea","gc":"101524"},
+  {"id":"taean-samok-park","n":"태안 사목공원캠핑장","kw":"사목공원캠핑장","r":"cc","a":"충남 태안군 이원면 사목길 49","min":140,"p":35000,"ps":"캠핏 35,000~","fit":"check","dog2":"check","dogT":"소형견","fire":"ok","fence":true,"auto":true,"ask":"두 마리 가능한지","memo":"1~2월 휴장 · 해수욕장 앞","sc":"sea"},
+  {"id":"hanam-ttabom","n":"하남 따봄캠핑장","r":"east","a":"경기 하남시","min":45,"p":50000,"ps":"60,000 → 쿠폰 50,000","fee":"추가 1마리 5,000","fit":"ok","dog2":"ok","dogT":"10kg 미만 2마리","fire":"ok","w":"1kW (후기)","auto":true,"lg":461,"url":"https://camfit.co.kr/camp/628721e384e43a001fc12589","sc":"mtn","rv":{"lv":"ok","s":"깨끗 · 가을에도 모기 있음","pts":["숲이라 가을 모기가 있으니 기피제 챙기기","전기 1kW까지 쓸 수 있다는 후기"]}},
+  {"id":"yongin-ever-auto","n":"용인 에버오토캠핑장","r":"east","a":"경기 용인시 처인구 포곡읍","min":50,"p":20000,"ps":"쿠폰가 20,000~ (존별 상이)","fit":"ok","dog2":"ok","dogT":"애견존 10kg 미만","fire":"ok","w":"600W","auto":true,"memo":"반려캠핑 TOP10","lg":1207,"url":"https://camfit.co.kr/camp/666659e213820a001eb3d18c","sc":"mtn","rv":{"lv":"warn","s":"차량·오토바이·헬기 소음","pts":["후기 80개 중 12개에서 소음 언급: 도로 차량, 오토바이, 헬기 소리","근처 공사로 아침마다 시끄러웠다는 최근 후기","관리동에서 사이트까지 경사"]}},
+  {"id":"paju-sanmeoru","n":"파주 산머루농원","r":"east","a":"경기 파주시","min":60,"p":50000,"ps":"60,000 → 쿠폰 50,000","fit":"ok","dog2":"ok","dogT":"10kg 미만 2마리","fire":"ok","auto":true,"memo":"와이너리 체험","lg":963,"url":"https://camfit.co.kr/camp/62fdf464ef3e2d001f2b951c","sc":"field","rv":{"lv":"ok","s":"후기에 큰 불만 없음","pts":[]}},
+  {"id":"yeoju-camperdy","n":"여주 캠퍼디","r":"east","a":"경기 여주시 북내면 여강로 375","min":75,"p":40000,"ps":"50,000 → 쿠폰 40,000","fit":"ok","dog2":"ok","dogT":"개별 울타리 반려존","fire":"ok","w":"600~700W","fence":true,"auto":true,"memo":"반려캠핑 TOP5 · 때찌에게 가장 편한 구조","lg":752,"url":"https://camfit.co.kr/camp/67bfc6c20b592d001df7fc83","sc":"field","rv":{"lv":"ok","s":"조용하고 벌레 적다는 후기","pts":["타프 덕분에 옆 사이트 소음이 막힌다는 후기"]}},
+  {"id":"gapyeong-seontaekjeok-gorip","n":"가평 선택적고립","r":"east","a":"경기 가평군 상면","min":90,"p":40000,"ps":"50,000 → 쿠폰 40,000","fee":"2마리 무료","fit":"ok","dog2":"ok","dogT":"무게 제한 없음","fire":"ok","w":"전기장판 OK","auto":true,"memo":"짖음이 심하면 퇴장될 수 있음","lg":1186,"url":"https://camfit.co.kr/camp/661b99159e2fb5001e2b1863","sc":"mtn","rv":{"lv":"mild","s":"경사 높음 · 예전 소음 이슈","pts":["경사가 높아 걱정하는 사람이 많다는 후기","'다른 리뷰에 소음 관리 이슈가 있었다'는 언급 (최근엔 조용했다고)"]}},
+  {"id":"pocheon-camp-daon","n":"포천 캠프다온","r":"east","a":"경기 포천시","min":90,"p":60000,"ps":"60,000~","fit":"ok","dog2":"ok","dogT":"애견존 10kg 미만 2마리","fire":"ok","w":"600W","auto":true,"plus":"애견놀이터","memo":"최다예약 TOP5","lg":1663,"url":"https://camfit.co.kr/camp/65000f57e23a8c001e02b1e4","sc":"mtn","rv":{"lv":"ok","s":"매너타임 잘 지켜지고 방역 꼼꼼","pts":[]}},
+  {"id":"pyeongtaek-nangman-factory","n":"평택 낭만팩토리","r":"near","a":"경기 평택시 안중읍","min":50,"p":30000,"ps":"40,000 → 쿠폰 30,000","fit":"check","dog2":"check","dogT":"짖지 않는 소형견","fire":"ok","fence":true,"auto":true,"ask":"때찌 짖음 괜찮은지","memo":"사이트 옆 주차","lg":599,"url":"https://camfit.co.kr/camp/638d58a9d05094001e295a79","sc":"field","rv":{"lv":"mild","s":"가끔 축사 냄새 · 바쁜 날 청소 부족","pts":["바람 따라 소 축사 냄새가 살짝 난다는 후기","주말에 화장실·샤워실 청소가 안 돼 있었다는 후기"]}},
+  {"id":"pyeongtaek-musu","n":"평택 무수캠핑장","r":"near","a":"경기 평택시 포승읍","min":50,"p":40000,"ps":"50,000 → 쿠폰 40,000","fee":"별도","fit":"check","dog2":"check","dogT":"가능, 무게 미기재","fire":"ok","auto":true,"ask":"무게·마리 수","lg":405,"url":"https://camfit.co.kr/camp/616546021f118c001f8713d1","sc":"field","rv":{"lv":"mild","s":"시설 낡음 · 도로 차 소음","pts":["샤워장이 낡았다는 후기 (청소는 깔끔)","도로 옆이라 차 소음이 있다는 후기"]}},
+  {"id":"hwaseong-tandoho","n":"화성 탄도호캠핑장","r":"near","a":"경기 화성시 송산면","min":55,"p":40000,"ps":"50,000 → 쿠폰 40,000","fit":"check","dog2":"check","dogT":"가능, 무게 미기재","fire":"ok","w":"고용량 금지","auto":true,"ask":"무게·마리 수","memo":"노을 뷰","lg":350,"url":"https://camfit.co.kr/camp/624fc9982a9c39001e49d105","sc":"lake","rv":{"lv":"mild","s":"숲 벌레 · 시설 조금 낡음","pts":["숲이라 날벌레·거미가 있다는 후기","진입로 경사, 시설이 최신식은 아님","뒤쪽 사이트에서 새벽까지 떠든 일이 있었다는 후기"]}},
+  {"id":"daebudo-verardel","n":"대부도 베르아델캠핑장","kw":"베르아델캠핑장","r":"near","a":"경기 안산시 단원구 대부도","min":55,"p":45000,"ps":"55,000 → 쿠폰 45,000","fit":"check","dog2":"check","dogT":"가능, 규정 미기재","fire":"ok","auto":true,"plus":"승마클럽","ask":"무게·마리 수","lg":327,"url":"https://camfit.co.kr/camp/6521160e96e332001e4a7f43","sc":"sea","rv":{"lv":"warn","s":"비행기 소음 · 옆 펜션 소음","pts":["인천공항 가까워 비행기 소리, 새벽에 특히 들린다는 후기","옆 펜션 때문에 매너타임 뒤에도 시끄러웠다는 후기","파리가 많다는 후기"]}},
+  {"id":"daebudo-lilac","n":"대부도 라일락캠핑장","kw":"라일락캠핑장 대부도","r":"near","a":"경기 안산시 단원구 대부도","min":55,"p":45000,"ps":"라일락D존 55,000 → 45,000","fit":"check","dog2":"check","dogT":"7kg 미만, D존만 (때찌 7.5kg)","fire":"ok","auto":true,"ask":"7.5kg 한 마리 포함 두 마리 협의 가능한지","memo":"장작·숯은 매점 구매","lg":114,"url":"https://camfit.co.kr/camp/686c84f2305ae7001d9b10a3","sc":"sea","rv":{"lv":"mild","s":"반려견 D존 간격 좁음","pts":["D존 사이트 간격이 좁다는 후기","금요일엔 매너타임 안 지키는 팀이 있었다는 후기"]}},
+  {"id":"hwaseong-hygge-campic","n":"화성 휘게캠피크","r":"near","a":"경기 화성시 우정읍 궁평항로 81-70","min":70,"p":35000,"ps":"애견존 쿠폰가 35,000~","fit":"check","dog2":"check","dogT":"애견존, 무게 미기재","fire":"ok","auto":true,"plus":"팬히터 대여 28,000","ask":"무게·마리 수","memo":"전 사이트 차 옆 주차","lg":151,"url":"https://camfit.co.kr/camp/6764ecc373197d001d1f6008","sc":"sea","rv":{"lv":"ok","s":"사이트 넓고 매너타임 잘 지켜짐","pts":["여름엔 모기가 많았다는 후기"]}},
+  {"id":"anyang-sanmaeul","n":"안양 산마을캠핑장","kw":"안양 산마을캠핑장","r":"city","a":"경기 안양시 동안구 평촌대로 452-2","min":10,"p":30000,"ps":"평일 B구역 연박 시 1박 30,000","fit":"check","dog2":"check","dogT":"규정은 사이트당 1마리 · 평일엔 두 마리로 다녀옴","fire":"ok","w":"1kW","auto":true,"ask":"두 마리 같이 가도 되는지 (평일엔 됐음)","memo":"지쏘가 직접 다녀온 곳 · 범계에서 10분"},
+  {"id":"ganghwa-mariwon","n":"강화 마리원관광농원","kw":"마리원관광농원캠핑장","r":"west","a":"인천 강화군 (강화도 초입)","min":70,"p":35000,"ps":"45,000 → 쿠폰 35,000","fee":"5,000","fit":"ok","dog2":"ok","dogT":"10kg 미만 최대 2마리","fire":"ok","auto":true,"memo":"불멍 23시까지 · 장작은 매점 구입만","lg":71,"url":"https://camfit.co.kr/camp/69913d100d5db4001d3ab6ce","sc":"lake","rv":{"lv":"ok","s":"최근 후기에 큰 불만 없음","pts":[]}},
+  {"id":"ganghwa-letsgo","n":"강화 렛츠고강화캠핑장","kw":"렛츠고강화캠핑장","r":"west","a":"인천 강화군 화도면","min":85,"p":35000,"ps":"C사이트(애견 전용) 45,000 → 35,000","fee":"1박 10,000","fit":"ok","dog2":"ok","dogT":"10kg 미만, C사이트만","fire":"ok","w":"600W 조금 넘어도 OK","auto":true,"ask":"반려견 요금이 마리당인지","memo":"애견 전용 사이트 선착순","lg":325,"url":"https://camfit.co.kr/camp/668a389a45db24001e68401f","sc":"mtn","rv":{"lv":"bad","s":"샤워장 곰팡이 · 노후 · 소음","pts":["샤워장에 곰팡이·물때, 개수대 정리 안 됨 (최근 후기)","시설 노후, 급경사 (꼭대기 편의동만 신축)","흡연구역·정화조 냄새, 하루살이 많음","매너타임 지나도 떠드는 팀, 앞 펜션 소음"]}},
+  {"id":"ganghwa-seaside-hill","n":"강화 씨사이드힐 캠핑장","kw":"씨사이드힐 캠핑장","r":"west","a":"인천 강화군","min":90,"p":40000,"ps":"메이플존 50,000 → 40,000","fee":"1마리 무료","fit":"ok","dog2":"ok","dogT":"15kg 미만 3마리까지","fire":"ok","w":"600W 미만","fence":true,"auto":true,"ask":"겨울에도 운영하는지 (이름에 '4월 1일~')","memo":"애견 울타리 · 모든 사이트 바다 뷰 · 반려캠핑 TOP5","lg":311,"url":"https://camfit.co.kr/camp/69b14a9e4386d8001dae2c54","sc":"sea","rv":{"lv":"ok","s":"최근 후기에 큰 불만 없음","pts":[]}},
+  {"id":"ganghwa-stone","n":"강화 스톤캠핑장","kw":"강화 스톤캠핑장","r":"west","a":"인천 강화군 (고려산·교동 방면)","min":95,"p":40000,"ps":"50,000 → 쿠폰 40,000","fee":"5,000","fit":"check","dog2":"check","dogT":"10kg 미만 1마리만 (규정)","fire":"ok","w":"600W 미만","auto":true,"ask":"평일 두 마리 협의 가능한지","memo":"데크·타프존 데크 위 불멍 금지 · 2025 단풍캠핑 TOP5","lg":1056,"url":"https://camfit.co.kr/camp/616c28bbb0e0a1001e5722c1","sc":"mtn","rv":{"lv":"ok","s":"깨끗하고 조용 · 고양이 있음","pts":["캠핑장에 고양이가 살아요 (때찌 짖음 주의)"]}},
+  {"id":"ganghwa-goryeosan-healing","n":"강화 고려산힐링캠프","kw":"고려산힐링캠프","r":"west","a":"인천 강화군 (고려산)","min":90,"p":40000,"ps":"50,000 → 쿠폰 40,000","fee":"1박 10,000","fit":"check","dog2":"check","dogT":"7kg 이하 (때찌 7.5kg)","fire":"check","fireT":"데크 위 화로 금지","w":"1000W","auto":true,"ask":"7.5kg 협의 가능한지 · 파쇄석 사이트 있는지","lg":429,"url":"https://camfit.co.kr/camp/6538ad6717d835001ea2cedc","sc":"mtn","rv":{"lv":"mild","s":"데크 관리 부족","pts":["데크가 더러운 편이었다는 최근 후기"]}},
+  {"id":"ganghwa-awesome","n":"강화 어썸캠핑장","kw":"강화 어썸캠핑장","r":"west","a":"인천 강화군","min":85,"p":50000,"ps":"60,000 → 쿠폰 50,000","fit":"check","dog2":"check","dogT":"7kg 미만 (때찌 7.5kg)","fire":"check","w":"600W 이하","auto":true,"ask":"7.5kg 협의 가능한지","memo":"사이트 밖에선 반려견을 안고 다녀야 하고, 시설 출입 금지","lg":467,"url":"https://camfit.co.kr/camp/625d36bc0b5a84001eea82b8","sc":"field","rv":{"lv":"ok","s":"최근 후기에 큰 불만 없음","pts":[]}},
+  {"id":"ganghwa-bada-noeul","n":"강화 바다노을캠핑장","kw":"바다노을캠핑장 강화","r":"west","a":"인천 강화군 길상면 선두리","min":75,"p":35000,"ps":"45,000 → 쿠폰 35,000","fit":"check","dog2":"check","dogT":"가능, 규정 미기재","fire":"ok","w":"충분한 용량","auto":true,"plus":"온돌 화장실 · 1인 샤워실","ask":"무게·마리 수","memo":"사이트 3.5×6m로 작음 · 11/30까지 예약 오픈","lg":121,"url":"https://camfit.co.kr/camp/676257960a4999001db83605","sc":"sea","rv":{"lv":"bad","s":"매너타임 안 지켜짐 · 펜션 노래방 소리","pts":["최근 후기 10개 중 5개가 소음 언급","'3일 동안 매너타임이 한 번도 안 지켜졌다'는 후기","옆 펜션 노래방 소리, 담배 냄새가 계속 넘어왔다는 후기"]}},
+  {"id":"ganghwa-haengbokhan-sopung","n":"강화 행복한소풍캠핑장","kw":"행복한소풍캠핑장","r":"west","a":"인천 강화군 화도면 (마니산 근처)","min":85,"p":35000,"ps":"E파쇄 45,000 → 35,000","fit":"check","dog2":"check","dogT":"가능, 규정 미기재","fire":"ok","auto":true,"ask":"무게·마리 수","memo":"불멍 자정 전 정리 · 아이 가족 많음","lg":440,"url":"https://camfit.co.kr/camp/62a192a8dd1ac5001fda9b5a","sc":"field","rv":{"lv":"mild","s":"가끔 축사 냄새 · 여름 파리","pts":["축사 냄새가 가끔 잠깐 난다는 후기가 여럿","여름엔 파리가 많다는 후기","수영장·놀이터가 있어 아이 가족이 많음"]}},
+  {"id":"yeongheungdo-simnipo","n":"영흥도 십리포캠핑장","kw":"영흥도 십리포캠핑장","r":"west","a":"인천 옹진군 영흥면","min":70,"p":40000,"ps":"B존 파쇄석 50,000 → 40,000","fee":"1마리 10,000","fit":"check","dog2":"check","dogT":"10kg 이내 2마리, 안 짖어야 함","fire":"ok","auto":true,"ask":"때찌 짖음 괜찮은지","memo":"데크 위 불멍 금지 → B존 파쇄석으로","lg":42,"url":"https://camfit.co.kr/camp/68661182e4fd39001dcd2c42","sc":"sea","rv":{"lv":"mild","s":"시설 조금 낡음 · 길고양이 많음","pts":["시설은 조금 낡았지만 깨끗하다는 후기","길고양이가 많이 다님 (때찌 짖음 주의)","사이트가 작은 편"]}},
+  {"id":"ganghwa-moonlight","n":"강화 문라이트캠핑장","kw":"문라이트캠핑장 강화","r":"west","a":"인천 강화군","min":85,"p":45000,"ps":"55,000 → 쿠폰 45,000","fit":"check","dog2":"check","dogT":"가능, 무게 미기재","fire":"check","w":"600W","auto":true,"ask":"무게·마리 수, 불멍","lg":356,"url":"https://camfit.co.kr/camp/6561ace6f5c193001e10e41d","sc":"field","rv":{"lv":"mild","s":"B구역 도로 소음","pts":["B구역만 도로와 가까워 차 소리가 들린다는 후기 (다른 구역 추천)"]}},
+  {"id":"seongmodo-ganghwa-ones","n":"석모도 강화원스캠핑장","kw":"강화원스캠핑장","r":"west","a":"인천 강화군 삼산면 (석모도)","min":100,"p":45000,"ps":"55,000 → 쿠폰 45,000","fit":"check","dog2":"check","dogT":"가능, 규정 미기재","fire":"check","auto":true,"ask":"무게·마리 수, 불멍","lg":24,"url":"https://camfit.co.kr/camp/675cdf2f4f3408001dda85bc","sc":"sea","rv":{"lv":"mild","s":"후기가 적어 판단 어려움","pts":["캠핑로그 24개로 아직 후기가 적어요"]}},
+  {"id":"uiwang-barasan","solo":1,"n":"의왕 바라산휴양림 야영장","kw":"바라산자연휴양림 야영장","r":"city","a":"경기 의왕시 바라산로 84","min":15,"p":14000,"ps":"평일 14,000 · 주말 20,000","fire":"check","auto":false,"memo":"범계에서 제일 가까움","sc":"mtn"},
+  {"id":"seoul-grand-park","solo":1,"n":"서울대공원 야영장","kw":"서울대공원 캠핑장","r":"city","a":"경기 과천시 대공원광장로 102","min":20,"p":15000,"ps":"15,000","fire":"check","auto":false,"sc":"field"},
+  {"id":"ansan-hwarang-auto","solo":1,"n":"안산 화랑오토캠핑장","kw":"화랑오토캠핑장","r":"near","a":"경기 안산시 단원구 동산로 268","min":30,"p":25000,"ps":"일반 25,000 · 오토 35,000~","fire":"ok","w":"1100W","w11":true,"auto":true,"sc":"lake"},
+  {"id":"pyeongtaek-jinwicheon","solo":1,"n":"평택 진위천유원지","kw":"진위천유원지 캠핑장","r":"near","a":"경기 평택시 진위면 진위서로 264-15","min":40,"p":30000,"ps":"30,000 (평택시민 20,000)","fire":"ok","auto":true,"sc":"lake"},
+  {"id":"sangam-noeul","solo":1,"n":"상암 노을캠핑장","kw":"노을캠핑장 상암","r":"city","a":"서울 마포구 하늘공원로 108-1","min":45,"p":10000,"ps":"C구역 10,000 · A/B 13,000","fire":"check","auto":false,"memo":"반려견 E구역(2마리, 33,000)도 있어요 · 주차장에서 전동차로 이동","sc":"city"},
+  {"id":"incheon-noeuljin","solo":1,"n":"인천 노을진캠핑장","kw":"노을진캠핑장","r":"west","a":"인천 서구 정서진로 500","min":50,"p":25000,"ps":"오토 주중 25,000 · 주말 30,000","fire":"check","auto":true,"sc":"sea"},
+  {"id":"goyang-kintex","solo":1,"n":"고양 킨텍스캠핑장","kw":"킨텍스캠핑장","r":"near","a":"경기 고양시 일산서구 킨텍스로 217-25","min":60,"p":15000,"ps":"일반 15,000 · 오토 25,000","fire":"ok","auto":true,"sc":"city"},
+  {"id":"chungju-mokgye-solbat","solo":1,"n":"충주 목계솔밭캠핑장","kw":"목계솔밭캠핑장","r":"cc","a":"충북 충주시 중앙탑면 첨단산업로 1438","min":100,"p":10000,"ps":"주중 10,000~30,000","fire":"ok","auto":true,"sc":"lake"}
+ ]
+}

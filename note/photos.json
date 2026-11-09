@@ -1,0 +1,81 @@
+{
+ "updated": "2026-11-09",
+ "source": "고캠핑(한국관광공사) 공공누리 제1유형",
+ "items": {
+  "jecheon-stayout": {
+   "img": "https://gocamping.or.kr/upload/camp/101368/thumb/thumb_720_9889EnNrNeQc6qq5h1rBwPse.jpg",
+   "gc": "101368",
+   "name": "스테이아웃"
+  },
+  "jecheon-baegun-sunvalley": {
+   "img": "https://gocamping.or.kr/upload/camp/100685/thumb/thumb_720_0168wkOT7aDrsrJOUNODbYxu.jpg",
+   "gc": "100685",
+   "name": "백운썬밸리캠핑장"
+  },
+  "jecheon-its-camping": {
+   "img": "https://gocamping.or.kr/upload/camp/100892/thumb/thumb_720_2611uOv2dt8OfNT0jH2tfxpG.jpg",
+   "gc": "100892",
+   "name": "잇츠 캠핑"
+  },
+  "taean-sinduri-orange": {
+   "img": "https://gocamping.or.kr/upload/camp/101524/thumb/thumb_720_5875MZWm6ctQZF737TSvPEw1.jpg",
+   "gc": "101524",
+   "name": "신두리 오렌지 캠핑장"
+  },
+  "hanam-ttabom": {
+   "img": "https://gocamping.or.kr/upload/camp/100337/thumb/thumb_720_8885FqorAofEE9kog4f2e7yr.jpg",
+   "gc": "100337",
+   "name": "따봄"
+  },
+  "yongin-ever-auto": {
+   "img": "https://gocamping.or.kr/upload/camp/101507/thumb/thumb_720_7841lENOIKHc4KdrtUklnfxR.jpg",
+   "gc": "101507",
+   "name": "에버오토캠핑장"
+  },
+  "gapyeong-seontaekjeok-gorip": {
+   "img": "https://gocamping.or.kr/upload/camp/101331/thumb/thumb_720_1699jqMrv4vEYJVdzBjgy8wi.jpg",
+   "gc": "101331",
+   "name": "선택적고립캠핑장"
+  },
+  "pocheon-camp-daon": {
+   "img": "https://gocamping.or.kr/upload/camp/101214/thumb/thumb_720_8367A1CMF93uOjw59EQY6API.jpg",
+   "gc": "101214",
+   "name": "캠프다온"
+  },
+  "pyeongtaek-nangman-factory": {
+   "img": "https://gocamping.or.kr/upload/camp/100679/thumb/thumb_720_5497C3Xh7N8Pw4VHqvXNPzic.jpg",
+   "gc": "100679",
+   "name": "낭만팩토리"
+  },
+  "daebudo-verardel": {
+   "img": "https://gocamping.or.kr/upload/camp/101121/thumb/thumb_720_9305z68zrJGlH5U2gooRwiBq.jpg",
+   "gc": "101121",
+   "name": "베르아델 승마클럽"
+  },
+  "ganghwa-awesome": {
+   "img": "https://gocamping.or.kr/upload/camp/100324/thumb/thumb_720_4993dyi1eFLAKGv5HGGLR0I7.jpg",
+   "gc": "100324",
+   "name": "어썸캠핑장"
+  },
+  "ganghwa-bada-noeul": {
+   "img": "https://gocamping.or.kr/upload/camp/101660/thumb/thumb_720_44809YeGXZLtc8yypgNUz0QA.png",
+   "gc": "101660",
+   "name": "바다노을 캠핑장"
+  },
+  "ansan-hwarang-auto": {
+   "img": "https://gocamping.or.kr/upload/camp/2022/thumb/thumb_720_4437dXcVLMyEqSFNqepY3pvd.jpg",
+   "gc": "2022",
+   "name": "안산화랑오토캠핑장"
+  },
+  "goyang-kintex": {
+   "img": "https://gocamping.or.kr/upload/camp/3120/thumb/thumb_720_2230dMoalowTL1SnrYjBhF59.jpg",
+   "gc": "3120",
+   "name": "킨텍스캠핑장"
+  },
+  "chungju-mokgye-solbat": {
+   "img": "https://gocamping.or.kr/upload/camp/100812/thumb/thumb_720_7461BXLT8apSq9JmOQf1Skz1.jpg",
+   "gc": "100812",
+   "name": "충주 목계솔밭 캠핑장"
+  }
+ }
+}
