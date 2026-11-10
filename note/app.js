@@ -17,16 +17,25 @@ function photoOf(d){const g=gco(d);if(g&&g.img)return {img:g.img,credit:CREDIT};
 /* 기록: {saved:[id], calls:[번호], notes:{id:글}, added:[캠핑장]} 하나로 모아 저장해요 */
 const KEY="camp_note";
 const local={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
-let saved=new Set(),checked=new Set(),notes={},added=[],ratings={},picks=null,DEFAULT_PICKS=[];
-function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};ratings={...(s.ratings||{})};picks=Array.isArray(s.picks)?new Set(s.picks):null;added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
-const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added,ratings,...(picks?{picks:[...picks]}:{})});
-const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length||Object.keys(s.ratings||{}).length||(s.picks||[]).length));
+let saved=new Set(),checked=new Set(),notes={},added=[],ratings={},edits={},picks=null,DEFAULT_PICKS=[];
+function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};ratings={...(s.ratings||{})};edits={...(s.edits||{})};picks=Array.isArray(s.picks)?new Set(s.picks):null;added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
+const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added,ratings,...(Object.keys(edits).length?{edits}:{}),...(picks?{picks:[...picks]}:{})});
+const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length||Object.keys(s.ratings||{}).length||Object.keys(s.edits||{}).length||(s.picks||[]).length));
 const same=(a,b)=>JSON.stringify(norm(a))===JSON.stringify(norm(b));
-function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]]),picks:[...(s.picks||[])].sort()}}
+function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]]),edits:Object.keys(s.edits||{}).sort().map(k=>[k,s.edits[k]]),picks:[...(s.picks||[])].sort()}}
 loadState(local.get(KEY,null));
 let cmp=new Set();try{cmp=new Set(JSON.parse(localStorage.getItem("camp_note_cmp")||"[]"))}catch(e){}
 let view="home",region="all",sort="dist",q="";const need=new Set();let animate=true;
-function all(){return D.concat(added.map(a=>({...a,user:true})),NEAR)}
+function withEdits(d){const e=edits[d.id];if(!e)return d;const c={...d,mine:{}};
+  for(const k in e){const o=e[k];if(!o||!o.st)continue;c.mine[k]=o;
+    if(k==="dog2"){c.dog2=o.st;if(o.t)c.dogT=o.t;if(o.st==="ok")c.fit="ok"}
+    else if(k==="fire"){c.fire=o.st;if(o.t)c.fireT=o.t}
+    else if(k==="w"){c.wst=o.st;c.w=o.st==="no"?"":(o.t||c.w||"전기 있음")}
+    else if(k==="auto"){c.auto=o.st==="ok"?true:o.st==="check"?"check":false;if(o.t)c.autoT=o.t}
+    else if(k==="heat"){c.heat={st:o.st,t:o.t||(c.heat&&c.heat.t)||""}}
+    else if(["tarp","cook","dog","toilet","park"].includes(k)){c.nj={...(c.nj||{})};if(k==="toilet"){c.nj.toiletSt=o.st;if(o.t)c.nj.toilet=o.t}else c.nj[k]={st:o.st,t:o.t||(c.nj[k]&&c.nj[k].t)||""}}}
+  return c}
+function all(){return D.map(withEdits).concat(added.map(a=>({...a,user:true})),NEAR)}
 /* 고캠핑 정보: 우리 후보는 id로, 주변 추천은 그 자체로 */
 const gco=d=>d.g||GC.camps[d.id]||null;
 const dist=d=>d.min?`약 ${hm(d.min)}`:d.km?`직선 ${d.km}km`:"거리 미입력";
@@ -185,7 +194,8 @@ function openSheet(title,html,forId,bare){
 }
 function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");document.documentElement.style.overflow="";sheetFor=null;
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
-function cond(icon,label,state,text){return `<div class="ctile ${state}"><div class="ctt"><i aria-hidden="true">${ICO[icon]?ic(ICO[icon]):icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
+function cond(icon,label,state,text,ek,d){const m=d&&d.mine&&d.mine[ek];const inner=`<div class="ctt"><i aria-hidden="true">${ICO[icon]?ic(ICO[icon]):icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small>${m?`<em class="minetag">✍️ 내가 확인${m.at?` · ${esc(m.at.slice(5).replace("-","/"))}`:""}</em>`:ek?`<em class="edithint">눌러서 고치기</em>`:""}`;
+  return ek&&d&&!d.user?`<button type="button" class="ctile ${state}${m?" byme":""}" data-econd="${d.id}" data-ek="${ek}" data-el="${esc(label)}" aria-label="${esc(label)} 직접 고치기">${inner}</button>`:`<div class="ctile ${state}">${inner}</div>`}
 function gallery(d){
   const g=gco(d);const np=NPHOTO[d.id];const useG=g&&g.imgs&&g.imgs.length>=2;const imgs=useG?g.imgs:np&&np.imgs.length?np.imgs:[];const cr=useG?CREDIT:NCREDIT;
   if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
@@ -219,14 +229,14 @@ function gcBox(g,d){
 function detail(id){
   const d=all().find(x=>x.id===id);if(!d)return;
   let c="";
-  if(d.noji){const t=d.nj||{};const cc=(i,l,o)=>o?cond(i,l,o.st,o.t):"";c+=cc("🏕️","타프·그늘막",t.tarp)+cc("🍳","버너 취사",t.cook)+cc("🚻","화장실",t.toilet?{st:/확인 필요|재래식/.test(t.toilet)?"check":"ok",t:t.toilet}:null)+cc("🐶","반려견",t.dog)+cc("🚗","주차",t.park?{st:"ok",t:t.park}:null)}
+  if(d.noji){const t=d.nj||{};const cc=(i,l,o,k)=>o?cond(i,l,o.st,o.t,k,d):"";c+=cc("🏕️","타프·그늘막",t.tarp,"tarp")+cc("🍳","버너 취사",t.cook,"cook")+cc("🚻","화장실",t.toilet?{st:t.toiletSt||(/확인 필요|재래식/.test(t.toilet)?"check":"ok"),t:t.toilet}:null,"toilet")+cc("🐶","반려견",t.dog,"dog")+cc("🚗","주차",t.park?(t.park.st?t.park:{st:"ok",t:t.park}):null,"park")}
   else{
-  if(!d.solo||d.dog2==="no")c+=cond("🐶",d.solo?"반려견":"반려견 2마리",d.dog2||"check",d.dogT||"정보 없음");
-  c+=cond("🔥","장작 불멍",d.fire==="ok"?"ok":d.fire==="no"?"no":"check",d.fireT||(d.fire==="ok"?"화로대 사용 가능":d.fire==="no"?"금지":"정책에 없어서 확인 필요"));
-  c+=cond("⚡","전기",d.w?"ok":"check",d.w||"정책에 W 표기 없음 · 전기장판은 대부분 OK");
-  c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"));
+  if(!d.solo||d.dog2==="no")c+=cond("🐶",d.solo?"반려견":"반려견 2마리",d.dog2||"check",d.dogT||"정보 없음","dog2",d);
+  c+=cond("🔥","장작 불멍",d.fire==="ok"?"ok":d.fire==="no"?"no":"check",d.fireT||(d.fire==="ok"?"화로대 사용 가능":d.fire==="no"?"금지":"정책에 없어서 확인 필요"),"fire",d);
+  c+=cond("⚡","전기",d.wst||(d.w?"ok":"check"),d.w||(d.wst==="no"?"전기 없음":"정책에 W 표기 없음 · 전기장판은 대부분 OK"),"w",d);
+  c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"),"auto",d);
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
-  if(d.heat)c+=cond("🌡️","난로 대여",d.heat.st,d.heat.t||"");
+  c+=d.heat?cond("🌡️","난로 대여",d.heat.st,d.heat.t||"","heat",d):cond("🌡️","난로 대여","check","정보 없음 · 겨울엔 전화로 물어보기","heat",d);
   }
   if((d.day||[]).length&&!d.noji)c+=cond("☀️","당일(캠프닉)","ok",`당일 상품 ${d.day.length}개${d.day.some(x=>x.dog===true)?" · 🐶 되는 상품 있음":""} · 아래 표 참고`);
   const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user||d.noji?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
@@ -371,7 +381,7 @@ function signInSheet(){
     closeSheet();toast("메일함에서 로그인 링크를 눌러 주세요");
   });
 }
-const countOf=s=>`찜 ${(s.saved||[]).length}곳 · 메모 ${Object.keys(s.notes||{}).length}개 · 직접 추가 ${(s.added||[]).length}곳 · 체크 ${(s.calls||[]).length}개 · 평점 ${Object.keys(s.ratings||{}).length}개`;
+const countOf=s=>`찜 ${(s.saved||[]).length}곳 · 메모 ${Object.keys(s.notes||{}).length}개 · 직접 추가 ${(s.added||[]).length}곳 · 체크 ${(s.calls||[]).length}개 · 평점 ${Object.keys(s.ratings||{}).length}개 · 직접 확인 ${Object.keys(s.edits||{}).length}곳`;
 function askWhichRecord(remote,mine){
   openSheet("어느 기록을 쓸까요?",`<p class="hint" style="margin:0">이 기기에 저장된 기록과 공유 기록이 달라요.</p>
   <div class="pickrow"><button class="pick" type="button" data-pick="local"><b>📱 이 기기 기록을 공유 기록으로 올리기</b><small>${countOf(mine)}</small></button>
@@ -428,7 +438,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261111j";
+  const V="20261111k";
   try{
     const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;DEFAULT_PICKS=c.defaultPicks||[];GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -590,6 +600,20 @@ function dayBox(d){const ds=d.day||[];if(!ds.length)return "";
 
 /* 지쏘 픽: 상세의 💚 버튼으로 넣고 빼요 (처음엔 camps.json의 defaultPicks) */
 const isPick=d=>(picks||new Set(DEFAULT_PICKS)).has(d.id);
+/* ---------- 조건 직접 고치기 ---------- */
+function editCond(id,k,label){const d=all().find(x=>x.id===id);if(!d)return;const cur=(edits[id]||{})[k]||{};
+  const opt=(v,l)=>`<label class="eopt ${v}"><input type="radio" name="est" value="${v}" ${cur.st===v?"checked":""}><span>${l}</span></label>`;
+  openSheet(`${label} 고치기`,`<form class="eform" data-esave="${id}" data-ek="${k}"><p class="hint" style="margin:0 0 12px">${esc(d.n)} · 전화나 현장에서 확인한 대로 바꿔요. 평점·비교·필터에 바로 반영돼요.</p>
+    <div class="eopts">${opt("ok","✅ 확인됨")}${opt("check","❓ 물어보기")}${opt("no","❌ 안 됨")}</div>
+    <label class="elabel">한 줄 메모 <small>(비워두면 원래 설명 유지)</small><input name="et" maxlength="80" value="${esc(cur.t||"")}" placeholder="예: 텐트 옆 주차 OK (11/12 전화)"></label>
+    <div class="ebtns">${edits[id]&&edits[id][k]?`<button type="button" class="sbtn ghost" data-ereset="${id}" data-ek="${k}">원래대로</button>`:""}<button type="submit" class="sbtn">저장</button></div></form>`)}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-econd],[data-ereset]");if(!t)return;
+  if(t.dataset.econd){editCond(t.dataset.econd,t.dataset.ek,t.dataset.el);return}
+  const id=t.dataset.ereset,k=t.dataset.ek;if(edits[id]){delete edits[id][k];if(!Object.keys(edits[id]).length)delete edits[id]}commit();render();detail(id);toast("원래 정보로 되돌렸어요")});
+document.addEventListener("submit",e=>{const f=e.target.closest("[data-esave]");if(!f)return;e.preventDefault();
+  const st=(f.querySelector('input[name="est"]:checked')||{}).value;if(!st){toast("확인됨 · 물어보기 · 안 됨 중 하나를 골라주세요");return}
+  const id=f.dataset.esave,k=f.dataset.ek;const today=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  edits[id]={...(edits[id]||{}),[k]:{st,t:f.et.value.trim().slice(0,80),at:today}};commit();render();detail(id);toast("내가 확인한 정보로 바꿨어요")});
 /* ---------- 비교하기 ---------- */
 function saveCmp(){try{localStorage.setItem("camp_note_cmp",JSON.stringify([...cmp]))}catch(e){}}
 function toggleCmp(id){if(cmp.has(id))cmp.delete(id);else{if(cmp.size>=3){toast("비교는 3곳까지 담을 수 있어요");return}cmp.add(id)}saveCmp();
