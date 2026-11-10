@@ -92,7 +92,7 @@ function pool(){
   if(q){const t=q.toLowerCase();r=r.filter(d=>(d.n+d.a+(R[d.r]||[""])[0]).toLowerCase().includes(t))}
   return r.sort((a,b)=>sort==="score"?(starOf(b)-starOf(a))||(a.min||999)-(b.min||999):sort==="dist"?(a.min||999)-(b.min||999)||(a.p||0)-(b.p||0):(a.p||1e9)-(b.p||1e9)||(a.min||0)-(b.min||0));
 }
-function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
+function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":d.fire==="no"?"🚫 장작 안 됨":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":d.fire==="no"?"🚫 장작 안 됨":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
   const badge=isPick(d)&&view==="solo"?`<span class="badge pickb">💚 지쏘 픽</span>`:d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
@@ -401,7 +401,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261111e";
+  const V="20261111f";
   try{
     const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;DEFAULT_PICKS=c.defaultPicks||[];GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
