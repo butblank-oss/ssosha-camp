@@ -47,7 +47,12 @@ function thumb(d,uid){
 }
 /* 사진을 못 받으면 그림 썸네일로 바꿔요 */
 window.__noimg=img=>{const d=all().find(x=>x.id===img.dataset.id);const c=img.nextElementSibling;if(c&&c.classList.contains("credit"))c.remove();img.outerHTML=d?art(d,img.dataset.u):""};
+/* 사진 없는 곳: 때찌·때꾸 3D 장면 그림 (산·바다·호수·들판·도시) */
 function art(d,uid){
+  const r=seed(d.n);const sc=d.sc||["mtn","sea","lake","field"][Math.floor(r()*4)];
+  return `<img class="scene" src="img/scene-${["mtn","sea","lake","field","city"].includes(sc)?sc:"field"}.jpg" alt="" loading="${uid==="h"||uid==="b"?"eager":"lazy"}" decoding="async">`;
+}
+function artSvg(d,uid){
   const r=seed(d.n);const t=["day","sunset","dusk","night"][Math.floor(r()*4)];const c=SKY[t];const id=uid+d.id;const sc=d.sc||["mtn","sea","lake","field"][Math.floor(r()*4)];
   let s=`<svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[1]}"/></linearGradient><linearGradient id="w${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c[1]}" stop-opacity=".9"/><stop offset="1" stop-color="${c[4]}"/></linearGradient></defs><rect width="400" height="260" fill="url(#g${id})"/>`;
   if(t==="night")for(let i=0;i<26;i++)s+=`<circle cx="${(r()*400).toFixed(0)}" cy="${(r()*120).toFixed(0)}" r="${(r()*1.4+.4).toFixed(1)}" fill="#fff" opacity="${(r()*.6+.3).toFixed(2)}"/>`;
@@ -389,7 +394,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110w";
+  const V="20261110x";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);

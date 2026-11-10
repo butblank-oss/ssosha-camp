@@ -362,3 +362,6 @@ details.gcbox{padding:0;gap:0}
 /* 로고 캐릭터 */
 .logo{display:flex;align-items:center;gap:8px}
 .logo img{width:34px;height:34px;border-radius:9px;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+img.scene{display:block;width:100%;height:100%;object-fit:cover}
+.card .ph img.scene{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.logo b{font-weight:800}
