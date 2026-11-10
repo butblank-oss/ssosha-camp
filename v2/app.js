@@ -393,13 +393,55 @@
     if (!TIPS.length) return null;
     const d = today(); return TIPS[(d.getFullYear() * 400 + d.getMonth() * 31 + d.getDate()) % TIPS.length];
   }
-  /* 홈 캠프 장면: 레벨(1~7)마다 3D 일러스트 한 장 */
-  const sceneImg = (lv) => `<img src="v2/scenes/level${Math.max(1, Math.min(7, (lv || 0) + 1))}.webp" alt="" decoding="async">`;
+  /* 홈 캠프 장면: 빈 섬 위에 레벨 소품(텐트·나무·차·깃발)과 산 물건, 캐릭터 포즈를 겹쳐 그려요.
+     의자가 있으면 두 사람이 앉고, 강아지 방석이 있으면 때찌·때꾸가 방석에 앉아요. */
+  const SCENE_LAYERS = [["trees_l",["lv",1],["trees_l"]],["trees_r",["lv",2],["trees_r"]],["star",["lv",6],["star"]],["car",["lv",5],["car"]],["tent1",["lvonly",0,0],["tent1"]],["tent2",["lvonly",1,2],["tent2"]],["tent4",["lvonly",3,3],["tent4"]],["tent5",["lv",4],["tent5"]],["flag",["lv",6],["flag"]],["tarp",["has","tarp"],["tarp"]],["reel",["has","reel"],["reel"]],["doghouse",["lv",4],["doghouse"]],["mainlamp",["has","mainlamp"],["mainlamp"]],["storage",["has","storage"],["storage"]],["people",["pose","people"],["ppl_stand","ppl_sit","ppl_stand_pad","ppl_sit_pad"]],["table1",["has","table1"],["table1"]],["cooler",["has","cooler"],["cooler"]],["dogs",["pose","dogs"],["dogs_grass","dogs_grass_wear","dogs_bed","dogs_bed_wear"]],["firepit",["has","firepit"],["firepit"]],["dogleash",["has","dogleash"],["dogleash"]]];
+  const SCENE_RECT = {"trees_l":[120,125,230,239],"trees_r":[1064,153,193,194],"star":[420,-4,360,154],"car":[980,232,191,166],"tent1":[289,175,282,267],"tent2":[274,190,313,250],"tent4":[252,168,356,278],"tent5":[272,175,335,273],"flag":[450,112,56,110],"tarp":[562,248,345,211],"reel":[550,363,101,79],"doghouse":[1066,358,169,135],"mainlamp":[212,261,99,217],"storage":[284,410,113,101],"ppl_stand":[582,283,247,228],"ppl_sit":[586,306,237,202],"ppl_stand_pad":[596,283,219,228],"ppl_sit_pad":[588,306,235,202],"table1":[456,444,129,90],"cooler":[805,438,110,92],"dogs_grass":[916,408,188,126],"dogs_grass_wear":[916,408,189,126],"dogs_bed":[915,394,190,142],"dogs_bed_wear":[920,394,181,142],"firepit":[635,442,130,106],"dogleash":[858,398,114,70]};
+  const SCENE_GLOW = { firepit: [700, 505, 190, "255,150,60", 0.55], mainlamp: [236, 318, 140, "255,210,120", 0.45], eblanket: [430, 350, 130, "255,190,100", 0.4] };
+  const sceneImgCache = {};
+  const sceneLoad = (key) => sceneImgCache[key] || (sceneImgCache[key] = new Promise((ok) => { const im = new Image(); im.decoding = "async"; im.onload = () => ok(im); im.onerror = () => ok(null); im.src = `v2/scene/${key}.webp`; }));
+  function scenePick(rule, lv, h) {
+    if (rule[0] === "lv") return lv >= rule[1];
+    if (rule[0] === "lvonly") return lv >= rule[1] && lv <= rule[2];
+    if (rule[0] === "has") return h.has(rule[1]);
+    if (rule[1] === "people") return `ppl_${h.has("chairs") ? "sit" : "stand"}${h.has("clothes") ? "_pad" : ""}`;
+    return `dogs_${h.has("dogbed") ? "bed" : "grass"}${h.has("dogwear") ? "_wear" : ""}`;
+  }
+  function sceneKeys(lv, h) {
+    const out = [];
+    SCENE_LAYERS.forEach(([, rule, files]) => { const r = scenePick(rule, lv, h); if (r === true) out.push(files[0]); else if (typeof r === "string") out.push(r); });
+    return out;
+  }
+  async function paintScene(cv) {
+    cv.dataset.painted = "0";
+    const lv = +cv.dataset.lv, h = new Set((cv.dataset.has || "").split(",").filter(Boolean));
+    const keys = sceneKeys(lv, h);
+    const imgs = await Promise.all(["island"].concat(keys).map(sceneLoad));
+    const ctx = cv.getContext("2d"); if (!ctx || !imgs[0]) return;
+    ctx.drawImage(imgs[0], 0, 0, cv.width, cv.height);
+    keys.forEach((k, i) => { const im = imgs[i + 1], r = SCENE_RECT[k]; if (im && r) ctx.drawImage(im, r[0], r[1], r[2], r[3]); });
+    ctx.save(); ctx.globalCompositeOperation = "lighter";
+    Object.entries(SCENE_GLOW).forEach(([id, [x, y, rad, col, a]]) => {
+      if (!h.has(id)) return;
+      ctx.save(); ctx.translate(x, y); ctx.scale(1, 0.7);
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rad);
+      g.addColorStop(0, `rgba(${col},${a})`); g.addColorStop(0.45, `rgba(${col},${a * 0.3})`); g.addColorStop(1, `rgba(${col},0)`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rad, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    });
+    ctx.restore(); cv.dataset.painted = "1";
+  }
+  const paintScenes = () => document.querySelectorAll("canvas.scene-cv:not([data-painted])").forEach(paintScene);
+  const sceneImg = (g) => {
+    const lv = Math.max(0, Math.min(6, (g && g.lv) || 0));
+    const has = g && g.h ? [...g.h].join(",") : "";
+    setTimeout(paintScenes, 0);
+    return `<canvas class="scene-cv" width="1376" height="768" data-lv="${lv}" data-has="${esc(has)}" role="img" aria-label="우리 캠프 장면"></canvas>`;
+  };
   function renderHome() {
     const g = game(), s = summary(), p = nextPlan(), m = missions(), tip = tipOfDay();
     const pct = g.next ? Math.min(1, (g.xp - g.cur.xp) / (g.next.xp - g.cur.xp)) : 1;
     const steps = LEVELS.length || 5;
-    const scene = sceneImg(g.lv);
+    const scene = sceneImg(g);
     const copy = p
       ? daysTo(p.date) < 0 ? `<h1>${esc(p.place || "캠핑")},<br><em>잘 다녀왔어요?</em></h1><button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : `<h1>${esc(p.place || "다음 캠핑")}까지<br>${daysTo(p.date) === 0 ? "<em>오늘</em> 떠나요" : `<em>${daysTo(p.date)}일</em> 남았어요`}</h1>${daysTo(p.date) > 0 ? `<button class="hero-set" type="button" data-pack="${esc(p.id)}">짐 챙기기 · ${(() => { const d = packData(p); return `${d.done}/${d.total}`; })()}</button>` : ""}${daysTo(p.date) <= 0 ? `<button class="hero-set" type="button" data-trip>다녀왔어요 · +${XP_TRIP} XP</button>` : ""}`
       : `<h1>다음 캠핑,<br>언제 떠날까요?</h1><button class="hero-set" type="button" data-plan>날짜 정하기</button>`;
@@ -1204,7 +1246,7 @@
     const prevFocus = document.activeElement;
     el.innerHTML = `<div class="lvup-card">
         <button class="lvup-x" type="button" id="lvupX" aria-label="닫기"><svg viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
-        <div class="lvup-scene" aria-hidden="true">${sceneImg(g.lv)}</div>
+        <div class="lvup-scene" aria-hidden="true">${sceneImg(g)}</div>
         <div class="lvup-text">
           <span class="lvup-eyebrow">레벨 업!</span>
           <h2 id="lvupTitle">Lv.${g.lv + 1} ${esc(g.cur.name)}${iga(g.cur.name)} 됐어요</h2>
