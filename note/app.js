@@ -387,7 +387,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110s";
+  const V="20261110t";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -506,15 +506,16 @@ function mapHint(n,miss){document.getElementById("maphint").textContent=`${n}곳
 async function drawKakao(el,list){
   const map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(HOME[0],HOME[1]),level:10});
   map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
-  const bounds=new kakao.maps.LatLngBounds();const P=(c)=>new kakao.maps.LatLng(c[0],c[1]);bounds.extend(P(HOME));
+  const bounds=new kakao.maps.LatLngBounds(),near=new kakao.maps.LatLngBounds();const P=(c)=>new kakao.maps.LatLng(c[0],c[1]);bounds.extend(P(HOME));near.extend(P(HOME));let nNear=0;
+  const km=c=>Math.hypot((c[0]-HOME[0])*111,(c[1]-HOME[1])*88.6);
   new kakao.maps.CustomOverlay({map,position:P(HOME),content:'<div class="kpin home" title="범계 (집)">🏠</div>',yAnchor:.5});
   let pop=null;const items=mapItems(list);let miss=0;
-  for(const d of items){const c=coordOf(d);if(!c){miss++;continue}bounds.extend(P(c));
+  for(const d of items){const c=coordOf(d);if(!c){miss++;continue}bounds.extend(P(c));if(km(c)<=80){near.extend(P(c));nNear++}
     const el2=document.createElement("div");el2.innerHTML=pinHtml(d);el2.title=d.n;
     el2.addEventListener("click",()=>{if(pop)pop.setMap(null);const box=document.createElement("div");box.className="kpop";box.innerHTML=popHtml(d)+'<button type="button" class="kx" aria-label="닫기">✕</button>';box.querySelector(".kx").onclick=()=>pop.setMap(null);
       pop=new kakao.maps.CustomOverlay({map,position:P(c),content:box,yAnchor:1.25,zIndex:10})});
     new kakao.maps.CustomOverlay({map,position:P(c),content:el2,yAnchor:1})}
-  const fit=()=>{map.relayout();if(items.length-miss>0)map.setBounds(bounds,30,20,60,20)};setTimeout(fit,60);setTimeout(fit,400);
+  const fit=()=>{map.relayout();if(items.length-miss>0)map.setBounds(nNear>=3?near:bounds,30,20,60,20)};setTimeout(fit,60);setTimeout(fit,400);
   mapHint(items.length-miss,miss);
 }
 async function drawMap(list){
