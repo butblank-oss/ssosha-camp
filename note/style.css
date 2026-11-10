@@ -244,14 +244,14 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 .daddr .copy{margin:0;flex:none}
 /* 조건 2칸 타일 */
 .ctg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.ct{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px;align-content:start}
+.ctile{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px;align-content:start}
 .ctt{display:flex;align-items:center;gap:6px;min-width:0}
 .ctt i{font-style:normal;font-size:18px;line-height:1}
 .ctt b{font-size:14px}
-.ct .st{justify-self:start}
-.ct small{color:var(--sub);font-size:12.5px;line-height:1.4}
-.ct.check{border-color:color-mix(in srgb,var(--warn) 35%,var(--line))}
-.ct.no{border-color:color-mix(in srgb,var(--no) 35%,var(--line))}
+.ctile .st{justify-self:start}
+.ctile small{color:var(--sub);font-size:12.5px;line-height:1.4}
+.ctile.check{border-color:color-mix(in srgb,var(--warn) 35%,var(--line))}
+.ctile.no{border-color:color-mix(in srgb,var(--no) 35%,var(--line))}
 /* 확인할 것 · 알아둘 것 */
 .askbox,.facts{border-radius:14px;padding:14px 16px;display:grid;gap:6px;font-size:14px}
 .askbox{background:var(--warn-soft)}
@@ -280,4 +280,41 @@ details.gcbox{padding:0;gap:0}
 .callbtn{flex:none;width:48px;height:48px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--brand);background:var(--app)}
 .ctt .st{margin-left:auto;flex:none;font-size:11.5px;padding:2px 7px}
 .ctt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.ct{gap:4px}
+.ctile{gap:4px}
+/* ---------- 평점 ---------- */
+.star{font-size:13px;font-weight:700;color:var(--ember);white-space:nowrap;font-variant-numeric:tabular-nums}
+.star.mine{color:var(--brand)}
+.mini small .star{font-size:12px}
+.scorebox{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.scorebox summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px}
+.scorebox summary::-webkit-details-marker{display:none}
+.scorebox summary .big{font-size:22px;font-weight:800;color:var(--ember);font-variant-numeric:tabular-nums;flex:none}
+.scorebox summary span:nth-child(2){display:grid;flex:1;min-width:0}
+.scorebox summary small{color:var(--sub);font-size:12.5px}
+.scorebox summary svg{flex:none;color:var(--sub);transition:transform .2s}
+.scorebox details[open] summary svg{transform:rotate(180deg)}
+.sbars{display:grid;gap:8px;padding:0 16px 14px}
+.sbar{display:grid;grid-template-columns:112px 1fr 44px;align-items:center;gap:8px;font-size:13px}
+.sbar i{height:6px;border-radius:3px;background:var(--fill);overflow:hidden}
+.sbar i b{display:block;height:100%;background:var(--ember);border-radius:3px}
+.sbar em{font-style:normal;color:var(--sub);text-align:right;font-variant-numeric:tabular-nums;font-size:12px}
+.ratebtn{width:100%;border:0;border-top:1px solid var(--line);background:var(--brand-soft);color:var(--brand);font-weight:700;padding:13px;font-size:14px}
+.myrate{border-top:1px solid var(--line);padding:12px 16px;display:grid;gap:6px;background:var(--brand-soft)}
+.myrate b{font-size:15px}
+.myrate small{color:var(--sub);font-size:12.5px}
+.myrate p{margin:0;font-size:14px}
+.ritems{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--sub)}
+.stars i,.spick button{font-style:normal;color:var(--line)}
+.stars i.on,.spick button.on{color:#f5a623}
+.stars i.half,.spick button.half{background:linear-gradient(90deg,#f5a623 50%,var(--line) 50%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.flabel{display:grid;gap:4px;font-size:13px;font-weight:600}
+.spick{display:flex;align-items:center;gap:2px}
+.spick button{border:0;background:none;font-size:30px;line-height:1;padding:2px 3px}
+.spick output{margin-left:8px;font-size:14px;color:var(--sub);font-variant-numeric:tabular-nums}
+.ritemsin{display:grid;gap:4px;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.ritem{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:14px}
+.ritem .spick button{font-size:22px}
+.again{display:flex!important;align-items:center;gap:8px;font-size:15px}
+.again input{width:20px!important;height:20px;accent-color:var(--brand)}
+.row1 .star{color:var(--ember)}
+.row1 .star.mine{color:var(--brand)}

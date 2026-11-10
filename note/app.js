@@ -11,12 +11,12 @@ const CREDIT="사진: 고캠핑(한국관광공사)";
 /* 기록: {saved:[id], calls:[번호], notes:{id:글}, added:[캠핑장]} 하나로 모아 저장해요 */
 const KEY="camp_note";
 const local={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
-let saved=new Set(),checked=new Set(),notes={},added=[];
-function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
-const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added});
-const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length));
+let saved=new Set(),checked=new Set(),notes={},added=[],ratings={};
+function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};ratings={...(s.ratings||{})};added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
+const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added,ratings});
+const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length||Object.keys(s.ratings||{}).length));
 const same=(a,b)=>JSON.stringify(norm(a))===JSON.stringify(norm(b));
-function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1)}}
+function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]])}}
 loadState(local.get(KEY,null));
 let view="home",region="all",sort="dist",q="";const need=new Set();let animate=true;
 function all(){return D.concat(added.map(a=>({...a,user:true})),NEAR)}
@@ -79,7 +79,7 @@ function pool(){
   if(region!=="all")r=r.filter(d=>d.r===region);
   for(const k of need){const f=NEEDS.find(n=>n[0]===k);if(f)r=r.filter(f[2])}
   if(q){const t=q.toLowerCase();r=r.filter(d=>(d.n+d.a+(R[d.r]||[""])[0]).toLowerCase().includes(t))}
-  return r.sort((a,b)=>sort==="dist"?(a.min||999)-(b.min||999)||(a.p||0)-(b.p||0):(a.p||1e9)-(b.p||1e9)||(a.min||0)-(b.min||0));
+  return r.sort((a,b)=>sort==="score"?(starOf(b)-starOf(a))||(a.min||999)-(b.min||999):sort==="dist"?(a.min||999)-(b.min||999)||(a.p||0)-(b.p||0):(a.p||1e9)-(b.p||1e9)||(a.min||0)-(b.min||0));
 }
 function summary(d){return (d.solo||view==="solo")?[d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
@@ -88,11 +88,11 @@ function card(d){
   const flag=d.rv&&["bad","warn"].includes(d.rv.lv)?`<span class="flag ${d.rv.lv==="warn"?"warn":""}">${RVL[d.rv.lv][0]} ${RVL[d.rv.lv][1]}</span>`:"";
   return `<article class="card"><div style="position:relative"><button class="ph" data-open="${d.id}" aria-label="${esc(d.n)} 자세히">${thumb(d,"f")}${badge}${flag}</button>
   ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button></div>
-  <button class="ct" data-open="${d.id}"><span class="row1"><b>${esc(d.n)}</b>${d.lg?`<span>로그 ${d.lg.toLocaleString()}</span>`:""}</span>
+  <button class="ct" data-open="${d.id}"><span class="row1"><b>${esc(d.n)}</b>${starTag(d)}</span>
   <span class="l2">${(R[d.r]||["지역 미입력"])[0]} · ${dist(d)}</span><span class="l3">${esc(summary(d))}</span>${rvLine(d)}
   <span class="price"><b>${d.near?"요금 문의":won(d.p)}</b> <small>${d.near?"":"/박"}${d.fee&&view!=="solo"?` · 반려견 ${esc(d.fee)}`:""}</small></span></button></article>`;
 }
-function mini(d){return `<button class="mini" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b><small>${dist(d)}${d.near&&d.g.pet?` · 🐶 ${esc(d.g.pet)}`:""}${d.rv?` · ${RVL[d.rv.lv][0]}`:""}</small><span class="pr">${d.near?"요금 문의":won(d.p)}<small style="font-weight:400">${d.near?"":" /박"}</small></span></button>`}
+function mini(d){return `<button class="mini" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b><small>${starTag(d,true)} · ${dist(d)}${d.near&&d.g.pet?` · 🐶 ${esc(d.g.pet)}`:""}${d.rv?` · ${RVL[d.rv.lv][0]}`:""}</small><span class="pr">${d.near?"요금 문의":won(d.p)}<small style="font-weight:400">${d.near?"":" /박"}</small></span></button>`}
 function emptyBox(t,s){return `<div class="empty"><b>${t}</b><span>${s}</span>${need.size||region!=="all"||q?'<button class="link" data-reset>조건 초기화</button>':""}</div>`}
 function renderCats(){
   const regs=view==="check"?[]:Object.keys(R).filter(k=>k==="all"||all().some(d=>d.r===k&&(view==="solo"?true:view==="saved"?saved.has(d.id):!d.solo)));
@@ -103,7 +103,7 @@ function renderCats(){
 const chip=([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}${need.has(k)?'<span class="qx" aria-hidden="true">✕</span>':""}</button>`;
 function quickRow(){return `<div class="quick bleed" role="group" aria-label="필터">${NEEDS.filter(n=>view!=="solo"||["fire","h1","clean"].includes(n[0])).map(chip).join("")}${need.size>1?'<button class="qreset" data-reset>초기화</button>':""}</div>`}
 /* 정렬: 목록 제목 오른쪽 (필터와 따로) */
-const SORTS=[["dist","가까운 순"],["price","저렴한 순"]];
+const SORTS=[["dist","가까운 순"],["price","저렴한 순"],["score","평점 높은 순"]];
 function sortCtl(){return `<div class="sortwrap"><button class="sortbtn" type="button" data-sortmenu aria-haspopup="true" aria-expanded="false">${SORTS.find(x=>x[0]===sort)[1]}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="sortmenu" role="menu" hidden>${SORTS.map(([k,l])=>`<button type="button" role="menuitemradio" aria-checked="${sort===k}" data-sortset="${k}">${l}${sort===k?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>':""}</button>`).join("")}</div></div>`}
 const addBtn=`<button class="addbtn" data-add>＋ 캠핏에서 찾은 캠핑장 직접 추가</button>`;
 function render(){
@@ -148,7 +148,7 @@ function openSheet(title,html,forId,bare){
 }
 function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");document.documentElement.style.overflow="";sheetFor=null;
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
-function cond(icon,label,state,text){return `<div class="ct ${state}"><div class="ctt"><i aria-hidden="true">${icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
+function cond(icon,label,state,text){return `<div class="ctile ${state}"><div class="ctt"><i aria-hidden="true">${icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
 function gallery(d){
   const g=gco(d);const imgs=g&&g.imgs&&g.imgs.length?g.imgs:[];
   if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
@@ -197,6 +197,7 @@ function detail(id){
    <div class="dt"><h3>${esc(d.n)}</h3>
     <p class="dmeta">${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p>
     ${d.a?`<p class="daddr"><span>${esc(d.a)}</span><button class="copy" data-copy="${esc(d.a)}">복사</button></p>`:""}</div>
+   ${scoreBox(d)}
    <section class="dsec" aria-label="조건"><div class="ctg">${c}</div></section>
    ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
    ${rv}
@@ -322,7 +323,7 @@ function signInSheet(){
     closeSheet();toast("메일함에서 로그인 링크를 눌러 주세요");
   });
 }
-const countOf=s=>`찜 ${(s.saved||[]).length}곳 · 메모 ${Object.keys(s.notes||{}).length}개 · 직접 추가 ${(s.added||[]).length}곳 · 체크 ${(s.calls||[]).length}개`;
+const countOf=s=>`찜 ${(s.saved||[]).length}곳 · 메모 ${Object.keys(s.notes||{}).length}개 · 직접 추가 ${(s.added||[]).length}곳 · 체크 ${(s.calls||[]).length}개 · 평점 ${Object.keys(s.ratings||{}).length}개`;
 function askWhichRecord(remote,mine){
   openSheet("어느 기록을 쓸까요?",`<p class="hint" style="margin:0">이 기기에 저장된 기록과 공유 기록이 달라요.</p>
   <div class="pickrow"><button class="pick" type="button" data-pick="local"><b>📱 이 기기 기록을 공유 기록으로 올리기</b><small>${countOf(mine)}</small></button>
@@ -379,7 +380,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110d";
+  const V="20261110e";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -394,3 +395,69 @@ document.addEventListener("scroll",e=>{const g=e.target;if(!g||g.id!=="gal")retu
 function closeSortMenus(){document.querySelectorAll(".sortmenu").forEach(m=>{m.hidden=true;const b=m.previousElementSibling;if(b)b.setAttribute("aria-expanded","false")})}
 document.addEventListener("click",e=>{if(!e.target.closest(".sortwrap"))closeSortMenus()},true);
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSortMenus()});
+
+/* ---------- 예상 평점: 지쏘 조건 기준 (가중치는 여기서 바꿔요) ---------- */
+const WEIGHTS={dog:25,fire:25,dist:15,price:15,review:12,power:5,auto:3};
+const WLABEL={dog:["🐶","반려견 2마리"],fire:["🔥","장작 불멍"],dist:["📍","거리"],price:["💸","가격"],review:["👍","후기"],power:["⚡","전력"],auto:["🚗","오토캠핑"]};
+function mins(d){return d.min||(d.km?Math.round(d.km*1.2+10):0)}
+function parts(d,solo){
+  const st=v=>v==="ok"?1:v==="no"?0:.5;const m=mins(d);const p=d.p;
+  const o={
+    dog:st(d.dog2||"check"),
+    fire:st(d.fire==="ok"?"ok":d.fire==="no"?"no":"check"),
+    dist:!m?.5:m<=30?1:m<=60?.85:m<=90?.65:m<=120?.45:.25,
+    price:!p?.5:p<=20000?1:p<=30000?.9:p<=40000?.75:p<=50000?.55:p<=60000?.4:.25,
+    review:!d.rv?.5:{ok:1,mild:.7,warn:.35,bad:0}[d.rv.lv],
+    power:d.w11?1:d.w?.6:.4,
+    auto:d.auto===true?1:d.auto==="check"?.5:0,
+  };
+  if(solo)delete o.dog;
+  return o;
+}
+function expected(d){const solo=!!d.solo||view==="solo";const o=parts(d,solo);let t=0,w=0;for(const k in o){t+=WEIGHTS[k]*o[k];w+=WEIGHTS[k]}return Math.round(t/w*50)/10}
+const mine=d=>ratings[d.id]&&ratings[d.id].star?ratings[d.id]:null;
+const starOf=d=>mine(d)?mine(d).star:expected(d);
+function starTag(d,short){const r=mine(d);return r?`<span class="star mine" title="내 평점">★ ${r.star.toFixed(1)}${short?"":" 내 평점"}</span>`:`<span class="star" title="지쏘 조건으로 계산한 예상 평점">★ ${expected(d).toFixed(1)}${short?"":" 예상"}</span>`}
+function scoreBox(d){
+  const solo=!!d.solo||view==="solo";const o=parts(d,solo);const e=expected(d);const r=mine(d);
+  const bars=Object.keys(o).map(k=>`<div class="sbar"><span>${WLABEL[k][0]} ${WLABEL[k][1]}</span><i><b style="width:${Math.round(o[k]*100)}%"></b></i><em>${Math.round(o[k]*WEIGHTS[k])}/${WEIGHTS[k]}</em></div>`).join("");
+  const my=r?`<div class="myrate"><div class="row"><b>내 평점 <span class="stars" aria-label="${r.star}점">${starsHtml(r.star)}</span> ${r.star.toFixed(1)}</b><button class="sbtn ghost" data-rate="${d.id}">수정</button></div>
+     <small>${esc(r.date||"")} 다녀옴${r.again?" · 또 갈래요 💚":""}</small>
+     ${RITEMS.filter(([k])=>r.items&&r.items[k]).length?`<div class="ritems">${RITEMS.filter(([k])=>r.items&&r.items[k]).map(([k,l])=>`<span>${l} ${"★".repeat(r.items[k])}</span>`).join("")}</div>`:""}
+     ${r.text?`<p>"${esc(r.text)}"</p>`:""}</div>`:`<button class="ratebtn" data-rate="${d.id}">⛺ 다녀왔어요 · 평점 남기기</button>`;
+  return `<section class="scorebox"><details><summary><span class="big">★ ${e.toFixed(1)}</span><span><b>예상 평점</b><small>지쏘 조건 기준 · 반려견·불멍을 가장 중요하게</small></span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="sbars">${bars}<small class="hint">${solo?"캠프닉이라 반려견 항목은 빼고 계산했어요. ":""}모르는 정보는 중간 점수로 넣었어요.</small></div></details>${my}</section>`;
+}
+/* ---------- 실제 평점: 다녀와서 남기기 ---------- */
+const RITEMS=[["dog","🐶 반려견 편함"],["fire","🔥 불멍"],["clean","🚿 청결"],["quiet","🤫 조용함"]];
+function starsHtml(v){let h="";for(let i=1;i<=5;i++)h+=`<i class="${v>=i?"on":v>=i-.5?"half":""}">★</i>`;return h}
+function starPicker(name,v,half){return `<div class="spick" data-name="${name}" data-half="${half?1:0}" data-v="${v||0}" role="radiogroup" aria-label="${name==="star"?"전체 별점":"항목 별점"}">${[1,2,3,4,5].map(i=>`<button type="button" data-star="${i}" aria-label="${i}점">${"★"}</button>`).join("")}<output>${v?(+v).toFixed(half?1:0):"-"}</output></div>`}
+function paintPicker(el){const v=+el.dataset.v;el.querySelectorAll("[data-star]").forEach(b=>{const i=+b.dataset.star;b.className=v>=i?"on":v>=i-.5?"half":""});el.querySelector("output").textContent=v?(el.dataset.half==="1"?v.toFixed(1):v):"-"}
+function rateSheet(id){
+  const d=all().find(x=>x.id===id);if(!d)return;const r=ratings[id]||{};const today=new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  openSheet("평점 남기기",`<p class="hint" style="margin:0">${esc(d.n)}</p>
+  <form class="form" id="rateForm">
+   <div class="flabel">전체 별점 <small class="hint">같은 별을 한 번 더 누르면 반 개</small>${starPicker("star",r.star,true)}</div>
+   <label>다녀온 날<input type="date" name="date" value="${esc(r.date||today)}" max="${today}"></label>
+   <div class="ritemsin">${RITEMS.filter(([k])=>!(k==="dog"&&d.solo)).map(([k,l])=>`<div class="ritem"><span>${l}</span>${starPicker(k,r.items&&r.items[k],false)}</div>`).join("")}</div>
+   <label>한 줄 후기<input name="text" maxlength="200" value="${esc(r.text||"")}" placeholder="예: 때찌가 안 짖고 잘 잤어요, 화장실 깨끗"></label>
+   <label class="again"><input type="checkbox" name="again" ${r.again?"checked":""}> 💚 또 갈래요</label>
+   <button class="apply" type="submit">저장</button>
+   <div class="row">${r.star?`<button type="button" class="sbtn danger" data-unrate="${id}">평점 지우기</button>`:"<span></span>"}<button type="button" class="sbtn ghost" data-open="${id}">돌아가기</button></div>
+   <span class="hint" id="rateState"></span>
+  </form>`);
+  document.querySelectorAll("#rateForm .spick").forEach(paintPicker);
+  document.getElementById("rateForm").addEventListener("submit",e=>{
+    e.preventDefault();const f=e.target;const v=n=>+(f.querySelector(`.spick[data-name="${n}"]`)||{dataset:{v:0}}).dataset.v;
+    const star=v("star");if(!star){document.getElementById("rateState").textContent="전체 별점을 눌러 주세요";return}
+    const items={};RITEMS.forEach(([k])=>{const x=v(k);if(x)items[k]=x});
+    ratings[id]={star,date:f.date.value,items,text:f.text.value.trim().slice(0,200),again:f.again.checked,at:Date.now()};
+    commit();render();detail(id);toast("평점을 저장했어요");
+  });
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-star]");
+  if(b){const el=b.closest(".spick");const i=+b.dataset.star;const cur=+el.dataset.v;el.dataset.v=el.dataset.half==="1"&&cur===i?i-.5:i;paintPicker(el);return}
+  const t=e.target.closest("[data-rate],[data-unrate]");if(!t)return;
+  if(t.dataset.rate){rateSheet(t.dataset.rate);return}
+  if(t.dataset.unrate){if(t.dataset.armed){delete ratings[t.dataset.unrate];commit();render();detail(t.dataset.unrate);toast("평점을 지웠어요")}else{t.dataset.armed="1";t.textContent="한 번 더 누르면 지워요"}}
+});
