@@ -4,7 +4,7 @@
 "use strict";
 let R={},D=[],PICKS=[],DROP=[],CALLS=[],GC={camps:{}},NEAR=[];
 const byId=id=>D.find(d=>d.id===id);
-const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)]];
+const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)],["heat","🌡️ 난로 대여",d=>d.heat&&d.heat.st==="ok"]];
 const RVL={bad:["🚩","후기 주의"],warn:["⚠️","참고할 단점"],mild:["💬","사소한 단점"],ok:["👍","후기 깨끗"]};
 const CREDIT="사진: 고캠핑(한국관광공사)";
 
@@ -101,7 +101,7 @@ function renderCats(){
   const n=need.size;const fc=document.getElementById("fcount");fc.hidden=!n;fc.textContent=n;
 }
 const chip=([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}${need.has(k)?'<span class="qx" aria-hidden="true">✕</span>':""}</button>`;
-function quickRow(){return `<div class="quick bleed" role="group" aria-label="필터">${NEEDS.filter(n=>view!=="solo"||["fire","h1","clean"].includes(n[0])).map(chip).join("")}${need.size>1?'<button class="qreset" data-reset>초기화</button>':""}</div>`}
+function quickRow(){return `<div class="quick bleed" role="group" aria-label="필터">${NEEDS.filter(n=>view!=="solo"||["fire","h1","clean","heat"].includes(n[0])).map(chip).join("")}${need.size>1?'<button class="qreset" data-reset>초기화</button>':""}</div>`}
 /* 정렬: 목록 제목 오른쪽 (필터와 따로) */
 const SORTS=[["dist","가까운 순"],["price","저렴한 순"],["score","평점 높은 순"]];
 function sortCtl(){return `<div class="sortwrap"><button class="sortbtn" type="button" data-sortmenu aria-haspopup="true" aria-expanded="false">${SORTS.find(x=>x[0]===sort)[1]}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="sortmenu" role="menu" hidden>${SORTS.map(([k,l])=>`<button type="button" role="menuitemradio" aria-checked="${sort===k}" data-sortset="${k}">${l}${sort===k?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>':""}</button>`).join("")}</div></div>`}
@@ -187,6 +187,7 @@ function detail(id){
   c+=cond("⚡","전기",d.w?"ok":"check",d.w||"정책에 W 표기 없음 · 전기장판은 대부분 OK");
   c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"));
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
+  if(d.heat)c+=cond("🌡️","난로 대여",d.heat.st,d.heat.t||"");
   const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
   const g=gco(d);
   const asks=[...diffs(d,g),...(d.ask?d.ask.split(/\s*·\s*|,\s*/).filter(Boolean).map(x=>x.endsWith("?")?x:x):[])];
