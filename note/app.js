@@ -99,9 +99,13 @@ function renderCats(){
   const regs=view==="check"?[]:Object.keys(R).filter(k=>k==="all"||all().some(d=>d.r===k&&(view==="solo"?true:view==="saved"?saved.has(d.id):!d.solo)));
   if(!regs.includes(region))region="all";
   const el=document.getElementById("cats");el.innerHTML=regs.map(k=>`<button class="cat" role="tab" data-r="${k}" aria-selected="${region===k}"><i>${R[k][1]}</i>${R[k][0]}</button>`).join("");el.hidden=view==="check";
-  const n=need.size+(sort!=="dist"?1:0);const fc=document.getElementById("fcount");fc.hidden=!n;fc.textContent=n;
+  const n=need.size;const fc=document.getElementById("fcount");fc.hidden=!n;fc.textContent=n;
 }
-function quickRow(){return `<div class="quick bleed" role="group" aria-label="빠른 조건">${NEEDS.filter(n=>view!=="solo"||["fire","h1","clean"].includes(n[0])).map(([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}</button>`).join("")}<button class="qc" data-sort aria-pressed="${sort==="price"}">${sort==="price"?"💸 저렴한 순":"📍 가까운 순"}</button></div>`}
+const chip=([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}${need.has(k)?'<span class="qx" aria-hidden="true">✕</span>':""}</button>`;
+function quickRow(){return `<div class="quick bleed" role="group" aria-label="필터">${NEEDS.filter(n=>view!=="solo"||["fire","h1","clean"].includes(n[0])).map(chip).join("")}${need.size>1?'<button class="qreset" data-reset>초기화</button>':""}</div>`}
+/* 정렬: 목록 제목 오른쪽 (필터와 따로) */
+const SORTS=[["dist","가까운 순"],["price","저렴한 순"]];
+function sortCtl(){return `<div class="sortwrap"><button class="sortbtn" type="button" data-sortmenu aria-haspopup="true" aria-expanded="false">${SORTS.find(x=>x[0]===sort)[1]}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="sortmenu" role="menu" hidden>${SORTS.map(([k,l])=>`<button type="button" role="menuitemradio" aria-checked="${sort===k}" data-sortset="${k}">${l}${sort===k?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg>':""}</button>`).join("")}</div></div>`}
 const addBtn=`<button class="addbtn" data-add>＋ 캠핏에서 찾은 캠핑장 직접 추가</button>`;
 function render(){
   renderCats();
@@ -115,10 +119,10 @@ function render(){
     if(ok.length)h+=`<section class="sec"><div class="sh"><h2>바로 예약해도 되는 곳</h2><span>두 마리 OK · 후기 주의 제외 · ${ok.length}곳</span></div><div class="rail bleed">${ok.map(mini).join("")}</div></section>`;
     const nr=NEAR.filter(d=>(region==="all"||d.r===region)&&(!q||(d.n+d.a).toLowerCase().includes(q.toLowerCase())));
     if(nr.length&&!need.size)h+=`<section class="sec"><div class="sh"><h2>근처 고캠핑 추천</h2><span>반려동물·개별 화로대 · ${nr.length}곳</span></div><div class="rail bleed">${nr.map(mini).join("")}</div><p class="hint" style="margin:8px 0 0">고캠핑 공공데이터로 자동으로 고른 곳이라 아직 확인하지 않았어요. 무게·마리 수는 꼭 물어보세요.</p></section>`;
-    h+=`<section class="sec"><div class="sh"><h2>${region==="all"?"전체 후보":R[region][0]}</h2><span>${r.length}곳 · ${sort==="dist"?"가까운 순":"저렴한 순"}</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section>`;
+    h+=`<section class="sec"><div class="sh"><h2>${region==="all"?"전체 후보":R[region][0]} <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section>`;
     h+=`<section class="sec">${addBtn}</section><p class="note">캠핏·고캠핑 운영정책과 캠핏 캠핑로그(곳마다 최근 10~80개)를 2026년 11월 9일에 확인했어요. 네이버 카페 후기는 로그인이 필요해서 직접 읽지 못했고, 각 캠핑장 상세에 검색 링크를 달아뒀어요. 가격은 평일 1박 쿠폰가, 거리는 범계 출발 대략치예요.</p>${creditNote()}`;
   }else if(view==="solo"){
-    h+=quickRow()+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게</h2><span>반려견 없이 갈 수 있는 모든 곳 · ${r.length}곳</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
+    h+=quickRow()+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게 <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div><p class="hint" style="margin:-6px 0 12px">반려견 없이 갈 수 있는 모든 곳</p>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
   }else if(view==="saved"){
     h+=`<section class="sec" style="margin-top:16px"><div class="sh"><h2>찜한 캠핑장</h2><span>${r.length}곳</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("아직 찜한 곳이 없어요","사진 오른쪽 위 하트를 눌러 모아보세요")}</section>`;
   }else{
@@ -198,8 +202,7 @@ function detail(id){
    <div class="cta"><div class="p"><b>${d.near?"요금 문의":won(d.p)}</b> ${d.near?"":"/박"}<small>${esc(d.ps||"")}${d.fee?` · 반려견 ${esc(d.fee)}`:""}</small></div>${d.near?`<a class="go" href="${esc(d.g.book||gcUrl(d))}" target="_blank" rel="noopener">${d.g.book?"예약 페이지":"고캠핑에서 보기"}</a>`:d.url?`<a class="go" href="${esc(d.url)}" target="_blank" rel="noopener">예약하러 가기</a>`:`<a class="go" href="https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}" target="_blank" rel="noopener">캠핏에서 찾기</a>`}</div>`,d.id);
 }
 function filterSheet(){
-  openSheet("조건과 정렬",`<div class="fs"><h4>정렬</h4><div class="opts"><button class="qc" data-sortset="dist" aria-pressed="${sort==="dist"}">📍 가까운 순</button><button class="qc" data-sortset="price" aria-pressed="${sort==="price"}">💸 저렴한 순</button></div></div>
-  <div class="fs"><h4>꼭 필요한 것</h4><div class="opts">${NEEDS.map(([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}</button>`).join("")}</div></div>
+  openSheet("필터",`<div class="fs"><h4>꼭 필요한 것</h4><div class="opts">${NEEDS.map(chip).join("")}</div>${need.size?'<button class="link" data-reset style="margin-top:6px;padding-left:0">필터 모두 풀기</button>':""}</div>
   <div class="legend"><span>🚩 후기 주의</span><span>⚠️ 참고할 단점</span><span>💬 사소한 단점</span><span>👍 후기 깨끗</span></div>
   <button class="apply" data-close>${pool().length}곳 보기</button>`);
 }
@@ -250,9 +253,9 @@ document.addEventListener("click",e=>{
   if(t.dataset.go){location.hash=t.dataset.go;return}
   if(t.dataset.r){region=t.dataset.r;render();return}
   if(t.dataset.need){const k=t.dataset.need;need.has(k)?need.delete(k):need.add(k);const inSheet=t.closest("#sheet");render();if(inSheet)filterSheet();return}
-  if(t.hasAttribute("data-sort")){sort=sort==="dist"?"price":"dist";render();return}
-  if(t.dataset.sortset){sort=t.dataset.sortset;render();filterSheet();return}
-  if(t.hasAttribute("data-reset")){need.clear();region="all";q="";document.getElementById("q").value="";render();return}
+  if(t.hasAttribute("data-sortmenu")){const m=t.nextElementSibling;const open=m.hidden;closeSortMenus();m.hidden=!open;t.setAttribute("aria-expanded",open);if(open)m.querySelector('[aria-checked="true"]').focus();return}
+  if(t.dataset.sortset){sort=t.dataset.sortset;render();const b=document.querySelector("[data-sortmenu]");if(b)b.focus({preventScroll:true});return}
+  if(t.hasAttribute("data-reset")){const inSheet=t.closest("#sheet");need.clear();if(!inSheet&&!t.classList.contains("qreset")){region="all";q="";document.getElementById("q").value=""}render();if(inSheet)filterSheet();return}
   if(t.hasAttribute("data-close")||t.id==="closeSheet"){closeSheet();return}
   if(t.hasAttribute("data-add")){addSheet();return}
   if(t.dataset.edit){addSheet(added.find(x=>x.id===t.dataset.edit));return}
@@ -369,7 +372,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110b";
+  const V="20261110c";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -379,3 +382,8 @@ document.addEventListener("click",e=>{
 })();
 /* 상세 사진첩: 몇 번째 사진인지 */
 document.addEventListener("scroll",e=>{const g=e.target;if(!g||g.id!=="gal")return;const n=document.getElementById("galn");if(n)n.textContent=`${Math.round(g.scrollLeft/g.clientWidth)+1} / ${g.children.length}`},true);
+
+/* 정렬 메뉴: 바깥을 누르거나 Esc면 닫기 */
+function closeSortMenus(){document.querySelectorAll(".sortmenu").forEach(m=>{m.hidden=true;const b=m.previousElementSibling;if(b)b.setAttribute("aria-expanded","false")})}
+document.addEventListener("click",e=>{if(!e.target.closest(".sortwrap"))closeSortMenus()},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSortMenus()});

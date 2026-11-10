@@ -215,3 +215,18 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 .gcbox .cd{padding:8px 0}
 .gcbox .cd:last-child{border-bottom:0}
 .gcbox a{color:var(--brand);font-weight:600}
+/* 필터와 정렬 나누기: 필터는 칩(켜지면 연한 초록 + ✕), 정렬은 목록 제목 오른쪽 메뉴 */
+.qc{display:inline-flex;align-items:center;gap:4px}
+.qc[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand);border-color:var(--brand);font-weight:700}
+.qx{font-size:11px;margin-left:2px;opacity:.8}
+.qreset{flex:none;border:0;background:none;color:var(--sub);font-size:13px;text-decoration:underline;padding:7px 6px;white-space:nowrap}
+.sh h2 small{font-size:14px;font-weight:500;color:var(--sub);margin-left:2px}
+.sortwrap{position:relative;flex:none}
+.sortbtn{display:inline-flex;align-items:center;gap:4px;border:0;background:none;color:var(--fg);font-size:14px;font-weight:600;padding:6px 2px}
+.sortbtn svg{color:var(--sub);transition:transform .15s}
+.sortbtn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.sortmenu{position:absolute;right:0;top:calc(100% + 4px);z-index:15;min-width:140px;background:var(--app);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:4px;display:grid}
+.sortmenu button{display:flex;justify-content:space-between;align-items:center;gap:12px;border:0;background:none;text-align:left;padding:10px 12px;border-radius:8px;font-size:14px}
+.sortmenu button:hover{background:var(--fill)}
+.sortmenu button[aria-checked="true"]{font-weight:700;color:var(--brand)}
+.sh{align-items:center}
