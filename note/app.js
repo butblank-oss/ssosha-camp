@@ -4,7 +4,7 @@
 "use strict";
 let R={},D=[],PICKS=[],DROP=[],CALLS=[],GC={camps:{}},NEAR=[];
 const byId=id=>D.find(d=>d.id===id);
-const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)],["heat","🌡️ 난로 대여",d=>d.heat&&d.heat.st==="ok"],["day","☀️ 당일 가능",d=>(d.day||[]).length>0],["dogday","🐶 반려견 동반",d=>(d.day||[]).some(x=>x.dog===true)||(!d.solo&&d.dog2!=="no")]];
+const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)],["heat","🌡️ 난로 대여",d=>d.heat&&d.heat.st==="ok"],["day","☀️ 당일 가능",d=>(d.day||[]).length>0],["dogday","🐶 반려견 동반",dogOk]];
 const RVL={bad:["🚩","후기 주의"],warn:["⚠️","참고할 단점"],mild:["💬","사소한 단점"],ok:["👍","후기 깨끗"]};
 const CREDIT="사진: 고캠핑(한국관광공사)";
 
@@ -81,7 +81,7 @@ function pool(){
   if(q){const t=q.toLowerCase();r=r.filter(d=>(d.n+d.a+(R[d.r]||[""])[0]).toLowerCase().includes(t))}
   return r.sort((a,b)=>sort==="score"?(starOf(b)-starOf(a))||(a.min||999)-(b.min||999):sort==="dist"?(a.min||999)-(b.min||999)||(a.p||0)-(b.p||0):(a.p||1e9)-(b.p||1e9)||(a.min||0)-(b.min||0));
 }
-function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",(d.day||[]).some(x=>x.dog===true)||(!d.solo&&d.dog2!=="no")?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
+function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
   const badge=d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
@@ -191,7 +191,7 @@ function detail(id){
   c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"));
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
   if(d.heat)c+=cond("🌡️","난로 대여",d.heat.st,d.heat.t||"");
-  if((d.day||[]).length)c+=cond("☀️","당일(캠프닉)","ok",d.day.map(x=>`${x.n}${x.time?" "+x.time:""}${x.price?" · "+x.price:""}${x.dog===true?" · 🐶 가능":x.dog===false?" · 🐶 불가":""}`).join(" / "));
+  if((d.day||[]).length)c+=cond("☀️","당일(캠프닉)","ok",`당일 상품 ${d.day.length}개${d.day.some(x=>x.dog===true)?" · 🐶 되는 상품 있음":""} · 아래 표 참고`);
   const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
   const g=gco(d);
   const asks=[...diffs(d,g),...(d.ask?d.ask.split(/\s*·\s*|,\s*/).filter(Boolean).map(x=>x.endsWith("?")?x:x):[]),...(d.askBlog?[d.askBlog]:[])];
@@ -208,6 +208,7 @@ function detail(id){
    ${rv}
    ${blogBox(d)}
    ${sitesBox(d)}
+   ${dayBox(d)}
    ${spotsBox(d)}
    ${facts.length?`<section class="facts"><b>📌 알아둘 것</b><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`:""}
    ${g?gcBox(g,d):""}
@@ -388,7 +389,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110t";
+  const V="20261110u";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -540,3 +541,9 @@ try{mapMode=localStorage.getItem("camp_note_map")==="1"}catch(e){}
 /* 사이트별 가격: 네이버 예약에서 모은 것 (camps.json의 sites) */
 function sitesBox(d){const ss=d.sites||[];if(!ss.length)return "";
   return `<section class="sites"><b>🏕️ 사이트별 가격 <small>네이버 예약 · ${esc(d.bookAt||"")}</small></b><ul>${ss.map(x=>`<li><div><b>${esc(x.n)}</b>${x.note?`<small>${esc(x.note)}</small>`:""}</div><span>${esc(x.pr||"")}</span></li>`).join("")}</ul>${d.biz?`<a class="lk" style="justify-content:center" href="https://m.booking.naver.com/booking/3/bizes/${encodeURIComponent(d.biz)}" target="_blank" rel="noopener"><b style="background:#03c75a">N</b>네이버 예약에서 날짜별 가격 보기</a>`:""}</section>`}
+
+/* 캠프닉 탭의 반려견 동반: 당일 상품에 반려견 가능이 적힌 곳, 또는 (당일 규정이 따로 없으면) 1박 반려견이 확인된 곳 */
+function dogOk(d){const day=d.day||[];if(day.some(x=>x.dog===true))return true;if(day.some(x=>x.dog===false)&&!day.some(x=>x.dog===null||x.dog===undefined))return false;return !d.solo&&d.dog2==="ok"}
+
+function dayBox(d){const ds=d.day||[];if(!ds.length)return "";
+  return `<section class="sites"><b>☀️ 당일(캠프닉) 상품 <small>네이버 예약</small></b><ul>${ds.map(x=>`<li><div><b>${esc(x.n)}</b><small>${esc(x.time||"")}${x.dog===true?" · 🐶 반려견 가능":x.dog===false?" · 🐶 반려견 불가":""}</small></div><span>${esc(x.price||"")}</span></li>`).join("")}</ul></section>`}
