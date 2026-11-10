@@ -359,3 +359,6 @@ details.gcbox{padding:0;gap:0}
 .sites li div{display:grid;gap:2px;min-width:0}
 .sites li small{color:var(--sub);font-size:12.5px}
 .sites li span{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;max-width:48%}
+/* 로고 캐릭터 */
+.logo{display:flex;align-items:center;gap:8px}
+.logo img{width:34px;height:34px;border-radius:9px;flex:none;box-shadow:0 1px 3px rgba(0,0,0,.12)}
