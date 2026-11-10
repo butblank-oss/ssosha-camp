@@ -201,6 +201,7 @@ function detail(id){
    <section class="dsec" aria-label="조건"><div class="ctg">${c}</div></section>
    ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
    ${rv}
+   ${spotsBox(d)}
    ${facts.length?`<section class="facts"><b>📌 알아둘 것</b><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`:""}
    ${g?gcBox(g,d):""}
    ${links(d)}
@@ -461,3 +462,11 @@ document.addEventListener("click",e=>{
   if(t.dataset.rate){rateSheet(t.dataset.rate);return}
   if(t.dataset.unrate){if(t.dataset.armed){delete ratings[t.dataset.unrate];commit();render();detail(t.dataset.unrate);toast("평점을 지웠어요")}else{t.dataset.armed="1";t.textContent="한 번 더 누르면 지워요"}}
 });
+
+/* 추천 자리: 네이버 블로그 후기에서 모은 명당 (camps.json의 spots) */
+function spotsBox(d){
+  const sp=d.spots||[];if(!sp.length)return "";
+  const good=sp.filter(x=>!x.avoid),bad=sp.filter(x=>x.avoid);
+  const li=x=>`<li><b class="spt${x.avoid?" bad":""}">${esc(x.s)}</b><span>${esc(x.why)}</span></li>`;
+  return `<section class="spots"><b>📍 추천 자리</b>${good.length?`<ul>${good.map(li).join("")}</ul>`:""}${bad.length?`<p class="spbad">피할 자리</p><ul>${bad.map(li).join("")}</ul>`:""}${(d.spotSrc||[]).length?`<small>출처: 네이버 블로그 ${d.spotSrc.map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${i+1}</a>`).join(" · ")}</small>`:""}</section>`;
+}
