@@ -70,10 +70,9 @@ const kw=d=>d.kw||d.n.replace(/^(강화|제천|태안|하남|용인|파주|여�
 const gcUrl=d=>{const g=d.gc||(gco(d)&&gco(d).gc);return g?`https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=${encodeURIComponent(g)}`:(d.url&&d.url.includes("gocamping")?d.url:"")};
 function links(d){
   const k=encodeURIComponent(kw(d));
-  return `<div class="links">${d.url&&d.url.includes("camfit")?`<a class="lk" href="${esc(d.url)}" target="_blank" rel="noopener"><b style="background:#21a366">C</b>캠핏 상세</a>`:`<a class="lk" href="https://camfit.co.kr/search/result?keyword=${k}" target="_blank" rel="noopener"><b style="background:#21a366">C</b>캠핏에서 검색</a>`}
-  ${gcUrl(d)?`<a class="lk" href="${esc(gcUrl(d))}" target="_blank" rel="noopener"><b style="background:#3a6fd8">G</b>고캠핑</a>`:""}
-  <a class="lk" href="https://search.naver.com/search.naver?where=article&query=${k}" target="_blank" rel="noopener"><b style="background:#03c75a">N</b>네이버 카페 후기</a>
-  <a class="lk" href="https://map.naver.com/p/search/${k}" target="_blank" rel="noopener"><b style="background:#03c75a">M</b>네이버 지도</a></div>`;
+  const cf=d.url&&d.url.includes("camfit")?d.url:`https://camfit.co.kr/search/result?keyword=${k}`;
+  const a=[["캠핏","#21a366","C",cf],gcUrl(d)?["고캠핑","#3a6fd8","G",gcUrl(d)]:null,["카페 후기","#03c75a","N",`https://search.naver.com/search.naver?where=article&query=${k}`],["지도","#03c75a","M",`https://map.naver.com/p/search/${k}`]].filter(Boolean);
+  return `<nav class="links" aria-label="바로가기" style="--n:${a.length}">${a.map(([l,c,i,u])=>`<a class="lk" href="${esc(u)}" target="_blank" rel="noopener"><b style="background:${c}">${i}</b>${l}</a>`).join("")}</nav>`;
 }
 function pool(){
   let r=all().filter(d=>view==="saved"?saved.has(d.id):d.near?false:view==="solo"?true:!d.solo);
@@ -140,15 +139,16 @@ function render(){
 }
 /* 바텀시트 */
 const sheet=document.getElementById("sheet"),scrim=document.getElementById("scrim");let lastFocus=null,sheetFor=null;
-function openSheet(title,html,forId){
+function openSheet(title,html,forId,bare){
   if(!sheet.classList.contains("on"))lastFocus=document.activeElement;sheetFor=forId||null;
+  sheet.classList.toggle("bare",!!bare);sheet.scrollTop=0;
   document.getElementById("sheetTitle").textContent=title;document.getElementById("sheetBody").innerHTML=html;
   sheet.hidden=false;requestAnimationFrame(()=>{sheet.classList.add("on");scrim.classList.add("on")});
   document.getElementById("closeSheet").focus({preventScroll:true});document.documentElement.style.overflow="hidden";
 }
 function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");document.documentElement.style.overflow="";sheetFor=null;
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
-function cond(icon,label,state,text){return `<div class="cd"><i>${icon}</i><div>${label}<small>${esc(text)}</small></div><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div>`}
+function cond(icon,label,state,text){return `<div class="ct ${state}"><div class="ctt"><i aria-hidden="true">${icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
 function gallery(d){
   const g=gco(d);const imgs=g&&g.imgs&&g.imgs.length?g.imgs:[];
   if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
@@ -165,12 +165,11 @@ function diffs(d,g){
   if(d.w11&&g.sbrs.length&&!g.sbrs.includes("전기"))out.push("고캠핑 시설 목록에 전기가 없어요");
   return out;
 }
-function diffBox(d,g){const x=diffs(d,g);return x.length?`<div class="rvbox warn"><b>🔎 고캠핑 정보와 달라요: 전화로 확인</b><ul>${x.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><small>고캠핑 정보가 예전 것일 수 있어요</small></div>`:""}
 function gcBox(g,d){
   const fl=Object.entries(g.floor||{}).map(([k,v])=>`${k} ${v}`).join(" · ");
   const row=(i,l,t)=>t?`<div class="cd"><i>${i}</i><div>${l}<small>${t}</small></div></div>`:"";
   const tel=(g.tel||"").replace(/[^0-9-]/g,"");
-  return `<div class="gcbox"><b>🏕️ 고캠핑 정보</b>${g.intro?`<p class="gci">"${esc(g.intro)}"</p>`:""}<div class="conds">
+  return `<details class="gcbox"><summary><span><b>🏕️ 고캠핑 정보</b>${g.intro?`<small>${esc(g.intro)}</small>`:""}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="conds">
    ${row("📞","전화",tel?`<a href="tel:${tel}">${esc(g.tel)}</a>`:"")}
    ${row("📅","운영",esc([g.season&&`${g.season}`,g.days].filter(Boolean).join(" · ")))}
    ${row("🪨","사이트 바닥",esc(fl))}
@@ -178,28 +177,36 @@ function gcBox(g,d){
    ${row("🐶","반려동물",esc(g.pet))}
    ${row("🔥","화로대",esc(g.fire))}
    ${row("🔗","홈페이지·예약",[g.home&&`<a href="${esc(g.home)}" target="_blank" rel="noopener">홈페이지</a>`,g.book&&g.book!==g.home&&`<a href="${esc(g.book)}" target="_blank" rel="noopener">예약 페이지</a>`].filter(Boolean).join(" · "))}
-  </div><small class="hint">출처: 고캠핑(한국관광공사) · ${esc(GC.updated||"")} 기준${d.near?" · 자동 추천이라 직접 확인 전이에요":""}</small></div>`;
+  </div><small class="hint">출처: 고캠핑(한국관광공사) · ${esc(GC.updated||"")} 기준${d.near?" · 자동 추천이라 직접 확인 전이에요":""}</small></details>`;
 }
 function detail(id){
   const d=all().find(x=>x.id===id);if(!d)return;
   let c="";
-  if(!d.solo)c+=cond("🐶","반려견 두 마리",d.dog2||"check",d.dogT||"정보 없음");
+  if(!d.solo)c+=cond("🐶","반려견 2마리",d.dog2||"check",d.dogT||"정보 없음");
   c+=cond("🔥","장작 불멍",d.fire==="ok"?"ok":d.fire==="no"?"no":"check",d.fireT||(d.fire==="ok"?"화로대 사용 가능":d.fire==="no"?"금지":"정책에 없어서 확인 필요"));
   c+=cond("⚡","전기",d.w?"ok":"check",d.w||"정책에 W 표기 없음 · 전기장판은 대부분 OK");
   c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"));
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
   const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
   const g=gco(d);
+  const asks=[...diffs(d,g),...(d.ask?d.ask.split(/\s*·\s*|,\s*/).filter(Boolean).map(x=>x.endsWith("?")?x:x):[])];
+  const facts=[d.plus,...(d.memo?d.memo.split(/\s*·\s*/):[])].filter(Boolean);
+  const tel=g&&g.tel?g.tel.replace(/[^0-9-]/g,""):"";
+  const book=d.near?{u:d.g.book||gcUrl(d),t:d.g.book?"예약 페이지":"고캠핑에서 보기"}:d.url?{u:d.url,t:"예약하러 가기"}:{u:`https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}`,t:"캠핏에서 찾기"};
   openSheet(d.n,`${gallery(d)}
-   <div class="dt"><h3>${esc(d.n)}</h3><p>${esc(d.a||"주소 미입력")} ${d.a?`<button class="copy" data-copy="${esc(d.a)}">주소 복사</button>`:""}</p><p>${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p></div>
-   ${links(d)}
-   ${diffBox(d,g)}
+   <div class="dt"><h3>${esc(d.n)}</h3>
+    <p class="dmeta">${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p>
+    ${d.a?`<p class="daddr"><span>${esc(d.a)}</span><button class="copy" data-copy="${esc(d.a)}">복사</button></p>`:""}</div>
+   <section class="dsec" aria-label="조건"><div class="ctg">${c}</div></section>
+   ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
    ${rv}
+   ${facts.length?`<section class="facts"><b>📌 알아둘 것</b><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`:""}
    ${g?gcBox(g,d):""}
-   <div class="conds">${c}</div>
-   ${d.plus?`<div class="memo">＋ ${esc(d.plus)}</div>`:""}${d.memo?`<div class="memo">${esc(d.memo)}</div>`:""}${d.ask?`<div class="ask">📞 물어볼 것: ${esc(d.ask)}</div>`:""}
+   ${links(d)}
    <div class="memo-in"><b>📝 내 메모</b><textarea id="noteText" placeholder="캠핏·카페에서 확인한 것, 통화 결과 등을 적어두세요">${esc(notes[d.id]||"")}</textarea><div class="row"><span class="hint" id="noteState">${shared.mode==="live"?"공유 기록에 저장돼요":"이 브라우저에 저장돼요"}</span><span style="display:flex;gap:8px">${d.user?`<button class="sbtn danger" data-del="${d.id}">삭제</button><button class="sbtn ghost" data-edit="${d.id}">수정</button>`:""}<button class="sbtn" data-savenote="${d.id}">메모 저장</button></span></div></div>
-   <div class="cta"><div class="p"><b>${d.near?"요금 문의":won(d.p)}</b> ${d.near?"":"/박"}<small>${esc(d.ps||"")}${d.fee?` · 반려견 ${esc(d.fee)}`:""}</small></div>${d.near?`<a class="go" href="${esc(d.g.book||gcUrl(d))}" target="_blank" rel="noopener">${d.g.book?"예약 페이지":"고캠핑에서 보기"}</a>`:d.url?`<a class="go" href="${esc(d.url)}" target="_blank" rel="noopener">예약하러 가기</a>`:`<a class="go" href="https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}" target="_blank" rel="noopener">캠핏에서 찾기</a>`}</div>`,d.id);
+   <div class="cta"><div class="p"><b>${d.near?"요금 문의":won(d.p)}</b>${d.near?"":" /박"}<small>${esc(d.ps||"")}${d.fee?` · 반려견 ${esc(d.fee)}`:""}</small></div>
+    ${tel?`<a class="callbtn" href="tel:${tel}" aria-label="전화 걸기 ${esc(g.tel)}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></a>`:""}
+    <a class="go" href="${esc(book.u)}" target="_blank" rel="noopener">${book.t}</a></div>`,d.id,true);
 }
 function filterSheet(){
   openSheet("필터",`<div class="fs"><h4>꼭 필요한 것</h4><div class="opts">${NEEDS.map(chip).join("")}</div>${need.size?'<button class="link" data-reset style="margin-top:6px;padding-left:0">필터 모두 풀기</button>':""}</div>
@@ -372,7 +379,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110c";
+  const V="20261110d";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);

@@ -230,3 +230,54 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 .sortmenu button:hover{background:var(--fill)}
 .sortmenu button[aria-checked="true"]{font-weight:700;color:var(--brand)}
 .sh{align-items:center}
+/* ---------- 상세 화면 (정리판) ---------- */
+.sheet.bare .shead{height:0;padding:0;background:none;overflow:visible}
+.sheet.bare .shead b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.sheet.bare .x{position:absolute;right:max(24px,calc(env(safe-area-inset-right,0px) + 8px));top:12px;z-index:5;background:rgba(255,255,255,.92);color:#17201b;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+.sheet.bare .sbody{padding-top:4px;gap:20px}
+.sheet.bare .hero{border-radius:16px;margin-top:4px}
+.dt{display:grid;gap:4px}
+.dt h3{font-size:24px}
+.dt .dmeta{margin:0;color:var(--sub);font-size:14px}
+.daddr{margin:0;display:flex;align-items:center;gap:8px;font-size:14px;color:var(--sub)}
+.daddr span{min-width:0}
+.daddr .copy{margin:0;flex:none}
+/* 조건 2칸 타일 */
+.ctg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ct{border:1px solid var(--line);border-radius:14px;padding:12px;display:grid;gap:6px;align-content:start}
+.ctt{display:flex;align-items:center;gap:6px;min-width:0}
+.ctt i{font-style:normal;font-size:18px;line-height:1}
+.ctt b{font-size:14px}
+.ct .st{justify-self:start}
+.ct small{color:var(--sub);font-size:12.5px;line-height:1.4}
+.ct.check{border-color:color-mix(in srgb,var(--warn) 35%,var(--line))}
+.ct.no{border-color:color-mix(in srgb,var(--no) 35%,var(--line))}
+/* 확인할 것 · 알아둘 것 */
+.askbox,.facts{border-radius:14px;padding:14px 16px;display:grid;gap:6px;font-size:14px}
+.askbox{background:var(--warn-soft)}
+.askbox b{color:var(--warn)}
+.askbox small{color:var(--sub);font-size:12px}
+.facts{background:var(--fill)}
+.askbox ul,.facts ul{margin:0;padding-left:18px;display:grid;gap:3px}
+/* 고캠핑 정보: 접기 */
+details.gcbox{padding:0;gap:0}
+.gcbox summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px}
+.gcbox summary::-webkit-details-marker{display:none}
+.gcbox summary span{display:grid;gap:2px;min-width:0}
+.gcbox summary small{color:var(--sub);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcbox summary svg{flex:none;color:var(--sub);transition:transform .2s}
+.gcbox[open] summary svg{transform:rotate(180deg)}
+.gcbox .conds{padding:0 16px}
+.gcbox>small.hint{display:block;padding:4px 16px 14px}
+/* 바로가기 4칸 */
+.links{display:grid;grid-template-columns:repeat(var(--n,4),minmax(0,1fr));gap:8px}
+.links .lk{flex-direction:column;justify-content:center;gap:6px;border-radius:14px;padding:12px 4px;font-size:12.5px;text-align:center;white-space:nowrap}
+.links .lk b{width:28px;height:28px;border-radius:8px;font-size:13px}
+/* 하단 고정: 가격 + 전화 + 예약 */
+.cta{gap:8px}
+.cta .p{flex:1;min-width:0}
+.cta .p small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.callbtn{flex:none;width:48px;height:48px;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--brand);background:var(--app)}
+.ctt .st{margin-left:auto;flex:none;font-size:11.5px;padding:2px 7px}
+.ctt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.ct{gap:4px}
