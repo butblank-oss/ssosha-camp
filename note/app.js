@@ -2,6 +2,11 @@
  * 데이터 원본: camps.json (캠핑장 id는 고정값) · 사진: photos.json (Actions가 고캠핑에서 받아요)
  * 저장: 이 브라우저(localStorage) + 로그인하면 Supabase camp_note 표에 공유 */
 "use strict";
+/* 3D 아이콘 (img/ic/*.png). 이모지로 부르면 같은 그림으로 바꿔요 */
+const ICO={"🐶":"dog","🔥":"fire","⚡":"power","🚗":"car","🐾":"fence","🌡️":"heater","☀️":"sun","🚶":"car"};
+const NEED_ICO={fence:"fence",fire:"fire",w11:"power",h1:"clock",ok:"check",clean:"thumb",heat:"heater",day:"sun",dogday:"dog"};
+const ic=(n,cls="")=>`<img class="ic3 ${cls}" src="img/ic/${n}.png" alt="" aria-hidden="true">`;
+const noEmoji=t=>String(t).replace(/^[^0-9A-Za-z가-힣]+\s*/,"");
 let R={},D=[],PICKS=[],DROP=[],CALLS=[],GC={camps:{}},NEAR=[];
 const byId=id=>D.find(d=>d.id===id);
 const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)],["heat","🌡️ 난로 대여",d=>d.heat&&d.heat.st==="ok"],["day","☀️ 당일 가능",d=>(d.day||[]).length>0],["dogday","🐶 반려견 동반",dogOk]];
@@ -102,10 +107,10 @@ function emptyBox(t,s){return `<div class="empty"><b>${t}</b><span>${s}</span>${
 function renderCats(){
   const regs=view==="check"?[]:Object.keys(R).filter(k=>k==="all"||all().some(d=>d.r===k&&(view==="solo"?true:view==="saved"?saved.has(d.id):!d.solo)));
   if(!regs.includes(region))region="all";
-  const el=document.getElementById("cats");el.innerHTML=regs.map(k=>`<button class="cat" role="tab" data-r="${k}" aria-selected="${region===k}"><i>${R[k][1]}</i>${R[k][0]}</button>`).join("");el.hidden=view==="check";
+  const el=document.getElementById("cats");el.innerHTML=regs.map(k=>`<button class="cat" role="tab" data-r="${k}" aria-selected="${region===k}"><i>${ic(k)}</i>${R[k][0]}</button>`).join("");el.hidden=view==="check";
   const n=need.size;const fc=document.getElementById("fcount");fc.hidden=!n;fc.textContent=n;
 }
-const chip=([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${l}${need.has(k)?'<span class="qx" aria-hidden="true">✕</span>':""}</button>`;
+const chip=([k,l])=>`<button class="qc" data-need="${k}" aria-pressed="${need.has(k)}">${NEED_ICO[k]?ic(NEED_ICO[k],"sm")+noEmoji(l):l}${need.has(k)?'<span class="qx" aria-hidden="true">✕</span>':""}</button>`;
 function quickRow(){return `<div class="quick bleed" role="group" aria-label="필터">${NEEDS.filter(n=>(view==="solo"||n[0]!=="dogday")&&view!=="solo"||["fire","h1","clean","heat","day","dogday"].includes(n[0])).map(chip).join("")}${need.size>1?'<button class="qreset" data-reset>초기화</button>':""}</div>`}
 /* 정렬: 목록 제목 오른쪽 (필터와 따로) */
 const SORTS=[["dist","가까운 순"],["price","저렴한 순"],["score","평점 높은 순"]];
@@ -156,7 +161,7 @@ function openSheet(title,html,forId,bare){
 }
 function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");document.documentElement.style.overflow="";sheetFor=null;
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
-function cond(icon,label,state,text){return `<div class="ctile ${state}"><div class="ctt"><i aria-hidden="true">${icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
+function cond(icon,label,state,text){return `<div class="ctile ${state}"><div class="ctt"><i aria-hidden="true">${ICO[icon]?ic(ICO[icon]):icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
 function gallery(d){
   const g=gco(d);const imgs=g&&g.imgs&&g.imgs.length?g.imgs:[];
   if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
@@ -394,7 +399,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110x";
+  const V="20261110y";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
