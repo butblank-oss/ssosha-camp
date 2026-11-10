@@ -2,7 +2,7 @@
  * 데이터 원본: camps.json (캠핑장 id는 고정값) · 사진: photos.json (Actions가 고캠핑에서 받아요)
  * 저장: 이 브라우저(localStorage) + 로그인하면 Supabase camp_note 표에 공유 */
 "use strict";
-let R={},D=[],PICKS=[],DROP=[],CALLS=[],PHOTO={};
+let R={},D=[],PICKS=[],DROP=[],CALLS=[],GC={camps:{}},NEAR=[];
 const byId=id=>D.find(d=>d.id===id);
 const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)]];
 const RVL={bad:["🚩","후기 주의"],warn:["⚠️","참고할 단점"],mild:["💬","사소한 단점"],ok:["👍","후기 깨끗"]};
@@ -19,13 +19,29 @@ const same=(a,b)=>JSON.stringify(norm(a))===JSON.stringify(norm(b));
 function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1)}}
 loadState(local.get(KEY,null));
 let view="home",region="all",sort="dist",q="";const need=new Set();let animate=true;
-function all(){return D.concat(added.map(a=>({...a,user:true})))}
+function all(){return D.concat(added.map(a=>({...a,user:true})),NEAR)}
+/* 고캠핑 정보: 우리 후보는 id로, 주변 추천은 그 자체로 */
+const gco=d=>d.g||GC.camps[d.id]||null;
+const dist=d=>d.min?`약 ${hm(d.min)}`:d.km?`직선 ${d.km}km`:"거리 미입력";
+function regionOf(a){
+  if(/인천/.test(a))return "west";
+  if(/충청|충북|충남|세종|대전/.test(a))return "cc";
+  if(/서울|안양|의왕|군포|과천|광명|부천|시흥/.test(a))return "city";
+  if(/안산|화성|평택|오산|수원|안성/.test(a))return "near";
+  return "east";
+}
+function nearCamp(g){
+  return {id:"gc"+g.gc,n:g.name,a:g.addr,r:regionOf(g.addr),km:g.km,p:0,min:0,near:true,g,gc:g.gc,
+    fit:"check",dog2:"check",dogT:`고캠핑: 반려동물 ${g.pet}`,fire:"ok",fireT:"고캠핑: 개별 화로대",
+    auto:/자동차야영장/.test(g.type)?true:"check",autoT:/자동차야영장/.test(g.type)?"고캠핑: 자동차야영장":"고캠핑 정보로는 차 옆 주차인지 알 수 없어요",
+    w:g.sbrs.includes("전기")?"전기 있음 (W는 문의)":"",ask:"무게·마리 수, 때찌 짖음 괜찮은지",sc:"field"};
+}
 
 function seed(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return ()=>((h=Math.imul(h^h>>>15,2246822507)^Math.imul(h^h>>>13,3266489909))>>>0)/4294967296}
 const SKY={day:["#7fc0ff","#e3f2ff","#fff7c2","#7fbf86","#3d7f58"],sunset:["#ff8a5c","#ffd59e","#fff2c9","#9c6178","#4b3557"],dusk:["#3a4b8c","#f3a17a","#ffe3b8","#4c4a7a","#272a4f"],night:["#0d1836","#2c3f73","#f4f1d0","#1f2b4c","#111a33"]};
 function hills(r,y,amp){let d=`M0 260L0 ${(y+amp*(r()-.5)).toFixed(1)}`;for(let x=0;x<400;x+=100)d+=`Q${x+50} ${(y-amp*r()).toFixed(1)} ${x+100} ${(y+amp*(r()-.5)).toFixed(1)}`;return d+"L400 260Z"}
 function thumb(d,uid){
-  const ph=PHOTO[d.id];
+  const ph=gco(d);
   if(ph&&ph.img)return `<img src="${esc(ph.img)}" alt="" loading="${uid==="h"||uid==="b"?"eager":"lazy"}" decoding="async" referrerpolicy="no-referrer" onerror="window.__noimg(this)" data-id="${esc(d.id)}" data-u="${uid}"><span class="credit">${CREDIT}</span>`;
   return art(d,uid);
 }
@@ -51,7 +67,7 @@ const hm=m=>!m?"거리 미입력":m<60?`${m}분`:`${Math.floor(m/60)}시간${m%6
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const heartSvg='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20s-7-4.4-9-9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c-2 4.6-9 9-9 9z"/></svg>';
 const kw=d=>d.kw||d.n.replace(/^(강화|제천|태안|하남|용인|파주|여주|가평|포천|평택|화성|대부도|안양|의왕|안산|상암|인천|고양|충주|석모도|영흥도)\s/,"");
-const gcUrl=d=>{const g=d.gc||(PHOTO[d.id]&&PHOTO[d.id].gc);return g?`https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=${encodeURIComponent(g)}`:(d.url&&d.url.includes("gocamping")?d.url:"")};
+const gcUrl=d=>{const g=d.gc||(gco(d)&&gco(d).gc);return g?`https://www.gocamping.or.kr/bsite/camp/info/read.do?c_no=${encodeURIComponent(g)}`:(d.url&&d.url.includes("gocamping")?d.url:"")};
 function links(d){
   const k=encodeURIComponent(kw(d));
   return `<div class="links">${d.url&&d.url.includes("camfit")?`<a class="lk" href="${esc(d.url)}" target="_blank" rel="noopener"><b style="background:#21a366">C</b>캠핏 상세</a>`:`<a class="lk" href="https://camfit.co.kr/search/result?keyword=${k}" target="_blank" rel="noopener"><b style="background:#21a366">C</b>캠핏에서 검색</a>`}
@@ -60,7 +76,7 @@ function links(d){
   <a class="lk" href="https://map.naver.com/p/search/${k}" target="_blank" rel="noopener"><b style="background:#03c75a">M</b>네이버 지도</a></div>`;
 }
 function pool(){
-  let r=all().filter(d=>view==="saved"?saved.has(d.id):view==="solo"?true:!d.solo);
+  let r=all().filter(d=>view==="saved"?saved.has(d.id):d.near?false:view==="solo"?true:!d.solo);
   if(region!=="all")r=r.filter(d=>d.r===region);
   for(const k of need){const f=NEEDS.find(n=>n[0]===k);if(f)r=r.filter(f[2])}
   if(q){const t=q.toLowerCase();r=r.filter(d=>(d.n+d.a+(R[d.r]||[""])[0]).toLowerCase().includes(t))}
@@ -69,15 +85,15 @@ function pool(){
 function summary(d){return (d.solo||view==="solo")?[d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
-  const badge=(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
+  const badge=d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
   const flag=d.rv&&["bad","warn"].includes(d.rv.lv)?`<span class="flag ${d.rv.lv==="warn"?"warn":""}">${RVL[d.rv.lv][0]} ${RVL[d.rv.lv][1]}</span>`:"";
   return `<article class="card"><div style="position:relative"><button class="ph" data-open="${d.id}" aria-label="${esc(d.n)} 자세히">${thumb(d,"f")}${badge}${flag}</button>
   ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button></div>
   <button class="ct" data-open="${d.id}"><span class="row1"><b>${esc(d.n)}</b>${d.lg?`<span>로그 ${d.lg.toLocaleString()}</span>`:""}</span>
-  <span class="l2">${(R[d.r]||["지역 미입력"])[0]} · 약 ${hm(d.min)}</span><span class="l3">${esc(summary(d))}</span>${rvLine(d)}
-  <span class="price"><b>${won(d.p)}</b> <small>/박${d.fee&&view!=="solo"?` · 반려견 ${esc(d.fee)}`:""}</small></span></button></article>`;
+  <span class="l2">${(R[d.r]||["지역 미입력"])[0]} · ${dist(d)}</span><span class="l3">${esc(summary(d))}</span>${rvLine(d)}
+  <span class="price"><b>${d.near?"요금 문의":won(d.p)}</b> <small>${d.near?"":"/박"}${d.fee&&view!=="solo"?` · 반려견 ${esc(d.fee)}`:""}</small></span></button></article>`;
 }
-function mini(d){return `<button class="mini" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b><small>약 ${hm(d.min)}${d.rv?` · ${RVL[d.rv.lv][0]}`:""}</small><span class="pr">${won(d.p)}<small style="font-weight:400"> /박</small></span></button>`}
+function mini(d){return `<button class="mini" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b><small>${dist(d)}${d.near&&d.g.pet?` · 🐶 ${esc(d.g.pet)}`:""}${d.rv?` · ${RVL[d.rv.lv][0]}`:""}</small><span class="pr">${d.near?"요금 문의":won(d.p)}<small style="font-weight:400">${d.near?"":" /박"}</small></span></button>`}
 function emptyBox(t,s){return `<div class="empty"><b>${t}</b><span>${s}</span>${need.size||region!=="all"||q?'<button class="link" data-reset>조건 초기화</button>':""}</div>`}
 function renderCats(){
   const regs=view==="check"?[]:Object.keys(R).filter(k=>k==="all"||all().some(d=>d.r===k&&(view==="solo"?true:view==="saved"?saved.has(d.id):!d.solo)));
@@ -97,6 +113,8 @@ function render(){
     }
     const ok=r.filter(d=>d.fit==="ok"&&!(d.rv&&d.rv.lv==="bad"));
     if(ok.length)h+=`<section class="sec"><div class="sh"><h2>바로 예약해도 되는 곳</h2><span>두 마리 OK · 후기 주의 제외 · ${ok.length}곳</span></div><div class="rail bleed">${ok.map(mini).join("")}</div></section>`;
+    const nr=NEAR.filter(d=>(region==="all"||d.r===region)&&(!q||(d.n+d.a).toLowerCase().includes(q.toLowerCase())));
+    if(nr.length&&!need.size)h+=`<section class="sec"><div class="sh"><h2>근처 고캠핑 추천</h2><span>반려동물·개별 화로대 · ${nr.length}곳</span></div><div class="rail bleed">${nr.map(mini).join("")}</div><p class="hint" style="margin:8px 0 0">고캠핑 공공데이터로 자동으로 고른 곳이라 아직 확인하지 않았어요. 무게·마리 수는 꼭 물어보세요.</p></section>`;
     h+=`<section class="sec"><div class="sh"><h2>${region==="all"?"전체 후보":R[region][0]}</h2><span>${r.length}곳 · ${sort==="dist"?"가까운 순":"저렴한 순"}</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section>`;
     h+=`<section class="sec">${addBtn}</section><p class="note">캠핏·고캠핑 운영정책과 캠핏 캠핑로그(곳마다 최근 10~80개)를 2026년 11월 9일에 확인했어요. 네이버 카페 후기는 로그인이 필요해서 직접 읽지 못했고, 각 캠핑장 상세에 검색 링크를 달아뒀어요. 가격은 평일 1박 쿠폰가, 거리는 범계 출발 대략치예요.</p>${creditNote()}`;
   }else if(view==="solo"){
@@ -127,6 +145,37 @@ function openSheet(title,html,forId){
 function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");document.documentElement.style.overflow="";sheetFor=null;
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
 function cond(icon,label,state,text){return `<div class="cd"><i>${icon}</i><div>${label}<small>${esc(text)}</small></div><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div>`}
+function gallery(d){
+  const g=gco(d);const imgs=g&&g.imgs&&g.imgs.length?g.imgs:[];
+  if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
+  return `<div class="hero gal"><div class="galrow" id="gal">${imgs.map((u,i)=>`<img src="${esc(u)}" alt="" loading="${i?"lazy":"eager"}" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`).join("")}</div><span class="credit">${CREDIT}</span><span class="galn" id="galn">1 / ${imgs.length}</span></div>`;
+}
+/* 우리 정보와 고캠핑 정보가 다르면 알려줘요 */
+function diffs(d,g){
+  if(!g)return [];const out=[];
+  if(!d.solo&&g.pet==="불가능")out.push("고캠핑엔 반려동물 '불가능'으로 나와요");
+  else if(!d.solo&&g.pet==="가능(소형견)"&&d.dog2==="ok"&&!/kg/.test(d.dogT||""))out.push("고캠핑엔 '소형견만' 가능으로 나와요");
+  if(d.fire==="ok"&&g.fire==="불가")out.push("고캠핑엔 화로대 '불가'로 나와요");
+  if(d.fire==="ok"&&g.fire==="공동취사장")out.push("고캠핑엔 화로대가 '공동'으로 나와요");
+  if(d.fire!=="ok"&&g.fire==="개별"&&!d.near)out.push("고캠핑엔 개별 화로대 가능으로 나와요 (불멍 될 수도 있어요)");
+  if(d.w11&&g.sbrs.length&&!g.sbrs.includes("전기"))out.push("고캠핑 시설 목록에 전기가 없어요");
+  return out;
+}
+function diffBox(d,g){const x=diffs(d,g);return x.length?`<div class="rvbox warn"><b>🔎 고캠핑 정보와 달라요: 전화로 확인</b><ul>${x.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><small>고캠핑 정보가 예전 것일 수 있어요</small></div>`:""}
+function gcBox(g,d){
+  const fl=Object.entries(g.floor||{}).map(([k,v])=>`${k} ${v}`).join(" · ");
+  const row=(i,l,t)=>t?`<div class="cd"><i>${i}</i><div>${l}<small>${t}</small></div></div>`:"";
+  const tel=(g.tel||"").replace(/[^0-9-]/g,"");
+  return `<div class="gcbox"><b>🏕️ 고캠핑 정보</b>${g.intro?`<p class="gci">"${esc(g.intro)}"</p>`:""}<div class="conds">
+   ${row("📞","전화",tel?`<a href="tel:${tel}">${esc(g.tel)}</a>`:"")}
+   ${row("📅","운영",esc([g.season&&`${g.season}`,g.days].filter(Boolean).join(" · ")))}
+   ${row("🪨","사이트 바닥",esc(fl))}
+   ${row("🚿","시설",esc((g.sbrs||[]).join(" · ")))}
+   ${row("🐶","반려동물",esc(g.pet))}
+   ${row("🔥","화로대",esc(g.fire))}
+   ${row("🔗","홈페이지·예약",[g.home&&`<a href="${esc(g.home)}" target="_blank" rel="noopener">홈페이지</a>`,g.book&&g.book!==g.home&&`<a href="${esc(g.book)}" target="_blank" rel="noopener">예약 페이지</a>`].filter(Boolean).join(" · "))}
+  </div><small class="hint">출처: 고캠핑(한국관광공사) · ${esc(GC.updated||"")} 기준${d.near?" · 자동 추천이라 직접 확인 전이에요":""}</small></div>`;
+}
 function detail(id){
   const d=all().find(x=>x.id===id);if(!d)return;
   let c="";
@@ -136,14 +185,17 @@ function detail(id){
   c+=cond("🚗","오토캠핑",d.auto===true?"ok":d.auto==="check"?"check":"no",d.autoT||(d.auto?"차를 사이트 옆에":"주차장에서 걸어서 이동"));
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
   const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
-  openSheet(d.n,`<div class="hero">${thumb(d,"h")}</div>
-   <div class="dt"><h3>${esc(d.n)}</h3><p>${esc(d.a||"주소 미입력")} ${d.a?`<button class="copy" data-copy="${esc(d.a)}">주소 복사</button>`:""}</p><p>${(R[d.r]||["지역 미입력"])[0]} · 범계에서 약 ${hm(d.min)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p></div>
+  const g=gco(d);
+  openSheet(d.n,`${gallery(d)}
+   <div class="dt"><h3>${esc(d.n)}</h3><p>${esc(d.a||"주소 미입력")} ${d.a?`<button class="copy" data-copy="${esc(d.a)}">주소 복사</button>`:""}</p><p>${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p></div>
    ${links(d)}
+   ${diffBox(d,g)}
    ${rv}
+   ${g?gcBox(g,d):""}
    <div class="conds">${c}</div>
    ${d.plus?`<div class="memo">＋ ${esc(d.plus)}</div>`:""}${d.memo?`<div class="memo">${esc(d.memo)}</div>`:""}${d.ask?`<div class="ask">📞 물어볼 것: ${esc(d.ask)}</div>`:""}
    <div class="memo-in"><b>📝 내 메모</b><textarea id="noteText" placeholder="캠핏·카페에서 확인한 것, 통화 결과 등을 적어두세요">${esc(notes[d.id]||"")}</textarea><div class="row"><span class="hint" id="noteState">${shared.mode==="live"?"공유 기록에 저장돼요":"이 브라우저에 저장돼요"}</span><span style="display:flex;gap:8px">${d.user?`<button class="sbtn danger" data-del="${d.id}">삭제</button><button class="sbtn ghost" data-edit="${d.id}">수정</button>`:""}<button class="sbtn" data-savenote="${d.id}">메모 저장</button></span></div></div>
-   <div class="cta"><div class="p"><b>${won(d.p)}</b> /박<small>${esc(d.ps||"")}${d.fee?` · 반려견 ${esc(d.fee)}`:""}</small></div>${d.url?`<a class="go" href="${esc(d.url)}" target="_blank" rel="noopener">예약하러 가기</a>`:`<a class="go" href="https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}" target="_blank" rel="noopener">캠핏에서 찾기</a>`}</div>`,d.id);
+   <div class="cta"><div class="p"><b>${d.near?"요금 문의":won(d.p)}</b> ${d.near?"":"/박"}<small>${esc(d.ps||"")}${d.fee?` · 반려견 ${esc(d.fee)}`:""}</small></div>${d.near?`<a class="go" href="${esc(d.g.book||gcUrl(d))}" target="_blank" rel="noopener">${d.g.book?"예약 페이지":"고캠핑에서 보기"}</a>`:d.url?`<a class="go" href="${esc(d.url)}" target="_blank" rel="noopener">예약하러 가기</a>`:`<a class="go" href="https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}" target="_blank" rel="noopener">캠핏에서 찾기</a>`}</div>`,d.id);
 }
 function filterSheet(){
   openSheet("조건과 정렬",`<div class="fs"><h4>정렬</h4><div class="opts"><button class="qc" data-sortset="dist" aria-pressed="${sort==="dist"}">📍 가까운 순</button><button class="qc" data-sortset="price" aria-pressed="${sort==="price"}">💸 저렴한 순</button></div></div>
@@ -241,7 +293,7 @@ function paintSync(){
   if(view==="check")render();
 }
 function syncNote(){return shared.mode==="live"?"찜·체크·메모·직접 추가한 캠핑장은 공유 기록에 저장돼서 다른 기기에서도 보여요.":"지금은 이 브라우저에만 저장돼요. 로그인하면 다른 기기와 함께 써요."}
-function creditNote(){return Object.keys(PHOTO).length?`<p class="note">${CREDIT} · <a href="https://www.data.go.kr/data/15101933/openapi.do" target="_blank" rel="noopener">고캠핑 정보 조회서비스</a>(공공누리 제1유형: 출처 표시). 고캠핑에 있는 곳만 사진이 나오고, 나머지는 그림이에요.</p>`:""}
+function creditNote(){return Object.keys(GC.camps).length?`<p class="note">${CREDIT} · <a href="https://www.data.go.kr/data/15101933/openapi.do" target="_blank" rel="noopener">고캠핑 정보 조회서비스</a>(공공누리 제1유형: 출처 표시). 고캠핑에 있는 곳만 사진과 정보가 나오고, 나머지는 그림이에요.</p>`:""}
 function accountBox(){
   if(!shared.sb)return `<section class="sec" style="margin-top:16px"><div class="sync"><div><b>📱 이 브라우저에 저장 중</b><small>공유 저장소에 연결하지 못했어요. 기록은 이 기기에 남아요.</small></div></div></section>`;
   if(!shared.user)return `<section class="sec" style="margin-top:16px"><div class="sync"><div><b>📱 이 브라우저에만 저장 중</b><small>지쏘·시아 이메일로 로그인하면 찜·메모가 다른 기기와 함께 저장돼요.</small></div><button class="sbtn" data-login>이메일로 로그인</button></div></section>`;
@@ -317,11 +369,13 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110a";
+  const V="20261110b";
   try{
-    const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("photos.json?v="+V).then(r=>r.ok?r.json():{items:{}}).catch(()=>({items:{}}))]);
-    R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;PHOTO=p.items||{};
+    const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
+    R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
   }catch(e){document.getElementById("view").innerHTML=`<div class="empty"><b>캠핑장 목록을 불러오지 못했어요</b><span>잠시 뒤 새로고침해 주세요.</span></div>`;return}
   window.addEventListener("hashchange",route);route();
   startShared();
 })();
+/* 상세 사진첩: 몇 번째 사진인지 */
+document.addEventListener("scroll",e=>{const g=e.target;if(!g||g.id!=="gal")return;const n=document.getElementById("galn");if(n)n.textContent=`${Math.round(g.scrollLeft/g.clientWidth)+1} / ${g.children.length}`},true);

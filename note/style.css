@@ -203,3 +203,15 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 .pick small{color:var(--sub);font-size:13px}
 .toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:60;background:var(--fg);color:var(--app);padding:10px 16px;border-radius:999px;font-size:14px;box-shadow:var(--shadow);max-width:calc(100vw - 32px)}
 .note a{color:var(--sub)}
+/* 고캠핑 사진첩·정보 */
+.gal{position:relative}
+.galrow{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;width:100%;height:100%}
+.galrow::-webkit-scrollbar{display:none}
+.galrow img{flex:none;width:100%;height:100%;object-fit:cover;scroll-snap-align:start}
+.galn{position:absolute;left:10px;bottom:8px;z-index:2;font-size:11px;background:rgba(0,0,0,.5);color:#fff;padding:2px 8px;border-radius:999px;font-variant-numeric:tabular-nums}
+.gcbox{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:grid;gap:6px}
+.gcbox .gci{margin:0;color:var(--sub);font-size:14px}
+.gcbox .conds{border-top:0}
+.gcbox .cd{padding:8px 0}
+.gcbox .cd:last-child{border-bottom:0}
+.gcbox a{color:var(--brand);font-weight:600}

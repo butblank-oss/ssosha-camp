@@ -4,7 +4,7 @@
 
 - 주소: https://butblank-oss.github.io/ssosha-camp/note/
 - `camps.json`: 캠핑장 데이터 원본. `id`는 고정값이라 이름(`n`)을 바꿔도 찜·메모가 이어져요. 새 캠핑장은 겹치지 않는 영어 `id`를 붙여요.
-- `photos.json`: 고캠핑(한국관광공사) 대표 사진. `.github/workflows/note-photos.yml`이 매주(그리고 camps.json이 바뀔 때) 시크릿 `GOCAMPING_KEY`로 받아 와요. 키는 페이지에 들어가지 않아요. 고캠핑 정보 조회서비스는 공공누리 제1유형이라 "사진: 고캠핑(한국관광공사)"를 표시해요.
+- `gocamping.json`: 고캠핑(한국관광공사) 사진 여러 장·한 줄 소개·전화·운영 기간·바닥·시설, 그리고 범계 근처 반려동물 가능·개별 화로대 추천. `.github/workflows/note-photos.yml`이 매주(그리고 camps.json이 바뀔 때) 시크릿 `GOCAMPING_KEY`로 받아 와요. 키는 페이지에 들어가지 않아요. 고캠핑 정보 조회서비스는 공공누리 제1유형이라 "사진: 고캠핑(한국관광공사)"를 표시해요.
 - `config.js`: Supabase 연결 정보(쏘샤캠프와 같은 프로젝트, 표는 `camp_note`).
 - `setup.sql`: 표 만드는 SQL. Supabase SQL Editor에서 한 번 실행해요.
 - 파일을 고치면 `index.html`의 `?v=` 값(과 app.js 안의 `V`)을 올려서 휴대폰이 예전 파일을 쓰지 않게 해요.

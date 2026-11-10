@@ -1,0 +1,1617 @@
+{
+ "updated": "2026-11-10",
+ "source": "고캠핑(한국관광공사) 공공누리 제1유형",
+ "full": false,
+ "camps": {
+  "jecheon-stayout": {
+   "gc": "101368",
+   "name": "스테이아웃",
+   "intro": "청풍호와 노을이 어우러진 풍경을 품은 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "충북 제천시 금성면 청풍호로 1623",
+   "km": 116.0,
+   "tel": "043-646-1623",
+   "home": "https://m.thankqcamping.com/resv/view.hbb?cseq=14933&go_main=Y&path=RP",
+   "book": "",
+   "season": "봄,여름,가을",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 19,
+    "데크": 4
+   },
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "불가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101368/thumb/thumb_720_9889EnNrNeQc6qq5h1rBwPse.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101368/thumb/thumb_720_9889EnNrNeQc6qq5h1rBwPse.jpg"
+   ]
+  },
+  "jecheon-baegun-sunvalley": {
+   "gc": "100685",
+   "name": "백운썬밸리캠핑장",
+   "intro": "제천박달재와덕동계곡 중간쯤에 위치한 백운썬밸리 캠핑장",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "충북 제천시 백운면 구학산로 600",
+   "km": 95.1,
+   "tel": "010-6203-3303",
+   "home": "https://www.camfit.co.kr/camp/629edbe3692d55001e3ef9ba",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 20
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100685/thumb/thumb_720_0168wkOT7aDrsrJOUNODbYxu.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100685/thumb/thumb_720_0168wkOT7aDrsrJOUNODbYxu.jpg"
+   ]
+  },
+  "jecheon-its-camping": {
+   "gc": "100892",
+   "name": "잇츠 캠핑",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "충청북도 제천시 덕산면 월악산로 340",
+   "km": 118.0,
+   "tel": "",
+   "home": "https://camfit.co.kr/camp/6476b77f9c2a3f001fc24964",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 18
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100892/thumb/thumb_720_2611uOv2dt8OfNT0jH2tfxpG.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100892/thumb/thumb_720_2611uOv2dt8OfNT0jH2tfxpG.jpg"
+   ]
+  },
+  "taean-sinduri-orange": {
+   "gc": "101524",
+   "name": "신두리 오렌지 캠핑장",
+   "intro": "태안 신두리 해안사구 앞 오토캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "충남 태안군 원북면 두웅로 356-123",
+   "km": 90.4,
+   "tel": "0507-1438-7960",
+   "home": "https://naver.me/5l74iG8B",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 36
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101524/thumb/thumb_720_5875MZWm6ctQZF737TSvPEw1.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101524/thumb/thumb_720_5875MZWm6ctQZF737TSvPEw1.jpg"
+   ]
+  },
+  "hanam-ttabom": {
+   "gc": "100337",
+   "name": "따봄",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 하남시 서하남로576번길 119 (교산동)",
+   "km": 26.7,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 9,
+    "데크": 12
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100337/thumb/thumb_720_8885FqorAofEE9kog4f2e7yr.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100337/thumb/thumb_720_8885FqorAofEE9kog4f2e7yr.jpg"
+   ]
+  },
+  "yongin-ever-auto": {
+   "gc": "101507",
+   "name": "에버오토캠핑장",
+   "intro": "용인IC 5분 거리에 위치한 오토 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 용인시 처인구 포곡읍 삼계리 677 ",
+   "km": 27.5,
+   "tel": "0507-1377-5354",
+   "home": "https://www.camfit.co.kr/camp/666659e213820a001eb3d18c",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 80
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101507/thumb/thumb_720_7841lENOIKHc4KdrtUklnfxR.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101507/thumb/thumb_720_7841lENOIKHc4KdrtUklnfxR.jpg"
+   ]
+  },
+  "yeoju-camperdy": {
+   "gc": "101740",
+   "name": "캠퍼디",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 여주시 북내면 여강로 375",
+   "km": 65.3,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "",
+   "days": "",
+   "floor": {},
+   "sbrs": [],
+   "pet": "",
+   "fire": "",
+   "img": "",
+   "imgs": []
+  },
+  "gapyeong-seontaekjeok-gorip": {
+   "gc": "101331",
+   "name": "선택적고립캠핑장",
+   "intro": "나만을 위한 시간",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 가평군 상면 축령로70번길 106",
+   "km": 56.9,
+   "tel": "010-3440-3771",
+   "home": "https://www.camfit.co.kr/camp/661b99159e2fb5001e2b1863",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 15,
+    "데크": 30
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101331/thumb/thumb_720_1699jqMrv4vEYJVdzBjgy8wi.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101331/thumb/thumb_720_1699jqMrv4vEYJVdzBjgy8wi.jpg"
+   ]
+  },
+  "pocheon-camp-daon": {
+   "gc": "101214",
+   "name": "캠프다온",
+   "intro": "반려견동반 풀타프존 키즈랜드 개별샤워실 온수수영장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 포천시 영북면 방골길 688-11",
+   "km": 80.6,
+   "tel": "",
+   "home": "http://cafe.naver.com/campdaon",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 23
+   },
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101214/thumb/thumb_720_8367A1CMF93uOjw59EQY6API.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101214/thumb/thumb_720_8367A1CMF93uOjw59EQY6API.jpg"
+   ]
+  },
+  "pyeongtaek-nangman-factory": {
+   "gc": "100679",
+   "name": "낭만팩토리",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 평택시 안중읍 안중북로 185-84",
+   "km": 42.8,
+   "tel": "010-3845-3478",
+   "home": "https://www.camfit.co.kr/camp/638d58a9d05094001e295a79",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 15
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100679/thumb/thumb_720_5497C3Xh7N8Pw4VHqvXNPzic.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100679/thumb/thumb_720_5497C3Xh7N8Pw4VHqvXNPzic.jpg"
+   ]
+  },
+  "daebudo-verardel": {
+   "gc": "101121",
+   "name": "베르아델 승마클럽",
+   "intro": "대부도 승마장에 딸린 오토캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 안산시 단원구 부흥로 376 (대부남동)",
+   "km": 36.1,
+   "tel": "032-882-2255",
+   "home": "http://www.horseride.co.kr/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 20
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101121/thumb/thumb_720_9305z68zrJGlH5U2gooRwiBq.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101121/thumb/thumb_720_9305z68zrJGlH5U2gooRwiBq.jpg"
+   ]
+  },
+  "hwaseong-hygge-campic": {
+   "gc": "101673",
+   "name": "휘게캠피크",
+   "intro": "노을이 멋진 감성 캠핑장",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 화성시 우정읍 궁평항로 81-70",
+   "km": 41.2,
+   "tel": "",
+   "home": "https://www.camfit.co.kr/camp/6764ecc373197d001d1f6008/6764f61b34bca6001daba398",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "",
+   "imgs": []
+  },
+  "ganghwa-awesome": {
+   "gc": "100324",
+   "name": "어썸캠핑장",
+   "intro": "아이와 함께 가기 좋은 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천 강화군 화도면 마니산로 808-11",
+   "km": 55.0,
+   "tel": "032-937-1580",
+   "home": "https://www.camfit.co.kr/camp/625d36bc0b5a84001eea82b8",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100324/thumb/thumb_720_4993dyi1eFLAKGv5HGGLR0I7.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100324/thumb/thumb_720_4993dyi1eFLAKGv5HGGLR0I7.jpg"
+   ]
+  },
+  "ganghwa-bada-noeul": {
+   "gc": "101660",
+   "name": "바다노을 캠핑장",
+   "intro": "강화도 선두리에 위치한 캠핑장입니다.",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천 강화군 길상면 해안남로 779-13",
+   "km": 48.0,
+   "tel": "010-4614-4401",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 1
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101660/thumb/thumb_720_44809YeGXZLtc8yypgNUz0QA.png",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101660/thumb/thumb_720_44809YeGXZLtc8yypgNUz0QA.png"
+   ]
+  },
+  "uiwang-barasan": {
+   "gc": "1208",
+   "name": "바라산자연휴양림 야영장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 의왕시 바라산로 84 (학의동)",
+   "km": 6.3,
+   "tel": "031-8086-7482",
+   "home": "https://strawberry.mainticket.co.kr/strawberry/strawberry.aspx?companycode=0048&shopcode=0001",
+   "book": "",
+   "season": "",
+   "days": "",
+   "floor": {},
+   "sbrs": [],
+   "pet": "불가능",
+   "fire": "",
+   "img": "",
+   "imgs": []
+  },
+  "seoul-grand-park": {
+   "gc": "1622",
+   "name": "서울대공원야영장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 과천시 대공원광장로 102 (막계동)",
+   "km": 7.6,
+   "tel": "02-500-7870",
+   "home": "http://grandpark.seoul.go.kr/korea_grand/camping/reserv/reserv01.jsp?headerId=41263&menuid=41281&parentId=41282",
+   "book": "",
+   "season": "",
+   "days": "",
+   "floor": {},
+   "sbrs": [
+    "장작판매"
+   ],
+   "pet": "불가능",
+   "fire": "",
+   "img": "",
+   "imgs": []
+  },
+  "ansan-hwarang-auto": {
+   "gc": "2022",
+   "name": "안산화랑오토캠핑장",
+   "intro": "다양한 부대시설과 지역축제를 즐길 수 있는 화랑유원지내 캠핑장",
+   "feature": "",
+   "type": "일반야영장,자동차야영장,카라반",
+   "addr": "경기도 안산시 단원구 초지동 동산로 268 ",
+   "km": 14.0,
+   "tel": "031-481-9801",
+   "home": "https://hwarangcamp.ansanuc.net/index.do",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "불가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/2022/thumb/thumb_720_4437dXcVLMyEqSFNqepY3pvd.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/2022/thumb/thumb_720_4437dXcVLMyEqSFNqepY3pvd.jpg"
+   ]
+  },
+  "pyeongtaek-jinwicheon": {
+   "gc": "2837",
+   "name": "진위천유원지 자동차야영장",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기도 평택시 진위면 진위서로 264-15 ",
+   "km": 34.6,
+   "tel": "031-665-6231",
+   "home": "https://tickets.interpark.com/goods/21009223",
+   "book": "",
+   "season": "",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "불가능",
+   "fire": "개별",
+   "img": "",
+   "imgs": []
+  },
+  "goyang-kintex": {
+   "gc": "3120",
+   "name": "킨텍스캠핑장",
+   "intro": "서울 근교 도심 속에서 즐기는 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 고양시 일산서구 킨텍스로 217-25 (대화동)",
+   "km": 35.6,
+   "tel": "031-913-1700",
+   "home": "http://ticket.interpark.com/Ticket/Goods/GoodsInfo.asp?GoodsCode=16014395",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "잔디": 45,
+    "파쇄석": 31
+   },
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "불가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/3120/thumb/thumb_720_2230dMoalowTL1SnrYjBhF59.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/3120/thumb/thumb_720_2230dMoalowTL1SnrYjBhF59.jpg"
+   ]
+  },
+  "chungju-mokgye-solbat": {
+   "gc": "100812",
+   "name": "충주 목계솔밭 캠핑장",
+   "intro": "대규모 친환경 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "충북 충주시 중앙탑면 첨단산업로 1438",
+   "km": 89.4,
+   "tel": "043-830-9370",
+   "home": "https://www.cjfmc.or.kr/camping/cjcamp/campsite",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 24
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "불가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100812/thumb/thumb_720_7461BXLT8apSq9JmOQf1Skz1.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100812/thumb/thumb_720_7461BXLT8apSq9JmOQf1Skz1.jpg"
+   ]
+  }
+ },
+ "nearby": [
+  {
+   "gc": "3636",
+   "name": "힐포인트",
+   "intro": "반려견수영장, 반려견 운동장 갖춘 글램핑장",
+   "feature": "",
+   "type": "일반야영장,글램핑",
+   "addr": "경기 용인시 수지구 동천로 541 (고기동)",
+   "km": 10.0,
+   "tel": "070-7761-4882",
+   "home": "http://healpoint.co.kr/pension/reserve.html?pid=25",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/3636/thumb/thumb_720_6434UX6lCcugUxHivAdwwoEh.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/3636/thumb/thumb_720_6434UX6lCcugUxHivAdwwoEh.jpg"
+   ]
+  },
+  {
+   "gc": "7542",
+   "name": "에제르파크 바베큐장",
+   "intro": "인천 남동구 만의골 은행나무길에 위치한 패밀리복합문화공간",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천광역시 남동구 만의골로 155 (장수동)",
+   "km": 17.5,
+   "tel": "0507-1420-2131",
+   "home": "https://m.site.naver.com/28PpB",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 24
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7542/thumb/thumb_720_3423J5pnqZzczlUhWlffRKm0.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7542/thumb/thumb_720_3423J5pnqZzczlUhWlffRKm0.jpg"
+   ]
+  },
+  {
+   "gc": "2533",
+   "name": "은빛초원 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기도 화성시 만세구 남양읍 샘실길 50-2",
+   "km": 22.8,
+   "tel": "010-9003-7727",
+   "home": "http://cafe.naver.com/songsukgui1",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 20
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/2533/thumb/thumb_720_9672Aq1bhXF6NfFrrXmsN42Y.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/2533/thumb/thumb_720_9672Aq1bhXF6NfFrrXmsN42Y.jpg"
+   ]
+  },
+  {
+   "gc": "100525",
+   "name": "소설악 가족 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장,카라반",
+   "addr": "경기 광주시 남한산성면 남한산성로 407",
+   "km": 24.4,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 6,
+    "데크": 4
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100525/thumb/thumb_720_9714T27bDxeOYvJWB2x4h8z4.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100525/thumb/thumb_720_9714T27bDxeOYvJWB2x4h8z4.jpg"
+   ]
+  },
+  {
+   "gc": "101789",
+   "name": "구이PICK",
+   "intro": "오산 당일캠핑 바베큐장",
+   "feature": "",
+   "type": "일반야영장,캠프닉",
+   "addr": "경기도 오산시 서랑로 208-13 (지곶동)",
+   "km": 25.0,
+   "tel": "",
+   "home": "https://blog.naver.com/92pick",
+   "book": "",
+   "season": "",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101789/thumb/thumb_720_2391AL6Pr5rjGijDUWeYphxF.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101789/thumb/thumb_720_2391AL6Pr5rjGijDUWeYphxF.jpg"
+   ]
+  },
+  {
+   "gc": "8049",
+   "name": "골드펫리조트",
+   "intro": "사랑스러운 반려동물과 함께하는 골드펫리조트",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 용인시 기흥구 기흥단지로 406 (고매동, 골드훼미리콘도)",
+   "km": 25.1,
+   "tel": "031-286-9111",
+   "home": "http://www.goldpetresort.kr/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/8049/thumb/thumb_720_2616wzEfRQirXCwkpos6UnXL.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/8049/thumb/thumb_720_2616wzEfRQirXCwkpos6UnXL.jpg"
+   ]
+  },
+  {
+   "gc": "100247",
+   "name": "남한산성 캠핑장",
+   "intro": "서울, 성남 등과 가까운 남한산성에 계곡을 끼고있는 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 광주시 남한산성면 남한산성로 144",
+   "km": 26.1,
+   "tel": "031-747-9488",
+   "home": "https://www.camfit.co.kr/camp/61dfd4b10af65b001eb59ab7",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 32,
+    "데크": 4
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100247/thumb/thumb_720_4573U29cCzGcTmCTIhb84p0P.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100247/thumb/thumb_720_4573U29cCzGcTmCTIhb84p0P.jpg"
+   ]
+  },
+  {
+   "gc": "7171",
+   "name": "싱글벙글캠핑장",
+   "intro": "무봉산 품에 자리한 조용한 숲속 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 용인시 처인구 이동읍 상덕로 95-62",
+   "km": 27.0,
+   "tel": "010-4611-4246",
+   "home": "https://m.thankqcamping.com/resv/view.hbb?cseq=318&go_main=Y&path=RP",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 22,
+    "데크": 2
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7171/thumb/thumb_720_2531kdflCvxqaxnwkaPnOWGU.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7171/thumb/thumb_720_2531kdflCvxqaxnwkaPnOWGU.jpg"
+   ]
+  },
+  {
+   "gc": "7886",
+   "name": "여기가자 카라반글램핑캠핑 화성사강점",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 화성시 만세구 송산면 송산포도로 194",
+   "km": 27.6,
+   "tel": "031-932-8188",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 11
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7886/thumb/thumb_720_6009aoa2UG0a4YjV3vVJGru7.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7886/thumb/thumb_720_6009aoa2UG0a4YjV3vVJGru7.jpg"
+   ]
+  },
+  {
+   "gc": "101563",
+   "name": "어도숲 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기도 화성시 송산면 어섬길259번길 64",
+   "km": 30.9,
+   "tel": "031-357-1004",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 3,
+    "데크": 6
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101563/thumb/thumb_720_3401VHIPfUptZQfufe3dWTUB.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101563/thumb/thumb_720_3401VHIPfUptZQfufe3dWTUB.jpg"
+   ]
+  },
+  {
+   "gc": "101618",
+   "name": "화성리프레시글램핑",
+   "intro": "자연속의 휴식, 내집처럼 편안한 글램핑",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 화성시 서신면 안벼슬길102번길 205",
+   "km": 31.6,
+   "tel": "0507-1374-4472",
+   "home": "http://refreshglamping.com/theme/basic/reserve.php",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 31
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101618/thumb/thumb_720_4820sWvFWYWI49Pkfzhp8lHc.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101618/thumb/thumb_720_4820sWvFWYWI49Pkfzhp8lHc.jpg"
+   ]
+  },
+  {
+   "gc": "100199",
+   "name": "사노리숲",
+   "intro": "외부음식,주류,무엇이든~반입가능^^",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 구리시 동구릉로459번길 181 (사노동)",
+   "km": 31.7,
+   "tel": "031-572-4511",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100199/thumb/thumb_720_8114VjZtcffaEu9aeGMzLdw4.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100199/thumb/thumb_720_8114VjZtcffaEu9aeGMzLdw4.jpg"
+   ]
+  },
+  {
+   "gc": "100144",
+   "name": "청라캠핑파크",
+   "intro": "청라국제도시의 해변공원 내에 위치한 도심 캠핑장",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "인천광역시 서해구 첨단서로 190 (청라동)",
+   "km": 33.9,
+   "tel": "032-567-4968",
+   "home": "https://booking.naver.com/booking/3/bizes/598254",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "데크": 13,
+    "자갈": 25
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100144/thumb/thumb_720_57561wuZF0YuXW8QK6AIhg5i.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100144/thumb/thumb_720_57561wuZF0YuXW8QK6AIhg5i.jpg"
+   ]
+  },
+  {
+   "gc": "100708",
+   "name": "일영Star캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 양주시 장흥면 유원지로 406-144",
+   "km": 36.1,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 48
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100708/thumb/thumb_720_4251liscxvcCexUIdHCS2YoE.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100708/thumb/thumb_720_4251liscxvcCexUIdHCS2YoE.jpg"
+   ]
+  },
+  {
+   "gc": "100642",
+   "name": "주식회사 대부도펜션시티",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장,카라반",
+   "addr": "경기 안산시 단원구 공마루길 68-97 (대부동동)",
+   "km": 36.4,
+   "tel": "1577-0616-",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 60
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100642/thumb/thumb_720_7564kkgOvSiPTpBeH4QGpQ08.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100642/thumb/thumb_720_7564kkgOvSiPTpBeH4QGpQ08.jpg"
+   ]
+  },
+  {
+   "gc": "7172",
+   "name": "씨밀레자연관광농원",
+   "intro": "유유자적 여유만만 자연친화 캠핑장",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 용인시 처인구 이동읍 이원로601번길 1-5",
+   "km": 36.5,
+   "tel": "010-8354-8645",
+   "home": "https://map.naver.com/p/entry/place/1668172134",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 24
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7172/thumb/thumb_720_7697ugCBHfRGDWsteN7CWM3Z.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7172/thumb/thumb_720_7697ugCBHfRGDWsteN7CWM3Z.jpg"
+   ]
+  },
+  {
+   "gc": "101426",
+   "name": "양주 장흥 브이아이피 캠핑장",
+   "intro": "도심 근처, 편안하고 다채롭게 가족, 연인과 캠핑을 즐길 수 있는 장흥양주 VIP 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 양주시 장흥면 권율로 102-26",
+   "km": 37.0,
+   "tel": "031-855-8101",
+   "home": "https://m.place.naver.com/accommodation/1449500928/home?entry=pll&businessCategory=camping",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101426/thumb/thumb_720_8833cEcXsfEKQG5uCEpW0kRW.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101426/thumb/thumb_720_8833cEcXsfEKQG5uCEpW0kRW.jpg"
+   ]
+  },
+  {
+   "gc": "7878",
+   "name": "빨간집 야영장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 양평군 양서면 양수로118번길 69",
+   "km": 37.4,
+   "tel": "010-8766-3742",
+   "home": "https://bbalganjib.modoo.at/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "잔디": 10
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7878/thumb/thumb_720_6267Qf82MZehtlf6Bd9ZD6mR.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7878/thumb/thumb_720_6267Qf82MZehtlf6Bd9ZD6mR.jpg"
+   ]
+  },
+  {
+   "gc": "100989",
+   "name": "포근마루캠핑장",
+   "intro": "경기도 양주시에 위치한 반려견 동반가능한 오토캠핑장입니다.",
+   "feature": "",
+   "type": "일반야영장,글램핑,에어컨,냉장고,유무선인터넷,난방기구,취사도구",
+   "addr": "경기 양주시 장흥면 권율로 156-116",
+   "km": 37.7,
+   "tel": "",
+   "home": "https://m.thankqcamping.com/resv/view.hbb?cseq=18431&go_main=Y&path=RP",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 16
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100989/thumb/thumb_720_5246deMlpSupv7ycABu5PIds.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100989/thumb/thumb_720_5246deMlpSupv7ycABu5PIds.jpg"
+   ]
+  },
+  {
+   "gc": "101217",
+   "name": "양주르글램핑캠핑장",
+   "intro": "All about family fun! 송추 가마골에 있는 캠핑피크닉",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 양주시 장흥면 가마골로 188-56",
+   "km": 38.5,
+   "tel": "0507-1335-9901",
+   "home": "http://naver.me/xFrKvXPn",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101217/thumb/thumb_720_4101mn6c0mTUCdzsZIzRlkOf.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101217/thumb/thumb_720_4101mn6c0mTUCdzsZIzRlkOf.jpg"
+   ]
+  },
+  {
+   "gc": "101184",
+   "name": "비트윈",
+   "intro": "송추 가마골 참숯찜질 안쪽 바비큐 전용 캠크닉",
+   "feature": "",
+   "type": "일반야영장,글램핑,캠프닉",
+   "addr": "경기 양주시 장흥면 가마골로 188-53",
+   "km": 38.6,
+   "tel": "031-836-0667",
+   "home": "https://map.naver.com/p/entry/place/1071613830?lng=126.9827553&lat=37.7364239&placePath=%2Fhome%3Fentry%3Dplt&c=15.00,0,0,0,dh",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101184/thumb/thumb_720_1765njjGYad5yj2C5ac6UfRQ.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101184/thumb/thumb_720_1765njjGYad5yj2C5ac6UfRQ.jpg"
+   ]
+  },
+  {
+   "gc": "7167",
+   "name": "숲속에안뜰 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 용인시 처인구 원삼면 원양로 250-23",
+   "km": 39.1,
+   "tel": "010-6639-6701",
+   "home": "http://땡큐캠핑",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "잔디": 10,
+    "파쇄석": 13
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7167/thumb/thumb_720_1619dumPESySNH0uqb3E3KvT.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7167/thumb/thumb_720_1619dumPESySNH0uqb3E3KvT.jpg"
+   ]
+  },
+  {
+   "gc": "101256",
+   "name": "미라마 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 안성시 양성면 양성로 560-21",
+   "km": 39.6,
+   "tel": "",
+   "home": "http://miramarcamp.modoo.at/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101256/thumb/thumb_720_3110HOe5rSaXb2Vm7beloEIG.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101256/thumb/thumb_720_3110HOe5rSaXb2Vm7beloEIG.jpg"
+   ]
+  },
+  {
+   "gc": "101330",
+   "name": "비앙드팜",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기 양평군 강하면 강하1로 380-6",
+   "km": 39.7,
+   "tel": "031-8027-6667",
+   "home": "https://map.naver.com/v5/entry/place/1793842605",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101330/thumb/thumb_720_3630VZLC6xF2iNEGkv5jCKuU.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101330/thumb/thumb_720_3630VZLC6xF2iNEGkv5jCKuU.jpg"
+   ]
+  },
+  {
+   "gc": "101236",
+   "name": "포레스트 도일",
+   "intro": "평택 브레인시티 산업단지 옆 당일 바비큐 캠핑장",
+   "feature": "",
+   "type": "일반야영장,캠프닉",
+   "addr": "경기 평택시 원릉군길 171-2 (도일동)",
+   "km": 39.8,
+   "tel": "",
+   "home": "https://www.instagram.com/forest_doil?igsh=MWF1dDF3bnp3Z3B5Yg%3D%3D&utm_source=qr",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "데크": 17
+   },
+   "sbrs": [
+    "전기",
+    "온수"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101236/thumb/thumb_720_8989QISuhZKR9LGl1z1hbxQE.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101236/thumb/thumb_720_8989QISuhZKR9LGl1z1hbxQE.jpg"
+   ]
+  },
+  {
+   "gc": "101595",
+   "name": "선재담 글램핑&카라반 리조트",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장,카라반,글램핑",
+   "addr": "인천 옹진군 영흥면 선재로226번길 130-37",
+   "km": 40.5,
+   "tel": "032-880-9903",
+   "home": "https://booking.naver.com/booking/3/bizes/1247314",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101595/thumb/thumb_720_08402IhhP5qEKd5Ihfk09mMx.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101595/thumb/thumb_720_08402IhhP5qEKd5Ihfk09mMx.jpg"
+   ]
+  },
+  {
+   "gc": "101655",
+   "name": "산정원",
+   "intro": "깨끗한 공간에 녹아든 캠핑 감성과 바베큐의 완벽한 조화!",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 안성시 양성면 양성로 349-27",
+   "km": 40.6,
+   "tel": "0507-1317-2807",
+   "home": "https://m.booking.naver.com/booking/6/bizes/1352085",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "데크": 15
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101655/thumb/thumb_720_4199gUtnTpO5LzzYQgCT43gz.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101655/thumb/thumb_720_4199gUtnTpO5LzzYQgCT43gz.jpg"
+   ]
+  },
+  {
+   "gc": "102112",
+   "name": "뻘마당캠핑장",
+   "intro": "수만 번의 파도가 쌓인 나만의 베이스캠프",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "인천광역시 옹진군 영흥면 선재리 439-80 ",
+   "km": 41.0,
+   "tel": "0507-1318-6376",
+   "home": "http://naver.me/G6RuVllM",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 9
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/102112/thumb/thumb_720_7280DFI6901vjKA4kNxZCpXz.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/102112/thumb/thumb_720_7280DFI6901vjKA4kNxZCpXz.jpg"
+   ]
+  },
+  {
+   "gc": "725",
+   "name": "대궐오토캠핑장",
+   "intro": "아늑한 산속 오토캠핑장과 글램핑",
+   "feature": "",
+   "type": "일반야영장,글램핑",
+   "addr": "경기도 양주시 백석읍 기산로440번길 177 ",
+   "km": 42.1,
+   "tel": "031-871-8989",
+   "home": "http://me2.do/FZeXh5mZ",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/725/thumb/thumb_720_23020AQIhPInUf2tdGSnoHxA.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/725/thumb/thumb_720_23020AQIhPInUf2tdGSnoHxA.jpg"
+   ]
+  },
+  {
+   "gc": "1931",
+   "name": "심학산야영장",
+   "intro": "호텔식 글램핑 시설의 야영장과 바비큐 파티를 즐길 수 있는 글램핑장",
+   "feature": "",
+   "type": "일반야영장,글램핑",
+   "addr": "경기도 파주시 돌곶이길 57(서패동 178-18번지)",
+   "km": 42.4,
+   "tel": "",
+   "home": "https://glampinggarden.modoo.at/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/1931/thumb/thumb_720_6972jZjcUSOlMKFs60ka2vhh.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/1931/thumb/thumb_720_6972jZjcUSOlMKFs60ka2vhh.jpg"
+   ]
+  },
+  {
+   "gc": "100866",
+   "name": "십리포힐링카라반",
+   "intro": "십리포해수욕장 바로 앞 신축 카라반",
+   "feature": "",
+   "type": "일반야영장,카라반",
+   "addr": "인천 옹진군 영흥면 영흥북로 376",
+   "km": 42.8,
+   "tel": "",
+   "home": "https://naver.me/xzLJablo",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100866/thumb/thumb_720_4585CSPOTEHRWSPnox2AmlMu.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100866/thumb/thumb_720_4585CSPOTEHRWSPnox2AmlMu.jpg"
+   ]
+  },
+  {
+   "gc": "492",
+   "name": "기산골캠핑장",
+   "intro": "마장저수지와 둘레길 산책이 가능한 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 양주시 백석읍 기산로 413 ",
+   "km": 43.0,
+   "tel": "031-871-0766",
+   "home": "http://기산골캠핑장.kr/",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 5,
+    "흙": 25
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/492/thumb/thumb_720_52057wmsa4RXZ3dJJ7vUizEG.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/492/thumb/thumb_720_52057wmsa4RXZ3dJJ7vUizEG.jpg"
+   ]
+  },
+  {
+   "gc": "100904",
+   "name": "매향리 캠핑장",
+   "intro": "궁평항 방조제 아래 평화생태공원옆 해변 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 화성시 만세구 우정읍 고온리안길102번길 31",
+   "km": 43.1,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 20
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100904/thumb/thumb_720_48425ZGxQglth1Y3uqIYjZ6g.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100904/thumb/thumb_720_48425ZGxQglth1Y3uqIYjZ6g.jpg"
+   ]
+  },
+  {
+   "gc": "100282",
+   "name": "주원캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "경기 용인시 처인구 원삼면 보개원삼로1415번길 11-14",
+   "km": 43.5,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 6
+   },
+   "sbrs": [
+    "전기"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100282/thumb/thumb_720_2210BhaHuHaBxzQhr9qevlkt.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100282/thumb/thumb_720_2210BhaHuHaBxzQhr9qevlkt.jpg"
+   ]
+  },
+  {
+   "gc": "101519",
+   "name": "너아라 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천 옹진군 영흥면 영흥서로 238",
+   "km": 43.8,
+   "tel": "",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101519/thumb/thumb_720_8465ET63PhQRZ73dVrtIXrV6.jpeg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101519/thumb/thumb_720_8465ET63PhQRZ73dVrtIXrV6.jpeg"
+   ]
+  },
+  {
+   "gc": "8007",
+   "name": "양주 리온 캠핑장",
+   "intro": "",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "경기도 양주시 마전로212번길 79-72 (마전동)",
+   "km": 44.4,
+   "tel": "031-821-6661",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 22
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/8007/thumb/thumb_720_8754tjc9IYKH062urE6dH074.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/8007/thumb/thumb_720_8754tjc9IYKH062urE6dH074.jpg"
+   ]
+  },
+  {
+   "gc": "7613",
+   "name": "황산도캠핑장",
+   "intro": "황산도 섬속 작은 캠핑장",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천 강화군 길상면 해안남로65번길 36-15",
+   "km": 44.6,
+   "tel": "",
+   "home": "https://blog.naver.com/jeepsin2282/221609501888",
+   "book": "",
+   "season": "봄,여름,가을",
+   "days": "주말",
+   "floor": {
+    "데크": 17
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/7613/thumb/thumb_720_3990cEPR1jta6ARGGlY4j9Te.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/7613/thumb/thumb_720_3990cEPR1jta6ARGGlY4j9Te.jpg"
+   ]
+  },
+  {
+   "gc": "1119",
+   "name": "무지개펜션&캠핑",
+   "intro": "",
+   "feature": "",
+   "type": "자동차야영장",
+   "addr": "인천 옹진군 영흥면 영흥남로9번길 355-20",
+   "km": 45.2,
+   "tel": "032-887-7677",
+   "home": "http://www.영흥도펜션.닷컴",
+   "book": "",
+   "season": "봄,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 25
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/1119/thumb/thumb_720_5792NMYvk0D77FZR8tKv0Q7A.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/1119/thumb/thumb_720_5792NMYvk0D77FZR8tKv0Q7A.jpg"
+   ]
+  },
+  {
+   "gc": "100872",
+   "name": "포레스트벨리캠프",
+   "intro": "수동 철마산 자락! 계곡과 잣나무 숲이 어우러진 캠핑장",
+   "feature": "",
+   "type": "자동차야영장,카라반",
+   "addr": "경기 남양주시 수동면 철마산로 388-1",
+   "km": 45.3,
+   "tel": "0507-1343-0642",
+   "home": "",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {
+    "파쇄석": 30
+   },
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/100872/thumb/thumb_720_6263tDAB4z6PNsFvaWi4PaD7.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/100872/thumb/thumb_720_6263tDAB4z6PNsFvaWi4PaD7.jpg"
+   ]
+  },
+  {
+   "gc": "101732",
+   "name": "라바돔 힐링타운",
+   "intro": "새로운 디자인의 카라반",
+   "feature": "",
+   "type": "일반야영장",
+   "addr": "인천 옹진군 영흥면 영흥로722번길 36",
+   "km": 45.6,
+   "tel": "032-553-9979",
+   "home": "https://booking.naver.com/booking/3/bizes/1362691",
+   "book": "",
+   "season": "봄,여름,가을,겨울",
+   "days": "평일+주말",
+   "floor": {},
+   "sbrs": [
+    "전기",
+    "온수",
+    "장작판매"
+   ],
+   "pet": "가능(소형견)",
+   "fire": "개별",
+   "img": "https://gocamping.or.kr/upload/camp/101732/thumb/thumb_720_2880Uq3AlQyR17rcXnlDrNNU.jpg",
+   "imgs": [
+    "https://gocamping.or.kr/upload/camp/101732/thumb/thumb_720_2880Uq3AlQyR17rcXnlDrNNU.jpg"
+   ]
+  }
+ ]
+}
