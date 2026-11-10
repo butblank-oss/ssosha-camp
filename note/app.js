@@ -24,6 +24,7 @@ const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(
 const same=(a,b)=>JSON.stringify(norm(a))===JSON.stringify(norm(b));
 function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]]),picks:[...(s.picks||[])].sort()}}
 loadState(local.get(KEY,null));
+let cmp=new Set();try{cmp=new Set(JSON.parse(localStorage.getItem("camp_note_cmp")||"[]"))}catch(e){}
 let view="home",region="all",sort="dist",q="";const need=new Set();let animate=true;
 function all(){return D.concat(added.map(a=>({...a,user:true})),NEAR)}
 /* 고캠핑 정보: 우리 후보는 id로, 주변 추천은 그 자체로 */
@@ -95,14 +96,33 @@ function pool(){
   return r.sort((a,b)=>sort==="score"?(starOf(b)-starOf(a))||(a.min||999)-(b.min||999):sort==="dist"?(a.min||999)-(b.min||999)||(a.p||0)-(b.p||0):(a.p||1e9)-(b.p||1e9)||(a.min||0)-(b.min||0));
 }
 function summary(d){if(d.noji){const t=d.nj||{};return [d.p?"🌿 저렴한 노지":"🌿 무료 노지",t.cook?({ok:"🍳 버너 취사 가능",no:"🚫 취사 금지",check:"🍳 취사 문의"})[t.cook.st]:"",t.toilet?"🚻 화장실":"",t.dog&&t.dog.st==="ok"?"🐶 반려견 가능":""].filter(Boolean).join(" · ")}return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":d.fire==="no"?"🚫 장작 안 됨":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":d.fire==="no"?"🚫 장작 안 됨":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
+/* ---------- 지금 주의 · 한 줄 결론 ---------- */
+function alertsOf(d){const now=new Date();const md=`${String(now.getMonth()+1).padStart(2,"0")}-${String(now.getDate()).padStart(2,"0")}`;const ymd=now.toISOString().slice(0,10);
+  return (d.alert||[]).filter(a=>a.from&&a.to?(a.from<=a.to?md>=a.from&&md<=a.to:md>=a.from||md<=a.to):a.until?ymd<=a.until:true).map(a=>a.t)}
+const shortWon=p=>p<10000?`${p.toLocaleString("ko-KR")}원`:p%10000===0?`${p/10000}만`:`${(p/10000).toFixed(1).replace(/\.0$/,"")}만`;
+function prosOf(d){const o=[];const t=d.nj||{};const solo=!!d.solo;
+  if(d.noji){if(t.tarp&&t.tarp.st==="ok")o.push("타프 OK");if(t.cook&&t.cook.st==="ok")o.push("버너 취사")}
+  else if(d.fire==="ok")o.push("불멍");
+  if(d.noji?(t.dog&&t.dog.st==="ok"):solo?dogOk(d):d.dog2==="ok")o.push(solo||d.noji?"반려견 OK":"2마리 OK");
+  const m=mins(d);if(m&&m<=40)o.push(`${m}분 거리`);
+  if(d.noji&&!d.p)o.push("무료");else if(d.p&&d.p<=35000&&!d.near)o.push(d.noji?shortWon(d.p):`평일 ${shortWon(d.p)}`);
+  const lv=(d.brv&&d.brv.lv)||(d.rv&&d.rv.lv);if(lv==="ok")o.push("후기 깨끗");
+  return o.slice(0,4)}
+function conOf(d,skipAlert){const a=skipAlert?[]:alertsOf(d);if(a.length)return {t:a[0],hard:true};const t=d.nj||{};const solo=!!d.solo;
+  if(d.noji){if(t.cook&&t.cook.st==="no")return {t:"타프·취사 안 됨 (돗자리 피크닉용)"};if(t.cook&&t.cook.st==="check")return {t:"타프·취사 확인 필요"}}
+  else{if(!solo&&d.dog2==="no")return {t:"반려견 2마리 안 됨",hard:true};if(!solo&&d.dog2!=="ok"&&!d.near)return {t:"2마리 가능한지 전화 확인"};if(d.fire==="no")return {t:"장작 불멍 안 됨"}}
+  const b=d.brv&&["warn","bad"].includes(d.brv.lv)?d.brv:d.rv&&["warn","bad"].includes(d.rv.lv)?d.rv:null;
+  if(b){const p=String(b.s).split(/,\s*/);return {t:p[p.length-1]}}
+  const m=mins(d);if(m>100)return {t:`멀어요 (약 ${Math.round(m/10)*10}분)`};return null}
+function verdict(d,inDetail){const p=prosOf(d),c=conOf(d,inDetail);return `<span class="vd">${p.length?`<span class="vp">👍 ${esc(p.join(" · "))}</span>`:""}${c?`<span class="vc${c.hard?" hard":""}">${c.hard?"⛔":"⚠️"} ${esc(c.t)}</span>`:""}</span>`}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
   const badge=d.noji&&!(isPick(d)&&view==="solo")?`<span class="badge noji">🌿 노지</span>`:isPick(d)&&view==="solo"?`<span class="badge pickb">💚 지쏘 픽</span>`:d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
   const flag=d.rv&&["bad","warn"].includes(d.rv.lv)?`<span class="flag ${d.rv.lv==="warn"?"warn":""}">${RVL[d.rv.lv][0]} ${RVL[d.rv.lv][1]}</span>`:"";
   return `<article class="card"><div style="position:relative"><button class="ph" data-open="${d.id}" aria-label="${esc(d.n)} 자세히">${thumb(d,"f")}${badge}${flag}</button>
-  ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button></div>
+  ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button>${d.user?"":`<button class="cmpbtn" type="button" data-cmp="${d.id}" aria-pressed="${cmp.has(d.id)}">${cmp.has(d.id)?"✓ 비교 담음":"＋ 비교"}</button>`}</div>
   <button class="ct" data-open="${d.id}"><span class="row1"><b>${esc(d.n)}</b>${starTag(d)}</span>
-  <span class="l2">${(R[d.r]||["지역 미입력"])[0]} · ${dist(d)}</span><span class="l3">${esc(summary(d))}</span>${rvLine(d)}
+  <span class="l2">${(R[d.r]||["지역 미입력"])[0]} · ${dist(d)}</span>${verdict(d)}
   <span class="price"><b>${priceLbl(d)}</b> <small>${perLbl(d)}${d.fee&&view!=="solo"?` · 반려견 ${esc(d.fee)}`:""}</small></span></button></article>`;
 }
 function mini(d){return `<button class="mini" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b><small>${starTag(d,true)} · ${dist(d)}${d.near&&d.g.pet?` · 🐶 ${esc(d.g.pet)}`:""}${d.rv?` · ${RVL[d.rv.lv][0]}`:""}</small><span class="pr">${priceLbl(d)}<small style="font-weight:400">${perLbl(d)}</small></span></button>`}
@@ -122,7 +142,7 @@ const addBtn=`<button class="addbtn" data-add>＋ 캠핏에서 찾은 캠핑장 
 function render(){
   renderCats();
   const v=document.getElementById("view");const r=pool();let h="";
-  paintMapToggle();
+  paintMapToggle();paintCmpBar();
   if(mapMode&&view!=="check"){h=quickRow()+`<div class="mapwrap bleed"><div id="map" role="region" aria-label="캠핑장 지도"></div><p class="maphint" id="maphint"></p></div>`;v.innerHTML=h;animate=false;
     document.querySelectorAll("[data-go]").forEach(b=>b.setAttribute("aria-current",b.dataset.go===view?"page":"false"));drawMap(r);return}
   if(view==="home"){
@@ -217,8 +237,10 @@ function detail(id){
   const book=d.noji?{u:`https://map.naver.com/p/search/${encodeURIComponent(d.kw||d.n)}`,t:"지도로 길찾기"}:d.near?{u:d.g.book||gcUrl(d),t:d.g.book?"예약 페이지":"고캠핑에서 보기"}:d.url?{u:d.url,t:"예약하러 가기"}:d.biz?{u:`https://m.booking.naver.com/booking/3/bizes/${encodeURIComponent(d.biz)}`,t:"네이버 예약하기"}:{u:`https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}`,t:"캠핏에서 찾기"};
   openSheet(d.n,`${gallery(d)}
    <div class="dt"><div class="dtitle"><h3>${esc(d.n)}</h3><button type="button" class="pickbtn" data-pick-toggle="${d.id}" aria-pressed="${isPick(d)}" aria-label="지쏘 픽">${isPick(d)?"💚 지쏘 픽":"🤍 픽하기"}</button></div>
+    ${alertsOf(d).map(t=>`<p class="alertbox">⛔ 지금 주의: ${esc(t)}</p>`).join("")}
     <p class="dmeta">${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p>
     ${d.a?`<p class="daddr"><span>${esc(d.a)}</span><button class="copy" data-copy="${esc(d.a)}">복사</button></p>`:""}</div>
+   <div class="dverdict">${verdict(d,true)}<button type="button" class="cmpbtn in" data-cmp="${d.id}" aria-pressed="${cmp.has(d.id)}">${cmp.has(d.id)?"✓ 비교 담음":"＋ 비교에 담기"}</button></div>
    ${scoreBox(d)}
    <section class="dsec" aria-label="조건"><div class="ctg">${c}</div></section>
    ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
@@ -406,7 +428,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261111i";
+  const V="20261111j";
   try{
     const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;DEFAULT_PICKS=c.defaultPicks||[];GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -568,5 +590,40 @@ function dayBox(d){const ds=d.day||[];if(!ds.length)return "";
 
 /* 지쏘 픽: 상세의 💚 버튼으로 넣고 빼요 (처음엔 camps.json의 defaultPicks) */
 const isPick=d=>(picks||new Set(DEFAULT_PICKS)).has(d.id);
+/* ---------- 비교하기 ---------- */
+function saveCmp(){try{localStorage.setItem("camp_note_cmp",JSON.stringify([...cmp]))}catch(e){}}
+function toggleCmp(id){if(cmp.has(id))cmp.delete(id);else{if(cmp.size>=3){toast("비교는 3곳까지 담을 수 있어요");return}cmp.add(id)}saveCmp();
+  document.querySelectorAll(`[data-cmp="${CSS.escape(id)}"]`).forEach(b=>{const on=cmp.has(id);b.setAttribute("aria-pressed",on);b.textContent=on?"✓ 비교 담음":(b.classList.contains("in")?"＋ 비교에 담기":"＋ 비교")});
+  paintCmpBar();toast(cmp.has(id)?`비교에 담았어요 (${cmp.size}/3)`:"비교에서 뺐어요")}
+function paintCmpBar(){let b=document.getElementById("cmpBar");
+  if(!b){b=document.createElement("div");b.id="cmpBar";b.className="cmpbar";document.body.appendChild(b)}
+  const ds=[...cmp].map(id=>all().find(x=>x.id===id)).filter(Boolean);
+  b.hidden=!ds.length||view==="check";document.body.classList.toggle("hascmp",!b.hidden);
+  b.innerHTML=`<span class="cmpn">⚖️ 비교 <b>${ds.length}</b>/3</span><span class="cmpnames">${ds.map(d=>esc(d.n)).join(" · ")}</span><button type="button" class="cmpclear" data-cmpclear>비우기</button><button type="button" class="cmpgo" data-cmpgo ${ds.length<2?"disabled":""}>${ds.length<2?"1곳 더 담기":"비교하기"}</button>`}
+function compareSheet(){const ds=[...cmp].map(id=>all().find(x=>x.id===id)).filter(Boolean);if(ds.length<2)return;
+  const best=(f,lo)=>{const v=ds.map(f);const ok=v.filter(x=>x!=null&&!isNaN(x));if(!ok.length)return v.map(()=>false);const b=lo?Math.min(...ok):Math.max(...ok);return v.map(x=>x===b&&ok.filter(y=>y===b).length<ds.length)};
+  const stx={ok:"✅",check:"❓",no:"❌"};
+  const sc=ds.map(d=>{const r=mine(d);return r?r.star:expected(d)}),bs=best((_,i)=>sc[i]);
+  const mn=ds.map(d=>mins(d)||null),bm=best((_,i)=>mn[i],true);
+  const pr=ds.map(d=>d.near?null:d.noji&&!d.p?0:d.p||null),bp=best((_,i)=>pr[i],true);
+  const dogT=d=>{const t=d.nj||{};if(d.noji)return t.dog?`${stx[t.dog.st]} ${t.dog.st==="ok"?"가능":t.dog.st==="no"?"안 됨":"확인 필요"}`:"❓";if(d.solo)return dogOk(d)?"✅ 가능":d.dog2==="no"?"❌ 안 됨":"❓ 확인 필요";return `${stx[d.dog2||"check"]} ${d.dog2==="ok"?"2마리 OK":d.dog2==="no"?"안 됨":"확인 필요"}`};
+  const fireT=d=>{if(d.noji){const c=(d.nj||{}).cook;return c?`${stx[c.st]} 버너 ${c.st==="ok"?"가능":c.st==="no"?"안 됨":"확인 필요"}`:"❓"}return `${stx[d.fire==="ok"?"ok":d.fire==="no"?"no":"check"]} ${d.fire==="ok"?"가능":d.fire==="no"?"안 됨":"확인 필요"}`};
+  const rows=[
+    ["⭐","평점",ds.map((d,i)=>`<b class="${bs[i]?"win":""}">${sc[i].toFixed(1)}</b><small>${mine(d)?"내 평점":"예상"}</small>`)],
+    ["📍","거리",ds.map((d,i)=>`<b class="${bm[i]?"win":""}">${mn[i]?`약 ${mn[i]}분`:"?"}</b>`)],
+    ["💸","가격",ds.map((d,i)=>`<b class="${bp[i]?"win":""}">${priceLbl(d)}</b><small>${esc((d.ps||"").slice(0,40))}</small>`)],
+    ["🐶","반려견",ds.map(d=>dogT(d))],
+    [ds.some(d=>d.noji)?"🍳":"🔥",ds.some(d=>d.noji)?"불·취사":"장작 불멍",ds.map(d=>fireT(d))],
+    ["⚡","전기·난로",ds.map(d=>d.noji?"노지 (전기 없음)":[d.w?esc(d.w):"전기 확인 필요",d.heat&&d.heat.st==="ok"?"난로 대여":""].filter(Boolean).join(" · "))],
+    ["🚗","차",ds.map(d=>d.noji?esc(((d.nj||{}).park||"").slice(0,30)):d.auto===true?"✅ 차 옆 주차":d.auto==="check"?"❓ 일부 사이트만":"❌ 따로 주차")],
+    ["👍","좋은 점",ds.map(d=>esc(prosOf(d).join(" · ")||"-"))],
+    ["⚠️","걸리는 점",ds.map(d=>{const c=conOf(d);return c?`<span class="${c.hard?"lose":""}">${esc(c.t)}</span>`:"-"})],
+  ];
+  openSheet("비교하기",`<div class="cmpwrap" style="--n:${ds.length}"><div class="cmpgrid">
+    <div class="cmph"></div>${ds.map(d=>`<button type="button" class="cmpcol" data-open="${d.id}"><span class="ph">${thumb(d,"m")}</span><b>${esc(d.n)}</b></button>`).join("")}
+    ${rows.map(([i,l,v])=>`<div class="cmpl"><span>${i}</span>${l}</div>${v.map(x=>`<div class="cmpv">${x}</div>`).join("")}`).join("")}
+  </div></div><p class="hint">초록 글씨가 그 항목에서 가장 나은 곳이에요. 이름을 누르면 상세로 가요.</p><button type="button" class="link" data-cmpclear style="padding-left:0">비교함 비우기</button>`)}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-cmp],[data-cmpgo],[data-cmpclear]");if(!t)return;e.stopPropagation();
+  if(t.dataset.cmp)toggleCmp(t.dataset.cmp);else if(t.hasAttribute("data-cmpgo"))compareSheet();else{cmp.clear();saveCmp();paintCmpBar();if(sheetFor===null&&document.getElementById("sheetTitle").textContent==="비교하기")closeSheet();render()}},true);
 function togglePick(id){if(!picks)picks=new Set(DEFAULT_PICKS);picks.has(id)?picks.delete(id):picks.add(id);commit();render();detail(id);toast(picks.has(id)?"💚 지쏘 픽에 넣었어요":"지쏘 픽에서 뺐어요")}
 document.addEventListener("click",e=>{const t=e.target.closest("[data-pick-toggle]");if(t)togglePick(t.dataset.pickToggle)});
