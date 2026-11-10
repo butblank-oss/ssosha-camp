@@ -199,7 +199,7 @@ function gcBox(g,d){
 function detail(id){
   const d=all().find(x=>x.id===id);if(!d)return;
   let c="";
-  if(d.noji){const t=d.nj||{};const cc=(i,l,o)=>o?cond(i,l,o.st,o.t):"";c+=cc("🏕️","타프·그늘막",t.tarp)+cc("🍳","버너 취사",t.cook)+cc("🚻","화장실",t.toilet?{st:/없|확인 필요/.test(t.toilet)?"check":"ok",t:t.toilet}:null)+cc("🐶","반려견",t.dog)+cc("🚗","주차",t.park?{st:"ok",t:t.park}:null)}
+  if(d.noji){const t=d.nj||{};const cc=(i,l,o)=>o?cond(i,l,o.st,o.t):"";c+=cc("🏕️","타프·그늘막",t.tarp)+cc("🍳","버너 취사",t.cook)+cc("🚻","화장실",t.toilet?{st:/확인 필요|재래식/.test(t.toilet)?"check":"ok",t:t.toilet}:null)+cc("🐶","반려견",t.dog)+cc("🚗","주차",t.park?{st:"ok",t:t.park}:null)}
   else{
   if(!d.solo||d.dog2==="no")c+=cond("🐶",d.solo?"반려견":"반려견 2마리",d.dog2||"check",d.dogT||"정보 없음");
   c+=cond("🔥","장작 불멍",d.fire==="ok"?"ok":d.fire==="no"?"no":"check",d.fireT||(d.fire==="ok"?"화로대 사용 가능":d.fire==="no"?"금지":"정책에 없어서 확인 필요"));
@@ -208,8 +208,8 @@ function detail(id){
   if(d.fence)c+=cond("🐾","펜스·울타리","ok","반려견 사이트에 울타리");
   if(d.heat)c+=cond("🌡️","난로 대여",d.heat.st,d.heat.t||"");
   }
-  if((d.day||[]).length)c+=cond("☀️","당일(캠프닉)","ok",`당일 상품 ${d.day.length}개${d.day.some(x=>x.dog===true)?" · 🐶 되는 상품 있음":""} · 아래 표 참고`);
-  const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
+  if((d.day||[]).length&&!d.noji)c+=cond("☀️","당일(캠프닉)","ok",`당일 상품 ${d.day.length}개${d.day.some(x=>x.dog===true)?" · 🐶 되는 상품 있음":""} · 아래 표 참고`);
+  const rv=d.rv?`<div class="rvbox ${d.rv.lv}"><b>${RVL[d.rv.lv][0]} 후기 요약: ${RVL[d.rv.lv][1]}</b>${d.rv.pts.length?`<ul>${d.rv.pts.map(p=>`<li>${esc(p)}</li>`).join("")}</ul>`:""}<small>캠핏 캠핑로그 최근 후기 키워드 분석 · 2026-11-09</small></div>`:(d.user||d.noji?"":`<div class="rvbox mild"><small>캠핏 후기가 없어 분석하지 못했어요. 아래 네이버 카페 후기로 확인해 보세요.</small></div>`);
   const g=gco(d);
   const asks=[...diffs(d,g),...(d.ask?d.ask.split(/\s*·\s*|,\s*/).filter(Boolean).map(x=>x.endsWith("?")?x:x):[]),...(d.askBlog?[d.askBlog]:[])];
   const facts=[d.plus,...(d.memo?d.memo.split(/\s*·\s*/):[]),...(d.extra||[])].filter(Boolean);
@@ -406,7 +406,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261111h";
+  const V="20261111i";
   try{
     const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;DEFAULT_PICKS=c.defaultPicks||[];GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -441,7 +441,7 @@ function parts(d,solo){
     auto:d.auto===true?1:d.auto==="check"?.5:0,
   };
   if(solo)delete o.dog;
-  if(d.noji){const t=d.nj||{};return {cook:st(t.cook&&t.cook.st),dist:o.dist,price:!p?1:p<=5000?.95:.8,review:o.review,toilet:t.toilet&&!/없|확인 필요/.test(t.toilet)?1:.4}}
+  if(d.noji){const t=d.nj||{};return {cook:st(t.cook&&t.cook.st),dist:o.dist,price:!p?1:p<=5000?.95:.8,review:o.review,toilet:t.toilet&&!/확인 필요|재래식/.test(t.toilet)?1:.4}}
   return o;
 }
 function expected(d){const solo=!!d.solo||view==="solo";const o=parts(d,solo);let t=0,w=0;for(const k in o){t+=WEIGHTS[k]*o[k];w+=WEIGHTS[k]}return Math.round(t/w*50)/10}
