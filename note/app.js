@@ -11,7 +11,8 @@ let R={},D=[],PICKS=[],DROP=[],CALLS=[],GC={camps:{}},NEAR=[];
 const byId=id=>D.find(d=>d.id===id);
 const NEEDS=[["fence","🐾 펜스 있는 곳만",d=>d.fence],["fire","🔥 불멍 확인됨",d=>d.fire==="ok"],["w11","⚡ 1100W 이상",d=>d.w11],["h1","🚗 1시간 이내",d=>d.min<=60],["ok","✅ 바로 예약만",d=>d.fit==="ok"],["clean","👍 후기 주의 빼기",d=>!d.rv||!["bad","warn"].includes(d.rv.lv)],["heat","🌡️ 난로 대여",d=>d.heat&&d.heat.st==="ok"],["day","☀️ 당일 가능",d=>(d.day||[]).length>0],["dogday","🐶 반려견 동반",dogOk]];
 const RVL={bad:["🚩","후기 주의"],warn:["⚠️","참고할 단점"],mild:["💬","사소한 단점"],ok:["👍","후기 깨끗"]};
-const CREDIT="사진: 고캠핑(한국관광공사)";
+const CREDIT="사진: 고캠핑(한국관광공사)";const NCREDIT="사진: 네이버(캠핑장 제공)";let NPHOTO={};
+function photoOf(d){const g=gco(d);if(g&&g.img)return {img:g.img,credit:CREDIT};const n=NPHOTO[d.id];if(n&&n.imgs&&n.imgs.length)return {img:n.imgs[0],credit:NCREDIT};return null}
 
 /* 기록: {saved:[id], calls:[번호], notes:{id:글}, added:[캠핑장]} 하나로 모아 저장해요 */
 const KEY="camp_note";
@@ -46,8 +47,8 @@ function seed(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.im
 const SKY={day:["#7fc0ff","#e3f2ff","#fff7c2","#7fbf86","#3d7f58"],sunset:["#ff8a5c","#ffd59e","#fff2c9","#9c6178","#4b3557"],dusk:["#3a4b8c","#f3a17a","#ffe3b8","#4c4a7a","#272a4f"],night:["#0d1836","#2c3f73","#f4f1d0","#1f2b4c","#111a33"]};
 function hills(r,y,amp){let d=`M0 260L0 ${(y+amp*(r()-.5)).toFixed(1)}`;for(let x=0;x<400;x+=100)d+=`Q${x+50} ${(y-amp*r()).toFixed(1)} ${x+100} ${(y+amp*(r()-.5)).toFixed(1)}`;return d+"L400 260Z"}
 function thumb(d,uid){
-  const ph=gco(d);
-  if(ph&&ph.img)return `<img src="${esc(ph.img)}" alt="" loading="${uid==="h"||uid==="b"?"eager":"lazy"}" decoding="async" referrerpolicy="no-referrer" onerror="window.__noimg(this)" data-id="${esc(d.id)}" data-u="${uid}"><span class="credit">${CREDIT}</span>`;
+  const ph=photoOf(d);
+  if(ph)return `<img src="${esc(ph.img)}" alt="" loading="${uid==="h"||uid==="b"?"eager":"lazy"}" decoding="async" referrerpolicy="no-referrer" onerror="window.__noimg(this)" data-id="${esc(d.id)}" data-u="${uid}"><span class="credit">${ph.credit}</span>`;
   return art(d,uid);
 }
 /* 사진을 못 받으면 그림 썸네일로 바꿔요 */
@@ -94,7 +95,7 @@ function pool(){
 function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
-  const badge=d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
+  const badge=d.pick&&view==="solo"?`<span class="badge pickb">💚 지쏘 픽</span>`:d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
   const flag=d.rv&&["bad","warn"].includes(d.rv.lv)?`<span class="flag ${d.rv.lv==="warn"?"warn":""}">${RVL[d.rv.lv][0]} ${RVL[d.rv.lv][1]}</span>`:"";
   return `<article class="card"><div style="position:relative"><button class="ph" data-open="${d.id}" aria-label="${esc(d.n)} 자세히">${thumb(d,"f")}${badge}${flag}</button>
   ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button></div>
@@ -134,7 +135,8 @@ function render(){
     h+=`<section class="sec"><div class="sh"><h2>${region==="all"?"전체 후보":R[region][0]} <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section>`;
     h+=`<section class="sec">${addBtn}</section><p class="note">캠핏·고캠핑 운영정책과 캠핏 캠핑로그(곳마다 최근 10~80개)를 2026년 11월 9일에 확인했어요. 네이버 카페 후기는 로그인이 필요해서 직접 읽지 못했고, 각 캠핑장 상세에 검색 링크를 달아뒀어요. 가격은 평일 1박 쿠폰가, 거리는 범계 출발 대략치예요.</p>${creditNote()}`;
   }else if(view==="solo"){
-    h+=quickRow()+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게 <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div><p class="hint" style="margin:-6px 0 12px">둘이서 가볍게 갈 수 있는 모든 곳 · 반려견과 갈 곳은 🐶 필터, 당일만은 ☀️ 필터</p>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
+    const picks=r.filter(d=>d.pick);
+    h+=quickRow()+(picks.length?`<section class="sec" style="margin-top:8px"><div class="sh"><h2>💚 지쏘 픽</h2><span>마음에 든 곳</span></div><div class="rail bleed">${picks.map(mini).join("")}</div></section>`:"")+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게 <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div><p class="hint" style="margin:-6px 0 12px">둘이서 가볍게 갈 수 있는 모든 곳 · 반려견과 갈 곳은 🐶 필터, 당일만은 ☀️ 필터</p>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
   }else if(view==="saved"){
     h+=`<section class="sec" style="margin-top:16px"><div class="sh"><h2>찜한 캠핑장</h2><span>${r.length}곳</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("아직 찜한 곳이 없어요","사진 오른쪽 위 하트를 눌러 모아보세요")}</section>`;
   }else{
@@ -163,9 +165,9 @@ function closeSheet(){sheet.classList.remove("on");scrim.classList.remove("on");
   setTimeout(()=>{if(!sheet.classList.contains("on"))sheet.hidden=true},430);if(lastFocus)lastFocus.focus({preventScroll:true})}
 function cond(icon,label,state,text){return `<div class="ctile ${state}"><div class="ctt"><i aria-hidden="true">${ICO[icon]?ic(ICO[icon]):icon}</i><b>${label}</b><span class="st ${state}">${state==="ok"?"확인됨":state==="check"?"물어보기":"안 됨"}</span></div><small>${esc(text)}</small></div>`}
 function gallery(d){
-  const g=gco(d);const imgs=g&&g.imgs&&g.imgs.length?g.imgs:[];
+  const g=gco(d);const np=NPHOTO[d.id];const useG=g&&g.imgs&&g.imgs.length>=2;const imgs=useG?g.imgs:np&&np.imgs.length?np.imgs:[];const cr=useG?CREDIT:NCREDIT;
   if(imgs.length<2)return `<div class="hero">${thumb(d,"h")}</div>`;
-  return `<div class="hero gal"><div class="galrow" id="gal">${imgs.map((u,i)=>`<img src="${esc(u)}" alt="" loading="${i?"lazy":"eager"}" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`).join("")}</div><span class="credit">${CREDIT}</span><span class="galn" id="galn">1 / ${imgs.length}</span></div>`;
+  return `<div class="hero gal"><div class="galrow" id="gal">${imgs.map((u,i)=>`<img src="${esc(u)}" alt="" loading="${i?"lazy":"eager"}" decoding="async" referrerpolicy="no-referrer" onerror="this.remove()">`).join("")}</div><span class="credit">${cr}</span><span class="galn" id="galn">1 / ${imgs.length}</span></div>`;
 }
 /* 우리 정보와 고캠핑 정보가 다르면 알려줘요 */
 function diffs(d,g){
@@ -323,7 +325,7 @@ function paintSync(){
   if(view==="check")render();
 }
 function syncNote(){return shared.mode==="live"?"찜·체크·메모·직접 추가한 캠핑장은 공유 기록에 저장돼서 다른 기기에서도 보여요.":"지금은 이 브라우저에만 저장돼요. 로그인하면 다른 기기와 함께 써요."}
-function creditNote(){return Object.keys(GC.camps).length?`<p class="note">${CREDIT} · <a href="https://www.data.go.kr/data/15101933/openapi.do" target="_blank" rel="noopener">고캠핑 정보 조회서비스</a>(공공누리 제1유형: 출처 표시). 고캠핑에 있는 곳만 사진과 정보가 나오고, 나머지는 그림이에요.</p>`:""}
+function creditNote(){return Object.keys(GC.camps).length?`<p class="note">${CREDIT} · <a href="https://www.data.go.kr/data/15101933/openapi.do" target="_blank" rel="noopener">고캠핑 정보 조회서비스</a>(공공누리 제1유형: 출처 표시). 고캠핑 사진이 없는 곳은 네이버 플레이스에 캠핑장이 직접 올린 사진을 보여줘요(저작권은 각 캠핑장에 있어요). 둘 다 없으면 그림이에요.</p>`:""}
 function accountBox(){
   if(!shared.sb)return `<section class="sec" style="margin-top:16px"><div class="sync"><div><b>📱 이 브라우저에 저장 중</b><small>공유 저장소에 연결하지 못했어요. 기록은 이 기기에 남아요.</small></div></div></section>`;
   if(!shared.user)return `<section class="sec" style="margin-top:16px"><div class="sync"><div><b>📱 이 브라우저에만 저장 중</b><small>지쏘·시아 이메일로 로그인하면 찜·메모가 다른 기기와 함께 저장돼요.</small></div><button class="sbtn" data-login>이메일로 로그인</button></div></section>`;
@@ -399,9 +401,9 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110z";
+  const V="20261111b";
   try{
-    const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
+    const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
   }catch(e){document.getElementById("view").innerHTML=`<div class="empty"><b>캠핑장 목록을 불러오지 못했어요</b><span>잠시 뒤 새로고침해 주세요.</span></div>`;return}
   window.addEventListener("hashchange",route);route();
