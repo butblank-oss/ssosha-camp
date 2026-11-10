@@ -350,3 +350,12 @@ details.gcbox{padding:0;gap:0}
 .kpin.home{background:none;border:0;box-shadow:none;font-size:22px;padding:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
 .kpop{position:relative;background:#fff;color:#17201b;border-radius:12px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .kpop .kx{position:absolute;right:6px;top:4px;border:0;background:none;font-size:14px;color:#5d6862}
+/* 사이트별 가격 */
+.sites{border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:10px;font-size:14px}
+.sites>b small{font-weight:400;color:var(--sub);font-size:12px;margin-left:4px}
+.sites ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.sites li{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-top:1px solid var(--line);padding-top:10px}
+.sites li:first-child{border-top:0;padding-top:0}
+.sites li div{display:grid;gap:2px;min-width:0}
+.sites li small{color:var(--sub);font-size:12.5px}
+.sites li span{flex:none;text-align:right;font-variant-numeric:tabular-nums;font-size:13px;max-width:48%}

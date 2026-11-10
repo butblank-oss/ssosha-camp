@@ -207,6 +207,7 @@ function detail(id){
    ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
    ${rv}
    ${blogBox(d)}
+   ${sitesBox(d)}
    ${spotsBox(d)}
    ${facts.length?`<section class="facts"><b>📌 알아둘 것</b><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`:""}
    ${g?gcBox(g,d):""}
@@ -535,3 +536,7 @@ async function drawMap(list){
   document.getElementById("maphint").textContent=`${items.length-miss}곳 표시${miss?` · 위치를 모르는 ${miss}곳은 빠졌어요`:""} · 핀 숫자는 ${view==="home"?"예상 평점 (회색은 고캠핑 추천)":"예상 평점"}`;
 }
 try{mapMode=localStorage.getItem("camp_note_map")==="1"}catch(e){}
+
+/* 사이트별 가격: 네이버 예약에서 모은 것 (camps.json의 sites) */
+function sitesBox(d){const ss=d.sites||[];if(!ss.length)return "";
+  return `<section class="sites"><b>🏕️ 사이트별 가격 <small>네이버 예약 · ${esc(d.bookAt||"")}</small></b><ul>${ss.map(x=>`<li><div><b>${esc(x.n)}</b>${x.note?`<small>${esc(x.note)}</small>`:""}</div><span>${esc(x.pr||"")}</span></li>`).join("")}</ul>${d.biz?`<a class="lk" style="justify-content:center" href="https://m.booking.naver.com/booking/3/bizes/${encodeURIComponent(d.biz)}" target="_blank" rel="noopener"><b style="background:#03c75a">N</b>네이버 예약에서 날짜별 가격 보기</a>`:""}</section>`}
