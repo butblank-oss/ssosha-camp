@@ -7,3 +7,7 @@ window.CAMP_NOTE_SUPABASE = {
   anonKey: "sb_publishable_tDpGepYjcn_CW6KjjKkdHQ_VwkQVuVo",
   table: "camp_note",
 };
+
+/* 카카오맵 JavaScript 키 (공개용 키예요. 카카오 개발자 콘솔에 등록한 도메인 https://butblank-oss.github.io 에서만 작동)
+ * 비우면 오픈스트리트맵을 써요. */
+window.CAMP_NOTE_KAKAO = "11a7f89cfa32590bf22123b139eb10d6";

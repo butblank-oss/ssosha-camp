@@ -344,3 +344,9 @@ details.gcbox{padding:0;gap:0}
 .mpop .sbtn{margin-top:6px;padding:7px 10px;font-size:13px}
 .leaflet-popup-content{margin:10px 12px}
 #rateForm textarea{resize:vertical;min-height:76px}
+/* 카카오맵 핀·말풍선 */
+.kpin{display:inline-block;color:#fff;font:700 12px/1 var(--font);padding:6px 7px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.3);border:2px solid #fff;white-space:nowrap;font-variant-numeric:tabular-nums;cursor:pointer}
+.kpin.saved{outline:2px solid #ff4d5e}
+.kpin.home{background:none;border:0;box-shadow:none;font-size:22px;padding:0;filter:drop-shadow(0 1px 2px rgba(0,0,0,.4))}
+.kpop{position:relative;background:#fff;color:#17201b;border-radius:12px;padding:12px 14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.kpop .kx{position:absolute;right:6px;top:4px;border:0;background:none;font-size:14px;color:#5d6862}

@@ -387,7 +387,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110q";
+  const V="20261110r";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -495,7 +495,31 @@ function loadLeaflet(){if(window.L)return Promise.resolve();if(leafletP)return l
   leafletP=new Promise((ok,no)=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(l);
     const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)});return leafletP}
 function pinColor(v){return v>=4.2?"#1f7a5a":v>=3.6?"#e0a21f":"#c2413a"}
+let kakaoP=null;
+function loadKakao(){const k=window.CAMP_NOTE_KAKAO;if(!k)return Promise.reject();if(window.kakao&&kakao.maps&&kakao.maps.LatLng)return Promise.resolve();if(kakaoP)return kakaoP;
+  kakaoP=new Promise((ok,no)=>{const s=document.createElement("script");s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(k)}&autoload=false`;s.onload=()=>{try{kakao.maps.load(ok)}catch(e){no(e)}};s.onerror=no;document.head.appendChild(s);setTimeout(()=>no(new Error("timeout")),8000)});
+  kakaoP.catch(()=>{kakaoP=null;window.CAMP_NOTE_KAKAO=""});return kakaoP}
+function mapItems(list){return list.concat(view==="home"?NEAR.filter(d=>(region==="all"||d.r===region)&&!need.size):[])}
+function pinHtml(d){const v=starOf(d);const m=mine(d);return `<b class="kpin${saved.has(d.id)?" saved":""}" style="background:${d.near?"#7d8882":pinColor(v)}">${m?"★":""}${v.toFixed(1)}</b>`}
+function popHtml(d){return `<div class="mpop"><b>${esc(d.n)}</b><span>${dist(d)} · ${d.near?"요금 문의":won(d.p)}</span><span>${esc(summary(d))}</span><button type="button" class="sbtn" data-open="${d.id}">자세히 보기</button></div>`}
+function mapHint(n,miss){document.getElementById("maphint").textContent=`${n}곳 표시${miss?` · 위치를 모르는 ${miss}곳은 빠졌어요`:""} · 핀 숫자는 ${view==="home"?"예상 평점 (회색은 고캠핑 추천)":"예상 평점"}`}
+async function drawKakao(el,list){
+  const map=new kakao.maps.Map(el,{center:new kakao.maps.LatLng(HOME[0],HOME[1]),level:10});
+  map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT);
+  const bounds=new kakao.maps.LatLngBounds();const P=(c)=>new kakao.maps.LatLng(c[0],c[1]);bounds.extend(P(HOME));
+  new kakao.maps.CustomOverlay({map,position:P(HOME),content:'<div class="kpin home" title="범계 (집)">🏠</div>',yAnchor:.5});
+  let pop=null;const items=mapItems(list);let miss=0;
+  for(const d of items){const c=coordOf(d);if(!c){miss++;continue}bounds.extend(P(c));
+    const el2=document.createElement("div");el2.innerHTML=pinHtml(d);el2.title=d.n;
+    el2.addEventListener("click",()=>{if(pop)pop.setMap(null);const box=document.createElement("div");box.className="kpop";box.innerHTML=popHtml(d)+'<button type="button" class="kx" aria-label="닫기">✕</button>';box.querySelector(".kx").onclick=()=>pop.setMap(null);
+      pop=new kakao.maps.CustomOverlay({map,position:P(c),content:box,yAnchor:1.25,zIndex:10})});
+    new kakao.maps.CustomOverlay({map,position:P(c),content:el2,yAnchor:1})}
+  if(items.length-miss>0)map.setBounds(bounds,40,40,40,40);
+  mapHint(items.length-miss,miss);
+}
 async function drawMap(list){
+  const el0=document.getElementById("map");
+  if(window.CAMP_NOTE_KAKAO){try{await loadKakao();if(!document.getElementById("map"))return;if(LMAP){LMAP.remove();LMAP=null}return drawKakao(document.getElementById("map"),list)}catch(e){}}
   try{await loadLeaflet()}catch(e){document.getElementById("maphint").textContent="지도를 불러오지 못했어요";return}
   const el=document.getElementById("map");if(!el)return;if(LMAP){LMAP.remove();LMAP=null}
   LMAP=L.map(el,{zoomControl:true,attributionControl:true}).setView(HOME,9);
