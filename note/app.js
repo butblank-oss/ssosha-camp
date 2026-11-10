@@ -109,6 +109,9 @@ const addBtn=`<button class="addbtn" data-add>＋ 캠핏에서 찾은 캠핑장 
 function render(){
   renderCats();
   const v=document.getElementById("view");const r=pool();let h="";
+  paintMapToggle();
+  if(mapMode&&view!=="check"){h=quickRow()+`<div class="mapwrap bleed"><div id="map" role="region" aria-label="캠핑장 지도"></div><p class="maphint" id="maphint"></p></div>`;v.innerHTML=h;animate=false;
+    document.querySelectorAll("[data-go]").forEach(b=>b.setAttribute("aria-current",b.dataset.go===view?"page":"false"));drawMap(r);return}
   if(view==="home"){
     h+=quickRow();
     if(!q&&!need.size&&region==="all"){
@@ -383,9 +386,9 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110n";
+  const V="20261110o";
   try{
-    const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
+    const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
   }catch(e){document.getElementById("view").innerHTML=`<div class="empty"><b>캠핑장 목록을 불러오지 못했어요</b><span>잠시 뒤 새로고침해 주세요.</span></div>`;return}
   window.addEventListener("hashchange",route);route();
@@ -479,3 +482,30 @@ function spotsBox(d){
 /* 네이버 블로그 후기 요약 (camps.json의 brv) */
 function blogBox(d){const b=d.brv;if(!b)return "";
   return `<div class="rvbox ${b.lv}"><b>📝 블로그 후기: ${RVL[b.lv][1]}</b><span>${esc(b.s)}</span>${(b.pts||[]).length?`<ul>${b.pts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}<small>네이버 블로그 ${b.n||(b.src||[]).length}개 분석 · ${esc(b.at||"")} · ${(b.src||[]).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${i+1}</a>`).join(" · ")}</small></div>`}
+
+/* ---------- 지도 (오픈스트리트맵 + Leaflet) ---------- */
+let mapMode=false,COORD={},LMAP=null;const HOME=[37.3899,126.9507];
+function coordOf(d){if(COORD[d.id])return COORD[d.id];const g=gco(d);return g&&g.lat&&g.lng?[g.lat,g.lng]:null}
+function paintMapToggle(){let b=document.getElementById("mapToggle");
+  if(!b){b=document.createElement("button");b.id="mapToggle";b.type="button";b.className="maptoggle";b.addEventListener("click",()=>{mapMode=!mapMode;try{localStorage.setItem("camp_note_map",mapMode?"1":"")}catch(e){}render();window.scrollTo({top:0})});document.body.appendChild(b)}
+  b.hidden=view==="check";b.innerHTML=mapMode?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>목록으로 보기':'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>지도로 보기'}
+let leafletP=null;
+function loadLeaflet(){if(window.L)return Promise.resolve();if(leafletP)return leafletP;
+  leafletP=new Promise((ok,no)=>{const l=document.createElement("link");l.rel="stylesheet";l.href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css";document.head.appendChild(l);
+    const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js";s.onload=ok;s.onerror=no;document.head.appendChild(s)});return leafletP}
+function pinColor(v){return v>=4.2?"#1f7a5a":v>=3.6?"#e0a21f":"#c2413a"}
+async function drawMap(list){
+  try{await loadLeaflet()}catch(e){document.getElementById("maphint").textContent="지도를 불러오지 못했어요";return}
+  const el=document.getElementById("map");if(!el)return;if(LMAP){LMAP.remove();LMAP=null}
+  LMAP=L.map(el,{zoomControl:true,attributionControl:true}).setView(HOME,9);
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(LMAP);
+  L.marker(HOME,{icon:L.divIcon({className:"pin home",html:"🏠",iconSize:[30,30],iconAnchor:[15,15]}),title:"범계 (집)"}).addTo(LMAP);
+  const items=list.concat(view==="home"?NEAR.filter(d=>(region==="all"||d.r===region)&&!need.size):[]);
+  const pts=[HOME];let miss=0;
+  for(const d of items){const c=coordOf(d);if(!c){miss++;continue}pts.push(c);const v=starOf(d);const m=mine(d);
+    const icon=L.divIcon({className:"pin"+(d.near?" near":"")+(saved.has(d.id)?" saved":""),html:`<b style="background:${d.near?"#7d8882":pinColor(v)}">${m?"★":""}${v.toFixed(1)}</b>`,iconSize:[44,26],iconAnchor:[22,26]});
+    L.marker(c,{icon,title:d.n}).addTo(LMAP).bindPopup(`<div class="mpop"><b>${esc(d.n)}</b><span>${dist(d)} · ${d.near?"요금 문의":won(d.p)}</span><span>${esc(summary(d))}</span><button type="button" class="sbtn" data-open="${d.id}">자세히 보기</button></div>`)}
+  if(pts.length>1)LMAP.fitBounds(pts,{padding:[30,30],maxZoom:12});
+  document.getElementById("maphint").textContent=`${items.length-miss}곳 표시${miss?` · 위치를 모르는 ${miss}곳은 빠졌어요`:""} · 핀 숫자는 ${view==="home"?"예상 평점 (회색은 고캠핑 추천)":"예상 평점"}`;
+}
+try{mapMode=localStorage.getItem("camp_note_map")==="1"}catch(e){}

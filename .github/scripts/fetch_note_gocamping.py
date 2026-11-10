@@ -86,6 +86,7 @@ def from_api(it):
         "sbrs": [s.strip() for s in (it.get("sbrsCl") or "").split(",") if s.strip()],
         "pet": it.get("animalCmgCl") or "", "fire": it.get("brazierCl") or "",
         "img": it.get("firstImageUrl") or "",
+        "lat": round(lat, 6) if lat else None, "lng": round(lng, 6) if lng else None,
     }
 
 
