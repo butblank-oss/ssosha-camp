@@ -386,7 +386,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110o";
+  const V="20261110p";
   try{
     const [c,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -448,7 +448,7 @@ function rateSheet(id){
    <div class="flabel">전체 별점 <small class="hint">같은 별을 한 번 더 누르면 반 개</small>${starPicker("star",r.star,true)}</div>
    <label>다녀온 날<input type="date" name="date" value="${esc(r.date||today)}" max="${today}"></label>
    <div class="ritemsin">${RITEMS.filter(([k])=>!(k==="dog"&&d.solo)).map(([k,l])=>`<div class="ritem"><span>${l}</span>${starPicker(k,r.items&&r.items[k],false)}</div>`).join("")}</div>
-   <label>한 줄 후기<input name="text" maxlength="200" value="${esc(r.text||"")}" placeholder="예: 때찌가 안 짖고 잘 잤어요, 화장실 깨끗"></label>
+   <label>한 줄 후기<textarea name="text" maxlength="300" rows="3" placeholder="예: 때찌가 안 짖고 잘 잤어요, 화장실 깨끗">${esc(r.text||"")}</textarea></label>
    <label class="again"><input type="checkbox" name="again" ${r.again?"checked":""}> 💚 또 갈래요</label>
    <button class="apply" type="submit">저장</button>
    <div class="row">${r.star?`<button type="button" class="sbtn danger" data-unrate="${id}">평점 지우기</button>`:"<span></span>"}<button type="button" class="sbtn ghost" data-open="${id}">돌아가기</button></div>
@@ -459,7 +459,7 @@ function rateSheet(id){
     e.preventDefault();const f=e.target;const v=n=>+(f.querySelector(`.spick[data-name="${n}"]`)||{dataset:{v:0}}).dataset.v;
     const star=v("star");if(!star){document.getElementById("rateState").textContent="전체 별점을 눌러 주세요";return}
     const items={};RITEMS.forEach(([k])=>{const x=v(k);if(x)items[k]=x});
-    ratings[id]={star,date:f.date.value,items,text:f.text.value.trim().slice(0,200),again:f.again.checked,at:Date.now()};
+    ratings[id]={star,date:f.date.value,items,text:f.text.value.trim().slice(0,300),again:f.again.checked,at:Date.now()};
     commit();render();detail(id);toast("평점을 저장했어요");
   });
 }
