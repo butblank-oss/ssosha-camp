@@ -17,12 +17,12 @@ function photoOf(d){const g=gco(d);if(g&&g.img)return {img:g.img,credit:CREDIT};
 /* 기록: {saved:[id], calls:[번호], notes:{id:글}, added:[캠핑장]} 하나로 모아 저장해요 */
 const KEY="camp_note";
 const local={get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
-let saved=new Set(),checked=new Set(),notes={},added=[],ratings={};
-function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};ratings={...(s.ratings||{})};added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
-const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added,ratings});
-const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length||Object.keys(s.ratings||{}).length));
+let saved=new Set(),checked=new Set(),notes={},added=[],ratings={},picks=null,DEFAULT_PICKS=[];
+function loadState(s){s=s||{};saved=new Set(s.saved||[]);checked=new Set(s.calls||[]);notes={...(s.notes||{})};ratings={...(s.ratings||{})};picks=Array.isArray(s.picks)?new Set(s.picks):null;added=(s.added||[]).filter(a=>a&&a.id&&a.n)}
+const snapshot=()=>({saved:[...saved],calls:[...checked].sort((a,b)=>a-b),notes,added,ratings,...(picks?{picks:[...picks]}:{})});
+const hasData=s=>!!(s&&((s.saved||[]).length||(s.calls||[]).length||Object.keys(s.notes||{}).length||(s.added||[]).length||Object.keys(s.ratings||{}).length||(s.picks||[]).length));
 const same=(a,b)=>JSON.stringify(norm(a))===JSON.stringify(norm(b));
-function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]])}}
+function norm(s){s=s||{};const n=s.notes||{};return {saved:[...(s.saved||[])].sort(),calls:[...(s.calls||[])].sort((a,b)=>a-b),notes:Object.keys(n).sort().map(k=>[k,n[k]]),added:[...(s.added||[])].sort((a,b)=>a.id<b.id?-1:1),ratings:Object.keys(s.ratings||{}).sort().map(k=>[k,s.ratings[k]]),picks:[...(s.picks||[])].sort()}}
 loadState(local.get(KEY,null));
 let view="home",region="all",sort="dist",q="";const need=new Set();let animate=true;
 function all(){return D.concat(added.map(a=>({...a,user:true})),NEAR)}
@@ -95,7 +95,7 @@ function pool(){
 function summary(d){return (d.solo||view==="solo")?[(d.day||[]).length?"☀️ 당일 가능":"",dogOk(d)?"🐶 반려견 가능":"",d.fire==="ok"?"🔥 불멍 가능":"🔥 불멍 문의",d.auto?"🚗 오토":"🚶 차 옆 주차 아님"].filter(Boolean).join(" · "):[d.dogT?`🐶 ${d.dogT}`:"",d.fire==="ok"?"🔥 불멍":"🔥 문의",d.fence?"🐾 펜스":""].filter(Boolean).join(" · ")}
 function rvLine(d){if(!d.rv)return notes[d.id]?`<span class="rv mild">📝 내 메모 있음</span>`:"";const[i,l]=RVL[d.rv.lv];return `<span class="rv ${d.rv.lv}">${i} ${esc(d.rv.s)}</span>`}
 function card(d){
-  const badge=d.pick&&view==="solo"?`<span class="badge pickb">💚 지쏘 픽</span>`:d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
+  const badge=isPick(d)&&view==="solo"?`<span class="badge pickb">💚 지쏘 픽</span>`:d.near?`<span class="badge check">고캠핑 추천</span>`:(d.solo||view==="solo")?"":`<span class="badge${d.fit==="check"?" check":""}">${d.fit==="ok"?"바로 예약 OK":"📞 전화 확인"}</span>`;
   const flag=d.rv&&["bad","warn"].includes(d.rv.lv)?`<span class="flag ${d.rv.lv==="warn"?"warn":""}">${RVL[d.rv.lv][0]} ${RVL[d.rv.lv][1]}</span>`:"";
   return `<article class="card"><div style="position:relative"><button class="ph" data-open="${d.id}" aria-label="${esc(d.n)} 자세히">${thumb(d,"f")}${badge}${flag}</button>
   ${d.user?'<span class="mine">내가 추가</span>':""}<button class="heart" data-heart="${d.id}" aria-pressed="${saved.has(d.id)}" aria-label="${esc(d.n)} 찜">${heartSvg}</button></div>
@@ -135,8 +135,8 @@ function render(){
     h+=`<section class="sec"><div class="sh"><h2>${region==="all"?"전체 후보":R[region][0]} <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section>`;
     h+=`<section class="sec">${addBtn}</section><p class="note">캠핏·고캠핑 운영정책과 캠핏 캠핑로그(곳마다 최근 10~80개)를 2026년 11월 9일에 확인했어요. 네이버 카페 후기는 로그인이 필요해서 직접 읽지 못했고, 각 캠핑장 상세에 검색 링크를 달아뒀어요. 가격은 평일 1박 쿠폰가, 거리는 범계 출발 대략치예요.</p>${creditNote()}`;
   }else if(view==="solo"){
-    const picks=r.filter(d=>d.pick);
-    h+=quickRow()+(picks.length?`<section class="sec" style="margin-top:8px"><div class="sh"><h2>💚 지쏘 픽</h2><span>마음에 든 곳</span></div><div class="rail bleed">${picks.map(mini).join("")}</div></section>`:"")+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게 <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div><p class="hint" style="margin:-6px 0 12px">둘이서 가볍게 갈 수 있는 모든 곳 · 반려견과 갈 곳은 🐶 필터, 당일만은 ☀️ 필터</p>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
+    const pk=r.filter(isPick);
+    h+=quickRow()+(pk.length?`<section class="sec" style="margin-top:8px"><div class="sh"><h2>💚 지쏘 픽</h2><span>상세에서 💚로 넣고 빼요</span></div><div class="rail bleed">${pk.map(mini).join("")}</div></section>`:"")+`<section class="sec" style="margin-top:8px"><div class="sh"><h2>둘이서 가볍게 <small>${r.length}곳</small></h2>${r.length>1?sortCtl():""}</div><p class="hint" style="margin:-6px 0 12px">둘이서 가볍게 갈 수 있는 모든 곳 · 반려견과 갈 곳은 🐶 필터, 당일만은 ☀️ 필터</p>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("조건에 맞는 곳이 없어요","조건을 하나 풀어보세요")}</section><section class="sec">${addBtn}</section>`;
   }else if(view==="saved"){
     h+=`<section class="sec" style="margin-top:16px"><div class="sh"><h2>찜한 캠핑장</h2><span>${r.length}곳</span></div>${r.length?`<div class="feed">${r.map(card).join("")}</div>`:emptyBox("아직 찜한 곳이 없어요","사진 오른쪽 위 하트를 눌러 모아보세요")}</section>`;
   }else{
@@ -211,7 +211,7 @@ function detail(id){
   const tel=g&&g.tel?g.tel.replace(/[^0-9-]/g,""):"";
   const book=d.near?{u:d.g.book||gcUrl(d),t:d.g.book?"예약 페이지":"고캠핑에서 보기"}:d.url?{u:d.url,t:"예약하러 가기"}:d.biz?{u:`https://m.booking.naver.com/booking/3/bizes/${encodeURIComponent(d.biz)}`,t:"네이버 예약하기"}:{u:`https://camfit.co.kr/search/result?keyword=${encodeURIComponent(kw(d))}`,t:"캠핏에서 찾기"};
   openSheet(d.n,`${gallery(d)}
-   <div class="dt"><h3>${esc(d.n)}</h3>
+   <div class="dt"><div class="dtitle"><h3>${esc(d.n)}</h3><button type="button" class="pickbtn" data-pick-toggle="${d.id}" aria-pressed="${isPick(d)}" aria-label="지쏘 픽">${isPick(d)?"💚 지쏘 픽":"🤍 픽하기"}</button></div>
     <p class="dmeta">${(R[d.r]||["지역 미입력"])[0]} · 범계에서 ${dist(d)}${d.lg?` · 캠핑로그 ${d.lg.toLocaleString()}`:""}</p>
     ${d.a?`<p class="daddr"><span>${esc(d.a)}</span><button class="copy" data-copy="${esc(d.a)}">복사</button></p>`:""}</div>
    ${scoreBox(d)}
@@ -401,10 +401,10 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261111b";
+  const V="20261111c";
   try{
     const [c,__,_,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("naverphotos.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{NPHOTO=(x&&x.items)||{}}),fetch("coords.json?v="+V).then(r=>r.ok?r.json():{}).catch(()=>({})).then(x=>{COORD=x||{}}),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
-    R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
+    R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;DEFAULT_PICKS=c.defaultPicks||[];GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
   }catch(e){document.getElementById("view").innerHTML=`<div class="empty"><b>캠핑장 목록을 불러오지 못했어요</b><span>잠시 뒤 새로고침해 주세요.</span></div>`;return}
   window.addEventListener("hashchange",route);route();
   startShared();
@@ -559,3 +559,8 @@ function dogOk(d){const day=d.day||[];if(day.some(x=>x.dog===true))return true;i
 
 function dayBox(d){const ds=d.day||[];if(!ds.length)return "";
   return `<section class="sites"><b>☀️ 당일(캠프닉) 상품 <small>네이버 예약</small></b><ul>${ds.map(x=>`<li><div><b>${esc(x.n)}</b><small>${esc(x.time||"")}${x.dog===true?" · 🐶 반려견 가능":x.dog===false?" · 🐶 반려견 불가":""}</small></div><span>${esc(x.price||"")}</span></li>`).join("")}</ul></section>`}
+
+/* 지쏘 픽: 상세의 💚 버튼으로 넣고 빼요 (처음엔 camps.json의 defaultPicks) */
+const isPick=d=>(picks||new Set(DEFAULT_PICKS)).has(d.id);
+function togglePick(id){if(!picks)picks=new Set(DEFAULT_PICKS);picks.has(id)?picks.delete(id):picks.add(id);commit();render();detail(id);toast(picks.has(id)?"💚 지쏘 픽에 넣었어요":"지쏘 픽에서 뺐어요")}
+document.addEventListener("click",e=>{const t=e.target.closest("[data-pick-toggle]");if(t)togglePick(t.dataset.pickToggle)});
