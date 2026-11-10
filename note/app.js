@@ -201,6 +201,7 @@ function detail(id){
    <section class="dsec" aria-label="조건"><div class="ctg">${c}</div></section>
    ${asks.length?`<section class="askbox"><b>📞 전화로 확인할 것</b><ul>${asks.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>${diffs(d,g).length?`<small>고캠핑 정보와 다른 부분이 있어요. 고캠핑 정보가 예전 것일 수 있어요.</small>`:""}</section>`:""}
    ${rv}
+   ${blogBox(d)}
    ${spotsBox(d)}
    ${facts.length?`<section class="facts"><b>📌 알아둘 것</b><ul>${facts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></section>`:""}
    ${g?gcBox(g,d):""}
@@ -381,7 +382,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110k";
+  const V="20261110l";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
@@ -399,6 +400,9 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSortMenus()});
 
 /* ---------- 예상 평점: 지쏘 조건 기준 (가중치는 여기서 바꿔요) ---------- */
 const WEIGHTS={dog:25,fire:25,dist:15,price:15,review:12,power:5,auto:3};
+/* 후기 점수: 캠핏 분석(rv)과 네이버 블로그 후기(brv)를 반씩, 하나만 있으면 그것만, 둘 다 없으면 중간 */
+const RVS={ok:1,mild:.7,warn:.35,bad:0};
+function revScore(d){const a=[d.rv&&RVS[d.rv.lv],d.brv&&RVS[d.brv.lv]].filter(x=>x!==undefined&&x!==null&&x!==false);return a.length?a.reduce((x,y)=>x+y,0)/a.length:.5}
 const WLABEL={dog:["🐶","반려견 2마리"],fire:["🔥","장작 불멍"],dist:["📍","거리"],price:["💸","가격"],review:["👍","후기"],power:["⚡","전력"],auto:["🚗","오토캠핑"]};
 function mins(d){return d.min||(d.km?Math.round(d.km*1.2+10):0)}
 function parts(d,solo){
@@ -408,7 +412,7 @@ function parts(d,solo){
     fire:st(d.fire==="ok"?"ok":d.fire==="no"?"no":"check"),
     dist:!m?.5:m<=30?1:m<=60?.85:m<=90?.65:m<=120?.45:.25,
     price:!p?.5:p<=20000?1:p<=30000?.9:p<=40000?.75:p<=50000?.55:p<=60000?.4:.25,
-    review:!d.rv?.5:{ok:1,mild:.7,warn:.35,bad:0}[d.rv.lv],
+    review:revScore(d),
     power:d.w11?1:d.w?.6:.4,
     auto:d.auto===true?1:d.auto==="check"?.5:0,
   };
@@ -470,3 +474,7 @@ function spotsBox(d){
   const li=x=>`<li><b class="spt${x.avoid?" bad":""}">${esc(x.s)}</b><span>${esc(x.why)}</span></li>`;
   return `<section class="spots"><b>📍 추천 자리</b>${good.length?`<ul>${good.map(li).join("")}</ul>`:""}${bad.length?`<p class="spbad">피할 자리</p><ul>${bad.map(li).join("")}</ul>`:""}${(d.spotSrc||[]).length?`<small>출처: 네이버 블로그 ${d.spotSrc.map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${i+1}</a>`).join(" · ")}</small>`:""}</section>`;
 }
+
+/* 네이버 블로그 후기 요약 (camps.json의 brv) */
+function blogBox(d){const b=d.brv;if(!b)return "";
+  return `<div class="rvbox ${b.lv}"><b>📝 블로그 후기: ${RVL[b.lv][1]}</b><span>${esc(b.s)}</span>${(b.pts||[]).length?`<ul>${b.pts.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}<small>네이버 블로그 ${b.n||(b.src||[]).length}개 분석 · ${esc(b.at||"")} · ${(b.src||[]).map((u,i)=>`<a href="${esc(u)}" target="_blank" rel="noopener">${i+1}</a>`).join(" · ")}</small></div>`}
