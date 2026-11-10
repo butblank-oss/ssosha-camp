@@ -31,6 +31,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101368/thumb/thumb_720_9889EnNrNeQc6qq5h1rBwPse.jpg",
+   "lat": 37.023628,
+   "lng": 128.177708,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101368/thumb/thumb_720_9889EnNrNeQc6qq5h1rBwPse.jpg",
     "https://gocamping.or.kr/upload/camp/101368/9889EnNrNeQc6qq5h1rBwPse.jpg",
@@ -71,6 +73,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100685/thumb/thumb_720_0168wkOT7aDrsrJOUNODbYxu.jpg",
+   "lat": 37.178964,
+   "lng": 127.992575,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100685/thumb/thumb_720_0168wkOT7aDrsrJOUNODbYxu.jpg",
     "https://gocamping.or.kr/upload/camp/100685/9868W6Qay9UEL3uPoEEA4haT.jpg",
@@ -111,6 +115,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100892/thumb/thumb_720_2611uOv2dt8OfNT0jH2tfxpG.jpg",
+   "lat": 36.898197,
+   "lng": 128.130329,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100892/thumb/thumb_720_2611uOv2dt8OfNT0jH2tfxpG.jpg",
     "https://gocamping.or.kr/upload/camp/100892/2611uOv2dt8OfNT0jH2tfxpG.jpg",
@@ -154,6 +160,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101524/thumb/thumb_720_5875MZWm6ctQZF737TSvPEw1.jpg",
+   "lat": 36.841992,
+   "lng": 126.197458,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101524/thumb/thumb_720_5875MZWm6ctQZF737TSvPEw1.jpg",
     "https://gocamping.or.kr/upload/camp/101524/0084NRPbJH0PBu9fWvfzHMz5.jpg",
@@ -196,6 +204,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100337/thumb/thumb_720_8885FqorAofEE9kog4f2e7yr.jpg",
+   "lat": 37.518674,
+   "lng": 127.206362,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100337/thumb/thumb_720_8885FqorAofEE9kog4f2e7yr.jpg",
     "https://gocamping.or.kr/upload/camp/100337/8885FqorAofEE9kog4f2e7yr.jpg",
@@ -238,6 +248,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101507/thumb/thumb_720_7841lENOIKHc4KdrtUklnfxR.jpg",
+   "lat": 37.292236,
+   "lng": 127.236748,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101507/thumb/thumb_720_7841lENOIKHc4KdrtUklnfxR.jpg",
     "https://gocamping.or.kr/upload/camp/101507/7841lENOIKHc4KdrtUklnfxR.jpg",
@@ -269,6 +281,8 @@
    "pet": "",
    "fire": "",
    "img": "",
+   "lat": 37.332931,
+   "lng": 127.685995,
    "imgs": []
   },
   "gapyeong-seontaekjeok-gorip": {
@@ -298,6 +312,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101331/thumb/thumb_720_1699jqMrv4vEYJVdzBjgy8wi.jpg",
+   "lat": 37.781723,
+   "lng": 127.365535,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101331/thumb/thumb_720_1699jqMrv4vEYJVdzBjgy8wi.jpg",
     "https://gocamping.or.kr/upload/camp/101331/8409nxvpBD1uhHMzlvZkvRCl.jpg",
@@ -338,6 +354,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101214/thumb/thumb_720_8367A1CMF93uOjw59EQY6API.jpg",
+   "lat": 38.075319,
+   "lng": 127.248088,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101214/thumb/thumb_720_8367A1CMF93uOjw59EQY6API.jpg",
     "https://gocamping.or.kr/upload/camp/101214/4958EOLadgJ4Gj3TJS3evM3Q.jpg",
@@ -378,6 +396,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100679/thumb/thumb_720_5497C3Xh7N8Pw4VHqvXNPzic.jpg",
+   "lat": 37.006497,
+   "lng": 126.911205,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100679/thumb/thumb_720_5497C3Xh7N8Pw4VHqvXNPzic.jpg",
     "https://gocamping.or.kr/upload/camp/100679/6096mufmC9eEafGJZvSE11Bn.jpg",
@@ -420,6 +440,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101121/thumb/thumb_720_9305z68zrJGlH5U2gooRwiBq.jpg",
+   "lat": 37.213193,
+   "lng": 126.608199,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101121/thumb/thumb_720_9305z68zrJGlH5U2gooRwiBq.jpg",
     "https://gocamping.or.kr/upload/camp/101121/0225e5720nBj0srPPPHIU5R0.jpg",
@@ -459,6 +481,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "",
+   "lat": 37.052192,
+   "lng": 126.759486,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101673/6063iA24XNVE0oQbBAnEa5qM.jpeg",
     "https://gocamping.or.kr/upload/camp/101673/0712xxqUs3lXkyfo7rYxv2Rm.jpeg"
@@ -488,6 +512,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100324/thumb/thumb_720_4993dyi1eFLAKGv5HGGLR0I7.jpg",
+   "lat": 37.63364,
+   "lng": 126.40848,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100324/thumb/thumb_720_4993dyi1eFLAKGv5HGGLR0I7.jpg",
     "https://gocamping.or.kr/upload/camp/100324/3530DSEydcd08UsvjQwkEvdC.jpg",
@@ -526,6 +552,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101660/thumb/thumb_720_44809YeGXZLtc8yypgNUz0QA.png",
+   "lat": 37.605663,
+   "lng": 126.479868,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101660/thumb/thumb_720_44809YeGXZLtc8yypgNUz0QA.png",
     "https://gocamping.or.kr/upload/camp/101660/44809YeGXZLtc8yypgNUz0QA.png",
@@ -560,6 +588,8 @@
    "pet": "불가능",
    "fire": "",
    "img": "",
+   "lat": 37.373101,
+   "lng": 127.019317,
    "imgs": []
   },
   "seoul-grand-park": {
@@ -583,6 +613,8 @@
    "pet": "불가능",
    "fire": "",
    "img": "",
+   "lat": 37.436452,
+   "lng": 127.013898,
    "imgs": []
   },
   "ansan-hwarang-auto": {
@@ -608,6 +640,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/2022/thumb/thumb_720_4437dXcVLMyEqSFNqepY3pvd.jpg",
+   "lat": 37.322695,
+   "lng": 126.81668,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/2022/thumb/thumb_720_4437dXcVLMyEqSFNqepY3pvd.jpg",
     "https://gocamping.or.kr/upload/camp/2022/4437dXcVLMyEqSFNqepY3pvd.jpg",
@@ -646,6 +680,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "",
+   "lat": 37.098145,
+   "lng": 127.086486,
    "imgs": []
   },
   "goyang-kintex": {
@@ -674,6 +710,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/3120/thumb/thumb_720_2230dMoalowTL1SnrYjBhF59.jpg",
+   "lat": 37.663128,
+   "lng": 126.739693,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/3120/thumb/thumb_720_2230dMoalowTL1SnrYjBhF59.jpg",
     "https://gocamping.or.kr/upload/camp/3120/2230dMoalowTL1SnrYjBhF59.jpg",
@@ -712,6 +750,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100812/thumb/thumb_720_7461BXLT8apSq9JmOQf1Skz1.jpg",
+   "lat": 37.07448,
+   "lng": 127.879733,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100812/thumb/thumb_720_7461BXLT8apSq9JmOQf1Skz1.jpg",
     "https://gocamping.or.kr/upload/camp/100812/3670CFKB1adVC2pSYjFFkkCA.jpg",
@@ -747,6 +787,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/331/thumb/thumb_720_1853pQU5AAYfN7Ui5tv2HM9h.jpg",
+   "lat": 37.459242,
+   "lng": 126.860768,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/331/thumb/thumb_720_1853pQU5AAYfN7Ui5tv2HM9h.jpg",
     "https://gocamping.or.kr/upload/camp/331/1853pQU5AAYfN7Ui5tv2HM9h.jpg",
@@ -788,6 +830,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7967/thumb/thumb_720_6181E4ycFXKTxVtwJkd076GD.jpg",
+   "lat": 37.479059,
+   "lng": 126.831451,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7967/thumb/thumb_720_6181E4ycFXKTxVtwJkd076GD.jpg",
     "https://gocamping.or.kr/upload/camp/7967/6043VvlYGHP7wJZhTPj402Wc.jpg",
@@ -827,6 +871,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/6731/thumb/thumb_720_81749myd4Or0cWH1z2rxEIVs.jpg",
+   "lat": 37.389839,
+   "lng": 126.76282,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/6731/thumb/thumb_720_81749myd4Or0cWH1z2rxEIVs.jpg",
     "https://gocamping.or.kr/upload/camp/6731/81749myd4Or0cWH1z2rxEIVs.jpg",
@@ -858,6 +904,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "",
+   "lat": 37.455112,
+   "lng": 126.749891,
    "imgs": []
   },
   "anyang-byeongmogan": {
@@ -882,6 +930,8 @@
    "pet": "불가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/1357/thumb/thumb_720_54445TeBWcVyQ5zPMvAQMmHJ.jpg",
+   "lat": 37.38264,
+   "lng": 126.910551,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/1357/thumb/thumb_720_54445TeBWcVyQ5zPMvAQMmHJ.jpg",
     "https://gocamping.or.kr/upload/camp/1357/54445TeBWcVyQ5zPMvAQMmHJ.jpg",
@@ -913,6 +963,8 @@
    "pet": "",
    "fire": "",
    "img": "",
+   "lat": 37.463203,
+   "lng": 126.787898,
    "imgs": []
   }
  },
@@ -942,6 +994,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/3636/thumb/thumb_720_6434UX6lCcugUxHivAdwwoEh.jpg",
+   "lat": 37.351364,
+   "lng": 127.052779,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/3636/thumb/thumb_720_6434UX6lCcugUxHivAdwwoEh.jpg"
    ]
@@ -978,6 +1032,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7542/thumb/thumb_720_3423J5pnqZzczlUhWlffRKm0.jpg",
+   "lat": 37.457031,
+   "lng": 126.772045,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7542/thumb/thumb_720_3423J5pnqZzczlUhWlffRKm0.jpg"
    ]
@@ -1008,6 +1064,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/2533/thumb/thumb_720_9672Aq1bhXF6NfFrrXmsN42Y.jpg",
+   "lat": 37.222647,
+   "lng": 126.801061,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/2533/thumb/thumb_720_9672Aq1bhXF6NfFrrXmsN42Y.jpg"
    ]
@@ -1039,6 +1097,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100525/thumb/thumb_720_9714T27bDxeOYvJWB2x4h8z4.jpg",
+   "lat": 37.460523,
+   "lng": 127.212441,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100525/thumb/thumb_720_9714T27bDxeOYvJWB2x4h8z4.jpg"
    ]
@@ -1070,6 +1130,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101789/thumb/thumb_720_2391AL6Pr5rjGijDUWeYphxF.jpg",
+   "lat": 37.172159,
+   "lng": 127.021615,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101789/thumb/thumb_720_2391AL6Pr5rjGijDUWeYphxF.jpg"
    ]
@@ -1098,6 +1160,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/8049/thumb/thumb_720_2616wzEfRQirXCwkpos6UnXL.jpg",
+   "lat": 37.221018,
+   "lng": 127.138738,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/8049/thumb/thumb_720_2616wzEfRQirXCwkpos6UnXL.jpg"
    ]
@@ -1131,6 +1195,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100247/thumb/thumb_720_4573U29cCzGcTmCTIhb84p0P.jpg",
+   "lat": 37.455088,
+   "lng": 127.235058,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100247/thumb/thumb_720_4573U29cCzGcTmCTIhb84p0P.jpg"
    ]
@@ -1163,6 +1229,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7171/thumb/thumb_720_2531kdflCvxqaxnwkaPnOWGU.jpg",
+   "lat": 37.212077,
+   "lng": 127.158664,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7171/thumb/thumb_720_2531kdflCvxqaxnwkaPnOWGU.jpg"
    ]
@@ -1192,6 +1260,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7886/thumb/thumb_720_6009aoa2UG0a4YjV3vVJGru7.jpg",
+   "lat": 37.216303,
+   "lng": 126.727453,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7886/thumb/thumb_720_6009aoa2UG0a4YjV3vVJGru7.jpg"
    ]
@@ -1225,6 +1295,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101563/thumb/thumb_720_3401VHIPfUptZQfufe3dWTUB.jpg",
+   "lat": 37.244669,
+   "lng": 126.652457,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101563/thumb/thumb_720_3401VHIPfUptZQfufe3dWTUB.jpg"
    ]
@@ -1258,6 +1330,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101618/thumb/thumb_720_4820sWvFWYWI49Pkfzhp8lHc.jpg",
+   "lat": 37.158649,
+   "lng": 126.74292,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101618/thumb/thumb_720_4820sWvFWYWI49Pkfzhp8lHc.jpg"
    ]
@@ -1285,6 +1359,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100199/thumb/thumb_720_8114VjZtcffaEu9aeGMzLdw4.jpg",
+   "lat": 37.636304,
+   "lng": 127.130985,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100199/thumb/thumb_720_8114VjZtcffaEu9aeGMzLdw4.jpg"
    ]
@@ -1319,6 +1395,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100144/thumb/thumb_720_57561wuZF0YuXW8QK6AIhg5i.jpg",
+   "lat": 37.538544,
+   "lng": 126.615545,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100144/thumb/thumb_720_57561wuZF0YuXW8QK6AIhg5i.jpg"
    ]
@@ -1349,6 +1427,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100708/thumb/thumb_720_4251liscxvcCexUIdHCS2YoE.jpg",
+   "lat": 37.714668,
+   "lng": 126.949897,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100708/thumb/thumb_720_4251liscxvcCexUIdHCS2YoE.jpg"
    ]
@@ -1382,6 +1462,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100642/thumb/thumb_720_7564kkgOvSiPTpBeH4QGpQ08.jpg",
+   "lat": 37.234093,
+   "lng": 126.589214,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100642/thumb/thumb_720_7564kkgOvSiPTpBeH4QGpQ08.jpg"
    ]
@@ -1413,6 +1495,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7172/thumb/thumb_720_7697ugCBHfRGDWsteN7CWM3Z.jpg",
+   "lat": 37.163361,
+   "lng": 127.249116,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7172/thumb/thumb_720_7697ugCBHfRGDWsteN7CWM3Z.jpg"
    ]
@@ -1439,6 +1523,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101426/thumb/thumb_720_8833cEcXsfEKQG5uCEpW0kRW.jpg",
+   "lat": 37.722711,
+   "lng": 126.949042,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101426/thumb/thumb_720_8833cEcXsfEKQG5uCEpW0kRW.jpg"
    ]
@@ -1469,6 +1555,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7878/thumb/thumb_720_6267Qf82MZehtlf6Bd9ZD6mR.jpg",
+   "lat": 37.547648,
+   "lng": 127.324427,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7878/thumb/thumb_720_6267Qf82MZehtlf6Bd9ZD6mR.jpg"
    ]
@@ -1500,6 +1588,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100989/thumb/thumb_720_5246deMlpSupv7ycABu5PIds.jpg",
+   "lat": 37.728752,
+   "lng": 126.953134,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100989/thumb/thumb_720_5246deMlpSupv7ycABu5PIds.jpg"
    ]
@@ -1530,6 +1620,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101217/thumb/thumb_720_4101mn6c0mTUCdzsZIzRlkOf.jpg",
+   "lat": 37.734893,
+   "lng": 126.980298,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101217/thumb/thumb_720_4101mn6c0mTUCdzsZIzRlkOf.jpg"
    ]
@@ -1558,6 +1650,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101184/thumb/thumb_720_1765njjGYad5yj2C5ac6UfRQ.jpg",
+   "lat": 37.736135,
+   "lng": 126.981296,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101184/thumb/thumb_720_1765njjGYad5yj2C5ac6UfRQ.jpg"
    ]
@@ -1589,6 +1683,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7167/thumb/thumb_720_1619dumPESySNH0uqb3E3KvT.jpg",
+   "lat": 37.183084,
+   "lng": 127.308399,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7167/thumb/thumb_720_1619dumPESySNH0uqb3E3KvT.jpg"
    ]
@@ -1618,6 +1714,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101256/thumb/thumb_720_3110HOe5rSaXb2Vm7beloEIG.jpg",
+   "lat": 37.102338,
+   "lng": 127.213798,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101256/thumb/thumb_720_3110HOe5rSaXb2Vm7beloEIG.jpg"
    ]
@@ -1640,6 +1738,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101330/thumb/thumb_720_3630VZLC6xF2iNEGkv5jCKuU.jpg",
+   "lat": 37.455443,
+   "lng": 127.392914,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101330/thumb/thumb_720_3630VZLC6xF2iNEGkv5jCKuU.jpg"
    ]
@@ -1671,6 +1771,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101236/thumb/thumb_720_8989QISuhZKR9LGl1z1hbxQE.jpg",
+   "lat": 37.055178,
+   "lng": 127.11037,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101236/thumb/thumb_720_8989QISuhZKR9LGl1z1hbxQE.jpg"
    ]
@@ -1701,6 +1803,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101595/thumb/thumb_720_08402IhhP5qEKd5Ihfk09mMx.jpg",
+   "lat": 37.255951,
+   "lng": 126.52451,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101595/thumb/thumb_720_08402IhhP5qEKd5Ihfk09mMx.jpg"
    ]
@@ -1734,6 +1838,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101655/thumb/thumb_720_4199gUtnTpO5LzzYQgCT43gz.jpg",
+   "lat": 37.085143,
+   "lng": 127.202488,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101655/thumb/thumb_720_4199gUtnTpO5LzzYQgCT43gz.jpg"
    ]
@@ -1763,6 +1869,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/102112/thumb/thumb_720_7280DFI6901vjKA4kNxZCpXz.jpg",
+   "lat": 37.241246,
+   "lng": 126.52651,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/102112/thumb/thumb_720_7280DFI6901vjKA4kNxZCpXz.jpg"
    ]
@@ -1793,6 +1901,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/725/thumb/thumb_720_23020AQIhPInUf2tdGSnoHxA.jpg",
+   "lat": 37.76873,
+   "lng": 126.939411,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/725/thumb/thumb_720_23020AQIhPInUf2tdGSnoHxA.jpg"
    ]
@@ -1821,6 +1931,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/1931/thumb/thumb_720_6972jZjcUSOlMKFs60ka2vhh.jpg",
+   "lat": 37.713929,
+   "lng": 126.696632,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/1931/thumb/thumb_720_6972jZjcUSOlMKFs60ka2vhh.jpg"
    ]
@@ -1847,6 +1959,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100866/thumb/thumb_720_4585CSPOTEHRWSPnox2AmlMu.jpg",
+   "lat": 37.28099,
+   "lng": 126.486519,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100866/thumb/thumb_720_4585CSPOTEHRWSPnox2AmlMu.jpg"
    ]
@@ -1883,6 +1997,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/492/thumb/thumb_720_52057wmsa4RXZ3dJJ7vUizEG.jpg",
+   "lat": 37.776665,
+   "lng": 126.935462,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/492/thumb/thumb_720_52057wmsa4RXZ3dJJ7vUizEG.jpg"
    ]
@@ -1912,6 +2028,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100904/thumb/thumb_720_48425ZGxQglth1Y3uqIYjZ6g.jpg",
+   "lat": 37.037964,
+   "lng": 126.746212,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100904/thumb/thumb_720_48425ZGxQglth1Y3uqIYjZ6g.jpg"
    ]
@@ -1940,6 +2058,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100282/thumb/thumb_720_2210BhaHuHaBxzQhr9qevlkt.jpg",
+   "lat": 37.120643,
+   "lng": 127.307411,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100282/thumb/thumb_720_2210BhaHuHaBxzQhr9qevlkt.jpg"
    ]
@@ -1962,6 +2082,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101519/thumb/thumb_720_8465ET63PhQRZ73dVrtIXrV6.jpeg",
+   "lat": 37.275361,
+   "lng": 126.477194,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101519/thumb/thumb_720_8465ET63PhQRZ73dVrtIXrV6.jpeg"
    ]
@@ -1995,6 +2117,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/8007/thumb/thumb_720_8754tjc9IYKH062urE6dH074.jpg",
+   "lat": 37.779479,
+   "lng": 127.058686,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/8007/thumb/thumb_720_8754tjc9IYKH062urE6dH074.jpg"
    ]
@@ -2024,6 +2148,8 @@
    "pet": "가능",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/7613/thumb/thumb_720_3990cEPR1jta6ARGGlY4j9Te.jpg",
+   "lat": 37.62131,
+   "lng": 126.538349,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/7613/thumb/thumb_720_3990cEPR1jta6ARGGlY4j9Te.jpg"
    ]
@@ -2056,6 +2182,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/1119/thumb/thumb_720_5792NMYvk0D77FZR8tKv0Q7A.jpg",
+   "lat": 37.24118,
+   "lng": 126.474453,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/1119/thumb/thumb_720_5792NMYvk0D77FZR8tKv0Q7A.jpg"
    ]
@@ -2087,6 +2215,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/100872/thumb/thumb_720_6263tDAB4z6PNsFvaWi4PaD7.jpg",
+   "lat": 37.716025,
+   "lng": 127.258901,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/100872/thumb/thumb_720_6263tDAB4z6PNsFvaWi4PaD7.jpg"
    ]
@@ -2119,6 +2249,8 @@
    "pet": "가능(소형견)",
    "fire": "개별",
    "img": "https://gocamping.or.kr/upload/camp/101732/thumb/thumb_720_2880Uq3AlQyR17rcXnlDrNNU.jpg",
+   "lat": 37.272493,
+   "lng": 126.456292,
    "imgs": [
     "https://gocamping.or.kr/upload/camp/101732/thumb/thumb_720_2880Uq3AlQyR17rcXnlDrNNU.jpg"
    ]
