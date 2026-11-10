@@ -161,7 +161,7 @@ function diffs(d,g){
   else if(!d.solo&&g.pet==="가능(소형견)"&&d.dog2==="ok"&&!/kg/.test(d.dogT||""))out.push("고캠핑엔 '소형견만' 가능으로 나와요");
   if(d.fire==="ok"&&g.fire==="불가")out.push("고캠핑엔 화로대 '불가'로 나와요");
   if(d.fire==="ok"&&g.fire==="공동취사장")out.push("고캠핑엔 화로대가 '공동'으로 나와요");
-  if(d.fire!=="ok"&&g.fire==="개별"&&!d.near)out.push("고캠핑엔 개별 화로대 가능으로 나와요 (불멍 될 수도 있어요)");
+  if(d.fire==="check"&&g.fire==="개별"&&!d.near)out.push("고캠핑엔 개별 화로대 가능으로 나와요 (불멍 될 수도 있어요)");
   if(d.w11&&g.sbrs.length&&!g.sbrs.includes("전기"))out.push("고캠핑 시설 목록에 전기가 없어요");
   return out;
 }
@@ -380,7 +380,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261110i";
+  const V="20261110j";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("gocamping.json",{cache:"no-cache"}).then(r=>r.ok?r.json():{camps:{}}).catch(()=>({camps:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;GC={camps:{},nearby:[],...p};NEAR=(GC.nearby||[]).map(nearCamp);
