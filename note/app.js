@@ -317,7 +317,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- 시작: 데이터 받기 ---------- */
 (async()=>{
-  const V="20261109a";
+  const V="20261110a";
   try{
     const [c,p]=await Promise.all([fetch("camps.json?v="+V).then(r=>r.json()),fetch("photos.json?v="+V).then(r=>r.ok?r.json():{items:{}}).catch(()=>({items:{}}))]);
     R=Object.fromEntries(c.regions.map(x=>[x.k,[x.name,x.icon]]));D=c.camps;PICKS=c.picks;DROP=c.drop;CALLS=c.calls;PHOTO=p.items||{};

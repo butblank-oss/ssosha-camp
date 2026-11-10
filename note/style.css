@@ -25,7 +25,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
   padding-block:0 calc(88px + env(safe-area-inset-bottom,0px))}
 @media (min-width:1100px){.app{border-left:1px solid var(--line);border-right:1px solid var(--line)}}
-.bleed{margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.bleed{margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px));scroll-padding-inline:max(16px,env(safe-area-inset-left,0px))}
 /* 상단 */
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--glass);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);padding-top:12px}
 .brandrow{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px}
@@ -45,7 +45,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 .cat[aria-selected="true"]{color:var(--fg);font-weight:700;border-color:var(--fg)}
 .cat[aria-selected="true"] i{filter:none;opacity:1}
 .cat:active i{transform:scale(.9)}
-.quick{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:12px 0}
+.quick{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-block:12px}
 .qc{flex:none;border:1px solid var(--line);background:var(--app);border-radius:999px;padding:7px 12px;font-size:13px;white-space:nowrap;transition:transform .12s,background-color .15s}
 .qc:active{transform:scale(.95)}
 .qc[aria-pressed="true"]{background:var(--fg);color:var(--app);border-color:var(--fg)}
